@@ -6,7 +6,7 @@
    ========================================================= */
 
 :root {
-  /* ---------- Core palette ---------- */
+  /* ---------- Core ---------- */
   --bg: #f4f2ed;
   --surface: #ffffff;
   --surface-soft: #ebe8e1;
@@ -17,8 +17,8 @@
   --ink-muted: #96928a;
   --ink-faint: #b4b0a8;
 
-  --white: #ffffff;
   --black: #111111;
+  --white: #ffffff;
 
   /* ---------- Lines ---------- */
   --line: rgba(17, 17, 17, 0.085);
@@ -44,8 +44,12 @@
   --max-width: 1440px;
   --content-width: 1250px;
   --page-gutter: 48px;
-
   --nav-height: 74px;
+
+  /* ---------- Coverflow ---------- */
+  --cover-card-width: 360px;
+  --cover-side-offset: 285px;
+  --cover-far-offset: 510px;
 
   /* ---------- Motion ---------- */
   --ease: cubic-bezier(0.22, 1, 0.36, 1);
@@ -66,8 +70,8 @@
 }
 
 html {
-  scroll-behavior: smooth;
   background: var(--bg);
+  scroll-behavior: smooth;
 }
 
 body {
@@ -80,11 +84,11 @@ body {
   font-size: 15px;
   line-height: 1.5;
 
+  overflow-x: hidden;
+
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-rendering: optimizeLegibility;
-
-  overflow-x: hidden;
 }
 
 body,
@@ -113,7 +117,6 @@ a {
 
 img {
   display: block;
-  width: 100%;
   max-width: 100%;
 }
 
@@ -156,7 +159,11 @@ main {
 }
 
 .page-container {
-  width: min(var(--max-width), calc(100% - (var(--page-gutter) * 2)));
+  width: min(
+    var(--max-width),
+    calc(100% - (var(--page-gutter) * 2))
+  );
+
   margin: 0 auto;
 }
 
@@ -178,9 +185,9 @@ main {
 
   font-size: 10px;
   font-weight: 700;
-  letter-spacing: 0.16em;
   line-height: 1.2;
 
+  letter-spacing: 0.16em;
   text-transform: uppercase;
 }
 
@@ -210,38 +217,46 @@ main {
 
 
 /* =========================================================
-   HEADER
+   GLOBAL HEADER
    ========================================================= */
 
 .site-header {
-  width: min(var(--max-width), calc(100% - (var(--page-gutter) * 2)));
+  position: relative;
+  z-index: 30;
+
+  width: min(
+    var(--max-width),
+    calc(100% - (var(--page-gutter) * 2))
+  );
 
   min-height: 92px;
-
   margin: 0 auto;
 
   display: flex;
   align-items: center;
   justify-content: space-between;
 
-  position: relative;
-  z-index: 30;
+  gap: 20px;
 }
 
 .site-logo {
+  flex-shrink: 0;
+
   font-size: 18px;
   font-weight: 700;
   letter-spacing: -0.04em;
 }
 
 .header-action {
+  flex-shrink: 0;
+
+  min-height: 40px;
+  padding: 10px 17px;
+
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 8px;
-
-  min-height: 40px;
-  padding: 10px 17px;
 
   border: 1px solid var(--line-medium);
   border-radius: var(--radius-pill);
@@ -269,7 +284,7 @@ main {
 
 
 /* =========================================================
-   HOME
+   HOME HERO
    ========================================================= */
 
 .home-page {
@@ -277,7 +292,10 @@ main {
 }
 
 .home-hero {
-  width: min(var(--max-width), calc(100% - (var(--page-gutter) * 2)));
+  width: min(
+    var(--max-width),
+    calc(100% - (var(--page-gutter) * 2))
+  );
 
   min-height: min(680px, 78vh);
 
@@ -291,6 +309,7 @@ main {
 }
 
 .home-hero-copy {
+  min-width: 0;
   max-width: 900px;
 }
 
@@ -342,7 +361,6 @@ main {
 
 .hero-cta:hover {
   transform: translateY(-4px);
-
   box-shadow: var(--shadow-md);
 }
 
@@ -363,12 +381,14 @@ main {
 
 .featured-section {
   width: 100%;
-
   margin: 0 auto 125px;
 }
 
 .featured-heading {
-  width: min(var(--max-width), calc(100% - (var(--page-gutter) * 2)));
+  width: min(
+    var(--max-width),
+    calc(100% - (var(--page-gutter) * 2))
+  );
 
   margin: 0 auto 27px;
 
@@ -383,29 +403,27 @@ main {
   font-size: 11px;
   font-weight: 700;
   letter-spacing: 0.15em;
-
   text-transform: uppercase;
 }
 
 .featured-heading p {
   color: var(--ink-muted);
-
   font-size: 11px;
 }
 
 
-/* ---------- Coverflow viewport ---------- */
+/* ---------- Viewport ---------- */
 
 .coverflow {
   position: relative;
 
   width: 100%;
-  height: clamp(410px, 45vw, 610px);
-
-  perspective: 1700px;
-  perspective-origin: center center;
+  height: 610px;
 
   overflow: hidden;
+
+  perspective: 1800px;
+  perspective-origin: center 48%;
 
   touch-action: pan-y;
   user-select: none;
@@ -417,26 +435,28 @@ main {
   content: "";
 
   position: absolute;
+  z-index: 0;
 
   left: 50%;
-  bottom: 2%;
+  bottom: 7%;
 
-  width: 34%;
-  height: 15px;
+  width: min(390px, 45vw);
+  height: 22px;
 
   transform: translateX(-50%);
 
   border-radius: 50%;
 
-  background: rgba(17, 17, 17, 0.10);
+  background: rgba(17, 17, 17, 0.13);
 
-  filter: blur(18px);
+  filter: blur(20px);
 
   pointer-events: none;
 }
 
 .coverflow-track {
   position: relative;
+  z-index: 1;
 
   width: 100%;
   height: 100%;
@@ -445,7 +465,9 @@ main {
 }
 
 
-/* ---------- Coverflow cards ---------- */
+/* =========================================================
+   COVERFLOW CARDS
+   ========================================================= */
 
 .coverflow-card {
   position: absolute;
@@ -453,8 +475,7 @@ main {
   top: 50%;
   left: 50%;
 
-  width: clamp(260px, 25vw, 355px);
-
+  width: var(--cover-card-width);
   aspect-ratio: 4 / 5;
 
   overflow: hidden;
@@ -463,52 +484,64 @@ main {
 
   background: var(--surface);
 
-  transform-style: preserve-3d;
-
   opacity: 0;
   visibility: hidden;
   pointer-events: none;
 
   cursor: pointer;
 
+  transform-style: preserve-3d;
+  backface-visibility: hidden;
+
   will-change: transform, opacity;
 
   box-shadow: var(--shadow-md);
 
   transition:
-    transform 0.7s var(--ease),
-    opacity 0.55s var(--ease),
-    filter 0.55s var(--ease),
-    box-shadow 0.55s var(--ease);
+    transform 0.72s var(--ease),
+    opacity 0.5s var(--ease),
+    filter 0.5s var(--ease),
+    box-shadow 0.5s var(--ease);
 }
+
+
+/* ---------- Image ---------- */
 
 .coverflow-card img {
   width: 100%;
   height: 100%;
 
   object-fit: cover;
+  object-position: center;
 
   transform: scale(1.001);
 
-  transition: transform 1s var(--ease);
+  backface-visibility: hidden;
+
+  transition: transform 0.9s var(--ease);
 }
 
 .coverflow-card:hover img {
   transform: scale(1.035);
 }
 
+
+/* ---------- Image treatment ---------- */
+
 .coverflow-card::after {
   content: "";
 
   position: absolute;
   inset: 0;
+  z-index: 2;
 
   background:
     linear-gradient(
       to top,
-      rgba(0, 0, 0, 0.62) 0%,
-      rgba(0, 0, 0, 0.19) 38%,
-      rgba(0, 0, 0, 0) 68%
+      rgba(0, 0, 0, 0.70) 0%,
+      rgba(0, 0, 0, 0.30) 32%,
+      rgba(0, 0, 0, 0.04) 64%,
+      rgba(0, 0, 0, 0) 100%
     );
 
   pointer-events: none;
@@ -519,26 +552,28 @@ main {
 
   position: absolute;
   inset: 0;
+  z-index: 4;
 
-  border: 1px solid rgba(255, 255, 255, 0.12);
-
+  border: 1px solid rgba(255, 255, 255, 0.14);
   border-radius: inherit;
-
-  z-index: 3;
 
   pointer-events: none;
 }
 
+
+/* ---------- Card content ---------- */
+
 .coverflow-card-content {
   position: absolute;
+  z-index: 5;
 
-  z-index: 4;
-
-  left: 24px;
-  right: 24px;
-  bottom: 24px;
+  left: 25px;
+  right: 25px;
+  bottom: 25px;
 
   color: var(--white);
+
+  pointer-events: none;
 }
 
 .coverflow-card-content small {
@@ -548,19 +583,20 @@ main {
 
   font-size: 9px;
   font-weight: 700;
-  letter-spacing: 0.15em;
+  line-height: 1.2;
 
+  letter-spacing: 0.15em;
   text-transform: uppercase;
 
   opacity: 0.72;
 }
 
 .coverflow-card-content h3 {
-  max-width: 285px;
+  max-width: 290px;
 
   font-family: "Playfair Display", Georgia, serif;
 
-  font-size: clamp(22px, 2vw, 29px);
+  font-size: clamp(23px, 2vw, 30px);
   font-weight: 600;
   line-height: 1.03;
 
@@ -568,109 +604,130 @@ main {
 }
 
 
-/* ---------- CENTER ---------- */
+/* =========================================================
+   COVERFLOW STATES
+   ========================================================= */
+
+/*
+   CENTER
+   Strongest visual.
+*/
 
 .coverflow-card.is-center {
+  z-index: 10;
+
   opacity: 1;
   visibility: visible;
   pointer-events: auto;
 
   transform:
     translate(-50%, -50%)
-    translateZ(100px)
-    rotateY(0deg)
-    scale(1.055);
+    translateZ(90px)
+    scale(1.035);
 
-  z-index: 10;
+  filter: saturate(1.03);
 
   box-shadow: var(--shadow-xl);
-
-  filter: saturate(1.02);
 }
 
 
-/* ---------- LEFT ---------- */
+/*
+   LEFT
+*/
 
 .coverflow-card.is-left {
-  opacity: 0.72;
+  z-index: 8;
+
+  opacity: 0.74;
   visibility: visible;
   pointer-events: auto;
 
   transform:
     translate(-50%, -50%)
-    translateX(-74%)
-    translateZ(-35px)
-    rotateY(30deg)
+    translateX(calc(-1 * var(--cover-side-offset)))
+    translateZ(-45px)
+    rotateY(25deg)
     scale(0.84);
 
-  z-index: 7;
-
-  filter: saturate(0.82);
+  filter: saturate(0.84);
 }
 
 
-/* ---------- RIGHT ---------- */
+/*
+   RIGHT
+*/
 
 .coverflow-card.is-right {
-  opacity: 0.72;
+  z-index: 8;
+
+  opacity: 0.74;
   visibility: visible;
   pointer-events: auto;
 
   transform:
     translate(-50%, -50%)
-    translateX(74%)
-    translateZ(-35px)
-    rotateY(-30deg)
+    translateX(var(--cover-side-offset))
+    translateZ(-45px)
+    rotateY(-25deg)
     scale(0.84);
 
-  z-index: 7;
-
-  filter: saturate(0.82);
+  filter: saturate(0.84);
 }
 
 
-/* ---------- FAR LEFT ---------- */
+/*
+   FAR LEFT
+*/
 
 .coverflow-card.is-far-left {
-  opacity: 0.24;
+  z-index: 5;
+
+  opacity: 0.18;
   visibility: visible;
+  pointer-events: none;
 
   transform:
     translate(-50%, -50%)
-    translateX(-139%)
-    translateZ(-145px)
-    rotateY(43deg)
+    translateX(calc(-1 * var(--cover-far-offset)))
+    translateZ(-150px)
+    rotateY(36deg)
     scale(0.67);
-
-  z-index: 4;
 
   filter: saturate(0.65);
 }
 
 
-/* ---------- FAR RIGHT ---------- */
+/*
+   FAR RIGHT
+*/
 
 .coverflow-card.is-far-right {
-  opacity: 0.24;
+  z-index: 5;
+
+  opacity: 0.18;
   visibility: visible;
+  pointer-events: none;
 
   transform:
     translate(-50%, -50%)
-    translateX(139%)
-    translateZ(-145px)
-    rotateY(-43deg)
+    translateX(var(--cover-far-offset))
+    translateZ(-150px)
+    rotateY(-36deg)
     scale(0.67);
-
-  z-index: 4;
 
   filter: saturate(0.65);
 }
 
 
-/* ---------- Coverflow controls ---------- */
+/* =========================================================
+   COVERFLOW CONTROLS
+   ========================================================= */
 
 .coverflow-controls {
-  width: min(var(--max-width), calc(100% - (var(--page-gutter) * 2)));
+  width: min(
+    var(--max-width),
+    calc(100% - (var(--page-gutter) * 2))
+  );
 
   margin: 24px auto 0;
 
@@ -682,12 +739,18 @@ main {
 }
 
 .coverflow-dots {
+  min-width: 0;
+
   display: flex;
   align-items: center;
   gap: 6px;
+
+  overflow: hidden;
 }
 
 .coverflow-dot {
+  flex: 0 0 auto;
+
   width: 5px;
   height: 5px;
 
@@ -709,6 +772,8 @@ main {
 }
 
 .coverflow-buttons {
+  flex-shrink: 0;
+
   display: flex;
   gap: 8px;
 }
@@ -732,7 +797,8 @@ main {
   transition:
     transform 0.35s var(--ease),
     background 0.35s var(--ease),
-    border-color 0.35s var(--ease);
+    border-color 0.35s var(--ease),
+    box-shadow 0.35s var(--ease);
 }
 
 .coverflow-button:hover {
@@ -754,7 +820,10 @@ main {
    ========================================================= */
 
 .story-board-section {
-  width: min(var(--max-width), calc(100% - (var(--page-gutter) * 2)));
+  width: min(
+    var(--max-width),
+    calc(100% - (var(--page-gutter) * 2))
+  );
 
   margin: 0 auto 130px;
 }
@@ -782,15 +851,31 @@ main {
   line-height: 1.7;
 }
 
-.story-grid {
+
+/* =========================================================
+   STORY CARDS — FIXED
+   ========================================================= */
+
+.story-grid,
+.explore-grid {
   column-count: 4;
   column-gap: 18px;
+
+  column-fill: balance;
 }
+
+
+/*
+   Important:
+   The card stays as a block inside the masonry columns.
+   This prevents the hover transform from behaving like an
+   inline element and reduces visual collisions.
+*/
 
 .story-card {
   position: relative;
 
-  display: inline-block;
+  display: block;
 
   width: 100%;
 
@@ -799,8 +884,9 @@ main {
   overflow: hidden;
 
   break-inside: avoid;
+  -webkit-column-break-inside: avoid;
 
-  border: 1px solid rgba(17, 17, 17, 0.035);
+  border: 1px solid rgba(17, 17, 17, 0.045);
   border-radius: var(--radius-md);
 
   background: var(--surface);
@@ -809,90 +895,135 @@ main {
 
   box-shadow: var(--shadow-xs);
 
+  isolation: isolate;
+
+  transform: translateZ(0);
+
   transition:
-    transform 0.5s var(--ease),
-    box-shadow 0.5s var(--ease);
+    transform 0.45s var(--ease),
+    box-shadow 0.45s var(--ease),
+    border-color 0.45s var(--ease);
 }
 
+
+/*
+   Keep the hover lift restrained.
+   Large lifts in a masonry layout cause cards to
+   visually crash into neighboring columns.
+*/
+
 .story-card:hover {
-  transform: translateY(-7px);
+  transform: translateY(-4px);
+
+  border-color: rgba(17, 17, 17, 0.08);
 
   box-shadow: var(--shadow-md);
 }
 
+
+/* ---------- Image ---------- */
+
 .story-card-image {
   position: relative;
+
+  width: 100%;
 
   overflow: hidden;
 
   background: var(--surface-soft);
+
+  isolation: isolate;
 }
 
 .story-card-image img {
+  display: block;
+
   width: 100%;
   height: auto;
 
+  object-fit: cover;
+
+  transform: scale(1);
+
   transition:
-    transform 0.85s var(--ease),
-    filter 0.5s var(--ease);
+    transform 0.8s var(--ease),
+    filter 0.6s var(--ease);
 }
 
 .story-card:hover .story-card-image img {
-  transform: scale(1.04);
+  transform: scale(1.035);
 }
+
+
+/* ---------- Image overlay ---------- */
 
 .story-card-overlay {
   position: absolute;
   inset: 0;
+  z-index: 2;
 
   background:
     linear-gradient(
       to top,
-      rgba(0, 0, 0, 0.52),
-      rgba(0, 0, 0, 0) 60%
+      rgba(0, 0, 0, 0.48),
+      rgba(0, 0, 0, 0) 63%
     );
 
   opacity: 0;
 
-  transition: opacity 0.45s var(--ease);
+  pointer-events: none;
+
+  transition: opacity 0.4s var(--ease);
 }
 
 .story-card:hover .story-card-overlay {
   opacity: 1;
 }
 
+
+/* ---------- Information ---------- */
+
 .story-card-info {
-  padding: 18px 18px 20px;
+  position: relative;
+  z-index: 3;
+
+  padding: 17px 18px 19px;
+
+  background: var(--surface);
 }
 
 .story-card-campaign {
-  margin-bottom: 8px;
+  margin-bottom: 7px;
 
   color: var(--ink-muted);
 
   font-size: 9px;
   font-weight: 700;
-  letter-spacing: 0.14em;
+  line-height: 1.2;
 
+  letter-spacing: 0.14em;
   text-transform: uppercase;
 }
 
 .story-card-title {
+  overflow-wrap: break-word;
+
   font-family: "Playfair Display", Georgia, serif;
 
-  font-size: 22px;
+  font-size: 21px;
   font-weight: 600;
-  line-height: 1.07;
+  line-height: 1.08;
 
   letter-spacing: -0.03em;
 }
 
 .story-card-emotion {
-  margin-top: 10px;
+  margin-top: 9px;
 
   color: var(--ink-soft);
 
-  font-size: 11px;
+  font-size: 10px;
+  line-height: 1.45;
 }
 
 
@@ -905,7 +1036,10 @@ main {
 }
 
 .explore-header {
-  width: min(var(--max-width), calc(100% - (var(--page-gutter) * 2)));
+  width: min(
+    var(--max-width),
+    calc(100% - (var(--page-gutter) * 2))
+  );
 
   margin: 0 auto;
 
@@ -941,7 +1075,10 @@ main {
 /* ---------- Filters ---------- */
 
 .explore-filters {
-  width: min(var(--max-width), calc(100% - (var(--page-gutter) * 2)));
+  width: min(
+    var(--max-width),
+    calc(100% - (var(--page-gutter) * 2))
+  );
 
   margin: 0 auto 42px;
 
@@ -950,9 +1087,11 @@ main {
 
   overflow-x: auto;
 
-  padding: 2px 1px 5px;
+  padding: 2px 1px 6px;
 
   scrollbar-width: none;
+
+  overscroll-behavior-x: contain;
 }
 
 .explore-filters::-webkit-scrollbar {
@@ -993,20 +1132,26 @@ main {
 .filter-button.active {
   background: var(--black);
   color: var(--white);
+
   border-color: var(--black);
 }
 
 
-/* ---------- Results ---------- */
+/* ---------- Explore meta ---------- */
 
 .explore-meta {
-  width: min(var(--max-width), calc(100% - (var(--page-gutter) * 2)));
+  width: min(
+    var(--max-width),
+    calc(100% - (var(--page-gutter) * 2))
+  );
 
   margin: 0 auto 24px;
 
   display: flex;
   align-items: center;
   justify-content: space-between;
+
+  gap: 20px;
 
   color: var(--ink-muted);
 
@@ -1016,19 +1161,6 @@ main {
   letter-spacing: 0.06em;
 
   text-transform: uppercase;
-}
-
-.explore-grid {
-  width: min(var(--max-width), calc(100% - (var(--page-gutter) * 2)));
-
-  margin: 0 auto;
-
-  column-count: 4;
-  column-gap: 18px;
-}
-
-.explore-grid .story-card {
-  margin-bottom: 18px;
 }
 
 
@@ -1078,7 +1210,9 @@ main {
 }
 
 
-/* ---------- Form sections ---------- */
+/* =========================================================
+   FORM SECTIONS
+   ========================================================= */
 
 .form-section {
   padding: 45px 0;
@@ -1113,7 +1247,9 @@ main {
 }
 
 
-/* ---------- Fields ---------- */
+/* =========================================================
+   FORM FIELDS
+   ========================================================= */
 
 .form-grid {
   display: grid;
@@ -1124,6 +1260,8 @@ main {
 }
 
 .form-field {
+  min-width: 0;
+
   display: flex;
   flex-direction: column;
   gap: 8px;
@@ -1147,6 +1285,8 @@ main {
 .form-field textarea,
 .form-field select {
   width: 100%;
+
+  min-width: 0;
 
   padding: 15px 16px;
 
@@ -1195,7 +1335,9 @@ main {
 }
 
 
-/* ---------- Choice cards ---------- */
+/* =========================================================
+   CHOICE CARDS
+   ========================================================= */
 
 .choice-grid {
   display: grid;
@@ -1208,6 +1350,7 @@ main {
 .choice-card {
   position: relative;
 
+  min-width: 0;
   min-height: 85px;
 
   padding: 17px;
@@ -1258,7 +1401,6 @@ main {
   height: 1px;
 
   opacity: 0;
-
   pointer-events: none;
 }
 
@@ -1282,6 +1424,14 @@ main {
 
 .choice-card.selected span {
   color: rgba(255, 255, 255, 0.66);
+}
+
+.choice-card:focus-within {
+  border-color: rgba(17, 17, 17, 0.38);
+
+  box-shadow:
+    0 0 0 4px rgba(17, 17, 17, 0.045),
+    var(--shadow-xs);
 }
 
 
@@ -1376,6 +1526,7 @@ main {
 }
 
 .reference-preview img {
+  width: 100%;
   max-height: 450px;
 
   object-fit: contain;
@@ -1384,7 +1535,9 @@ main {
 }
 
 
-/* ---------- Submit ---------- */
+/* =========================================================
+   CREATE SUBMIT
+   ========================================================= */
 
 .create-submit {
   width: 100%;
@@ -1440,7 +1593,10 @@ main {
 }
 
 .story-header {
-  width: min(var(--max-width), calc(100% - (var(--page-gutter) * 2)));
+  width: min(
+    var(--max-width),
+    calc(100% - (var(--page-gutter) * 2))
+  );
 
   min-height: 92px;
 
@@ -1450,11 +1606,15 @@ main {
   align-items: center;
   justify-content: space-between;
 
+  gap: 20px;
+
   border-bottom: 1px solid var(--line);
 }
 
 .story-back,
 .story-create {
+  flex-shrink: 0;
+
   font-size: 11px;
   font-weight: 600;
 
@@ -1479,7 +1639,10 @@ main {
 }
 
 .story-content {
-  width: min(var(--content-width), calc(100% - (var(--page-gutter) * 2)));
+  width: min(
+    var(--content-width),
+    calc(100% - (var(--page-gutter) * 2))
+  );
 
   margin: 0 auto;
 
@@ -1529,11 +1692,14 @@ main {
 }
 
 .story-visual img {
+  display: block;
+
   width: 100%;
   height: auto;
 }
 
 .story-copy {
+  min-width: 0;
   padding-top: 22px;
 }
 
@@ -1552,6 +1718,8 @@ main {
 }
 
 .story-title {
+  overflow-wrap: break-word;
+
   font-family: "Playfair Display", Georgia, serif;
 
   font-size: clamp(46px, 5vw, 76px);
@@ -1658,8 +1826,6 @@ main {
   border-radius: 50%;
 
   background: rgba(255, 255, 255, 0.07);
-
-  filter: blur(1px);
 
   pointer-events: none;
 }
@@ -1793,7 +1959,8 @@ main {
 
   background: #f1f1f1;
 
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.20);
+  box-shadow:
+    0 10px 25px rgba(0, 0, 0, 0.20);
 }
 
 .prompt-buy:active {
@@ -1802,11 +1969,14 @@ main {
 
 
 /* =========================================================
-   SITE FOOTER
+   FOOTER
    ========================================================= */
 
 .site-footer {
-  width: min(var(--max-width), calc(100% - (var(--page-gutter) * 2)));
+  width: min(
+    var(--max-width),
+    calc(100% - (var(--page-gutter) * 2))
+  );
 
   margin: 0 auto;
 
@@ -1845,11 +2015,10 @@ main {
 
 .bottom-nav {
   position: fixed;
-
   z-index: 100;
 
   left: 50%;
-  bottom: 16px;
+  bottom: max(10px, env(safe-area-inset-bottom));
 
   width: min(390px, calc(100% - 32px));
   height: 59px;
@@ -1872,9 +2041,6 @@ main {
 
   box-shadow:
     0 20px 60px rgba(17, 17, 17, 0.15);
-
-  transition:
-    box-shadow 0.4s var(--ease);
 }
 
 .bottom-nav a {
@@ -1913,7 +2079,7 @@ main {
 
 
 /* =========================================================
-   EMPTY / ERROR STATES
+   EMPTY / ERROR
    ========================================================= */
 
 .empty-state {
@@ -1958,13 +2124,17 @@ main {
 
 
 /* =========================================================
-   TABLET
+   LARGE TABLET
    ========================================================= */
 
-@media (max-width: 1100px) {
+@media (max-width: 1200px) {
 
   :root {
     --page-gutter: 32px;
+
+    --cover-card-width: 320px;
+    --cover-side-offset: 250px;
+    --cover-far-offset: 440px;
   }
 
   .story-grid,
@@ -1972,37 +2142,48 @@ main {
     column-count: 3;
   }
 
-  .coverflow-card {
-    width: 295px;
+  .story-layout {
+    grid-template-columns:
+      minmax(0, 1fr)
+      minmax(310px, 0.88fr);
+
+    gap: 50px;
+  }
+}
+
+
+/* =========================================================
+   TABLET
+   ========================================================= */
+
+@media (max-width: 900px) {
+
+  :root {
+    --cover-card-width: 300px;
+    --cover-side-offset: 225px;
+    --cover-far-offset: 395px;
   }
 
-  .coverflow-card.is-left {
-    transform:
-      translate(-50%, -50%)
-      translateX(-69%)
-      translateZ(-40px)
-      rotateY(28deg)
-      scale(0.82);
+  .coverflow {
+    height: 535px;
   }
 
+  .coverflow-card.is-left,
   .coverflow-card.is-right {
-    transform:
-      translate(-50%, -50%)
-      translateX(69%)
-      translateZ(-40px)
-      rotateY(-28deg)
-      scale(0.82);
+    opacity: 0.64;
   }
 
   .coverflow-card.is-far-left,
   .coverflow-card.is-far-right {
-    opacity: 0.12;
+    opacity: 0.10;
   }
 
   .story-layout {
-    grid-template-columns: minmax(0, 1fr) minmax(320px, 0.88fr);
+    grid-template-columns:
+      minmax(0, 1fr)
+      minmax(280px, 0.82fr);
 
-    gap: 48px;
+    gap: 38px;
   }
 
   .choice-grid {
@@ -2020,6 +2201,10 @@ main {
   :root {
     --page-gutter: 14px;
     --nav-height: 70px;
+
+    --cover-card-width: min(72vw, 285px);
+    --cover-side-offset: 155px;
+    --cover-far-offset: 270px;
   }
 
   main {
@@ -2043,7 +2228,9 @@ main {
   }
 
 
-  /* ---------- Header ---------- */
+  /* =======================================================
+     HEADER
+     ======================================================= */
 
   .site-header {
     min-height: 75px;
@@ -2062,7 +2249,9 @@ main {
   }
 
 
-  /* ---------- Home ---------- */
+  /* =======================================================
+     HOME
+     ======================================================= */
 
   .home-hero {
     min-height: 525px;
@@ -2080,7 +2269,6 @@ main {
 
   .home-hero-title {
     font-size: clamp(56px, 17vw, 89px);
-
     line-height: 0.88;
   }
 
@@ -2100,7 +2288,9 @@ main {
   }
 
 
-  /* ---------- Featured ---------- */
+  /* =======================================================
+     COVERFLOW MOBILE
+     ======================================================= */
 
   .featured-section {
     margin-bottom: 78px;
@@ -2122,64 +2312,69 @@ main {
     height: 455px;
 
     perspective: 1200px;
+    perspective-origin: center 47%;
   }
 
   .coverflow::before {
+    bottom: 8%;
+
     width: 48%;
+    height: 16px;
   }
 
   .coverflow-card {
-    width: min(69vw, 286px);
-
     border-radius: 21px;
   }
 
   .coverflow-card.is-center {
     transform:
       translate(-50%, -50%)
-      translateZ(60px)
-      rotateY(0deg)
+      translateZ(55px)
       scale(1);
   }
 
   .coverflow-card.is-left {
+    opacity: 0.62;
+
     transform:
       translate(-50%, -50%)
-      translateX(-65%)
-      translateZ(-40px)
-      rotateY(27deg)
-      scale(0.78);
+      translateX(calc(-1 * var(--cover-side-offset)))
+      translateZ(-35px)
+      rotateY(23deg)
+      scale(0.79);
   }
 
   .coverflow-card.is-right {
+    opacity: 0.62;
+
     transform:
       translate(-50%, -50%)
-      translateX(65%)
-      translateZ(-40px)
-      rotateY(-27deg)
-      scale(0.78);
+      translateX(var(--cover-side-offset))
+      translateZ(-35px)
+      rotateY(-23deg)
+      scale(0.79);
   }
 
   .coverflow-card.is-far-left {
+    opacity: 0.06;
+
     transform:
       translate(-50%, -50%)
-      translateX(-113%)
+      translateX(calc(-1 * var(--cover-far-offset)))
       translateZ(-100px)
-      rotateY(38deg)
+      rotateY(31deg)
       scale(0.62);
-
-    opacity: 0.08;
   }
 
   .coverflow-card.is-far-right {
+    opacity: 0.06;
+
     transform:
       translate(-50%, -50%)
-      translateX(113%)
+      translateX(var(--cover-far-offset))
       translateZ(-100px)
-      rotateY(-38deg)
+      rotateY(-31deg)
       scale(0.62);
-
-    opacity: 0.08;
   }
 
   .coverflow-card-content {
@@ -2190,7 +2385,6 @@ main {
 
   .coverflow-card-content small {
     margin-bottom: 6px;
-
     font-size: 8px;
   }
 
@@ -2210,7 +2404,9 @@ main {
   }
 
 
-  /* ---------- Bento / Pinterest ---------- */
+  /* =======================================================
+     BENTO / PINTEREST
+     ======================================================= */
 
   .story-board-section {
     margin-bottom: 82px;
@@ -2234,6 +2430,17 @@ main {
     margin-bottom: 10px;
 
     border-radius: 13px;
+
+    /*
+      Smaller mobile lift prevents masonry collisions.
+    */
+    transition:
+      transform 0.35s var(--ease),
+      box-shadow 0.35s var(--ease);
+  }
+
+  .story-card:hover {
+    transform: translateY(-2px);
   }
 
   .story-card-info {
@@ -2242,22 +2449,23 @@ main {
 
   .story-card-campaign {
     margin-bottom: 6px;
-
     font-size: 8px;
   }
 
   .story-card-title {
-    font-size: 18px;
+    font-size: 17px;
+    line-height: 1.08;
   }
 
   .story-card-emotion {
     margin-top: 7px;
-
     font-size: 9px;
   }
 
 
-  /* ---------- Explore ---------- */
+  /* =======================================================
+     EXPLORE
+     ======================================================= */
 
   .explore-header {
     padding: 52px 0 38px;
@@ -2269,7 +2477,6 @@ main {
 
   .explore-header p {
     margin-top: 19px;
-
     font-size: 12px;
   }
 
@@ -2287,12 +2494,13 @@ main {
 
   .explore-meta {
     margin-bottom: 18px;
-
     font-size: 9px;
   }
 
 
-  /* ---------- Create ---------- */
+  /* =======================================================
+     CREATE
+     ======================================================= */
 
   .create-wrapper {
     width: calc(100% - 28px);
@@ -2310,7 +2518,6 @@ main {
 
   .create-intro p {
     margin-top: 19px;
-
     font-size: 12px;
   }
 
@@ -2332,7 +2539,6 @@ main {
 
   .form-grid {
     grid-template-columns: 1fr;
-
     gap: 14px;
   }
 
@@ -2344,19 +2550,16 @@ main {
   .form-field textarea,
   .form-field select {
     padding: 14px;
-
     font-size: 13px;
   }
 
   .choice-grid {
     grid-template-columns: 1fr 1fr;
-
     gap: 8px;
   }
 
   .choice-card {
     min-height: 78px;
-
     padding: 13px;
   }
 
@@ -2381,7 +2584,9 @@ main {
   }
 
 
-  /* ---------- Story ---------- */
+  /* =======================================================
+     STORY
+     ======================================================= */
 
   .story-header {
     min-height: 75px;
@@ -2403,7 +2608,6 @@ main {
   .story-layout {
     display: flex;
     flex-direction: column;
-
     gap: 35px;
   }
 
@@ -2430,13 +2634,11 @@ main {
 
   .story-quote {
     margin-top: 22px;
-
     font-size: 19px;
   }
 
   .story-description {
     margin-top: 23px;
-
     font-size: 12px;
   }
 
@@ -2450,12 +2652,13 @@ main {
 
   .story-tag {
     padding: 7px 10px;
-
     font-size: 8px;
   }
 
 
-  /* ---------- Prompt product ---------- */
+  /* =======================================================
+     PROMPT PRODUCT
+     ======================================================= */
 
   .prompt-product {
     margin-top: 31px;
@@ -2494,24 +2697,25 @@ main {
   }
 
 
-  /* ---------- Footer ---------- */
+  /* =======================================================
+     FOOTER
+     ======================================================= */
 
   .site-footer {
     padding: 45px 0 100px;
 
     align-items: flex-start;
-
     flex-direction: column;
 
     gap: 8px;
   }
 
 
-  /* ---------- Bottom nav ---------- */
+  /* =======================================================
+     BOTTOM NAV
+     ======================================================= */
 
   .bottom-nav {
-    bottom: 9px;
-
     width: calc(100% - 24px);
     height: 55px;
 
@@ -2520,7 +2724,6 @@ main {
 
   .bottom-nav a {
     height: 45px;
-
     font-size: 9px;
   }
 }
@@ -2531,6 +2734,12 @@ main {
    ========================================================= */
 
 @media (max-width: 390px) {
+
+  :root {
+    --cover-card-width: 70vw;
+    --cover-side-offset: 133px;
+    --cover-far-offset: 230px;
+  }
 
   .home-hero {
     min-height: 500px;
@@ -2544,26 +2753,9 @@ main {
     height: 425px;
   }
 
-  .coverflow-card {
-    width: 68vw;
-  }
-
-  .coverflow-card.is-left {
-    transform:
-      translate(-50%, -50%)
-      translateX(-56%)
-      translateZ(-30px)
-      rotateY(24deg)
-      scale(0.72);
-  }
-
+  .coverflow-card.is-left,
   .coverflow-card.is-right {
-    transform:
-      translate(-50%, -50%)
-      translateX(56%)
-      translateZ(-30px)
-      rotateY(-24deg)
-      scale(0.72);
+    opacity: 0.56;
   }
 
   .story-grid,
@@ -2610,8 +2802,10 @@ main {
     height: 390px;
   }
 
-  .coverflow-card {
-    width: 235px;
+  :root {
+    --cover-card-width: 235px;
+    --cover-side-offset: 180px;
+    --cover-far-offset: 310px;
   }
 }
 
@@ -2637,7 +2831,8 @@ main {
   .story-card:hover,
   .hero-cta:hover,
   .create-submit:hover,
-  .prompt-buy:hover {
+  .prompt-buy:hover,
+  .coverflow-button:hover {
     transform: none;
   }
 }
