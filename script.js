@@ -1,393 +1,679 @@
-const state = {
-  moment: "Exam Season",
-  emotion: "Determined",
-  style: "Cinematic",
-  recipe: "Exam Era",
-  package: "One Moment"
-};
+/* =========================================
+   FEELFRAME™
+   Main application logic
+========================================= */
+
+const WHATSAPP_NUMBER = "2349012728201";
+
+let stories = [];
 
 
-const moments = [
-  {
-    id: "exam-era",
-    icon: "🎓",
-    name: "Exam Era",
-    description: "Tired. Determined. Still showing up.",
-    featured: true
-  },
-  {
-    id: "graduation",
-    icon: "🎉",
-    name: "Graduation",
-    description: "The chapter you've worked for."
-  },
-  {
-    id: "new-chapter",
-    icon: "🚀",
-    name: "New Chapter",
-    description: "Something ended. Something begins."
-  },
-  {
-    id: "future",
-    icon: "💼",
-    name: "Building My Future",
-    description: "Ambition, work and becoming."
-  },
-  {
-    id: "personal",
-    icon: "❤️",
-    name: "Personal Story",
-    description: "A moment that only you understand."
-  },
-  {
-    id: "something",
-    icon: "✨",
-    name: "Something Else",
-    description: "Tell us what your moment is."
-  }
-];
+/* =========================================
+   LOAD STORY DATA
+========================================= */
 
+async function loadStories() {
+  try {
+    const response = await fetch("data.json");
 
-const commandsByEmotion = {
+    if (!response.ok) {
+      throw new Error("Could not load data.json");
+    }
 
-  determined: [
-    "/cinematic",
-    "/closeup",
-    "/dramaticlighting",
-    "/35mmfilm",
-    "/shallowdepth"
-  ],
+    stories = await response.json();
 
-  exhausted: [
-    "/cinematic",
-    "/softlighting",
-    "/mist",
-    "/closeup",
-    "/filmgrain"
-  ],
+    renderPage();
 
-  hopeful: [
-    "/cinematic",
-    "/sunrise",
-    "/goldenhour",
-    "/wideangle",
-    "/35mmfilm"
-  ],
+  } catch (error) {
+    console.error(error);
 
-  proud: [
-    "/editorial",
-    "/dramaticlighting",
-    "/lowangle",
-    "/studio",
-    "/magazinecover"
-  ],
+    const boards = [
+      document.getElementById("homeBoard"),
+      document.getElementById("exploreGrid")
+    ];
 
-  almost: [
-    "/cinematic",
-    "/backlight",
-    "/motionblur",
-    "/closeup",
-    "/anamorphic"
-  ]
-};
-
-
-const emotionNames = {
-  determined: "Determined",
-  exhausted: "Exhausted",
-  hopeful: "Hopeful",
-  proud: "Making Myself Proud",
-  almost: "Almost There"
-};
-
-
-const momentGrid = document.getElementById("momentGrid");
-
-const engineMoment = document.getElementById("engineMoment");
-const engineEmotion = document.getElementById("engineEmotion");
-const engineStyle = document.getElementById("engineStyle");
-const engineRecipe = document.getElementById("engineRecipe");
-
-const commandList = document.getElementById("commandList");
-
-const resultTitle = document.getElementById("resultTitle");
-
-
-/* MOMENT CARDS */
-
-function renderMoments() {
-
-  momentGrid.innerHTML = "";
-
-  moments.forEach(moment => {
-
-    const card = document.createElement("article");
-
-    card.className =
-      `moment-card ${moment.featured ? "featured" : ""}`;
-
-    card.innerHTML = `
-      <div class="moment-icon">${moment.icon}</div>
-
-      <h3>${moment.name}</h3>
-
-      <p>${moment.description}</p>
-    `;
-
-    card.addEventListener("click", () => {
-
-      state.moment = moment.name;
-
-      state.recipe =
-        moment.name === "Exam Era"
-          ? "Exam Era"
-          : "Cinematic Story";
-
-      updateEngine();
-
-      document
-        .getElementById("engine")
-        .scrollIntoView({ behavior: "smooth" });
-
+    boards.forEach(board => {
+      if (board) {
+        board.innerHTML = `
+          <div class="empty-state">
+            <p>Stories are loading...</p>
+          </div>
+        `;
+      }
     });
-
-    momentGrid.appendChild(card);
-
-  });
-
+  }
 }
 
 
-/* ENGINE */
+/* =========================================
+   ROUTER
+========================================= */
 
-function updateEngine() {
+function renderPage() {
 
-  engineMoment.textContent = state.moment;
+  const page = document.body.dataset.page;
 
-  engineEmotion.textContent = state.emotion;
+  if (page === "home") {
+    renderHome();
+  }
 
-  engineStyle.textContent = state.style;
+  if (page === "explore") {
+    renderExplore();
+  }
 
-  engineRecipe.textContent = state.recipe;
+  if (page === "story") {
+    renderStory();
+  }
 
-  const emotionKey =
-    Object.keys(emotionNames).find(
-      key => emotionNames[key].toLowerCase() === state.emotion.toLowerCase()
-    ) || "determined";
-
-  const commands =
-    commandsByEmotion[emotionKey] ||
-    commandsByEmotion.determined;
-
-  commandList.innerHTML = "";
-
-  commands.forEach(command => {
-
-    const element = document.createElement("span");
-
-    element.className = "command";
-
-    element.textContent = command;
-
-    commandList.appendChild(element);
-
-  });
-
-  const titles = {
-    Determined: "Still Showing Up.",
-    Exhausted: "You Made It This Far.",
-    Hopeful: "Something Better Is Coming.",
-    "Making Myself Proud": "I Did This For Me.",
-    "Almost There": "Don't Stop Now."
-  };
-
-  resultTitle.textContent =
-    titles[state.emotion] || "Your Story, Your Way.";
-
+  if (page === "create") {
+    initialiseCreateForm();
+  }
 }
 
 
-/* STYLE BUTTONS */
+/* =========================================
+   HOME BOARD
+========================================= */
 
-document
-  .querySelectorAll(".style-option")
-  .forEach(button => {
+function renderHome() {
+
+  const board = document.getElementById("homeBoard");
+
+  if (!board) return;
+
+  board.innerHTML = stories.map(createStoryCard).join("");
+}
+
+
+/* =========================================
+   EXPLORE
+========================================= */
+
+function renderExplore() {
+
+  const grid = document.getElementById("exploreGrid");
+
+  if (!grid) return;
+
+  grid.innerHTML = stories.map(createStoryCard).join("");
+
+  const filters = document.querySelectorAll(".filter");
+
+  filters.forEach(button => {
 
     button.addEventListener("click", () => {
 
-      document
-        .querySelectorAll(".style-option")
-        .forEach(item => {
-          item.classList.remove("active");
-        });
+      filters.forEach(item => item.classList.remove("active"));
 
       button.classList.add("active");
 
-      state.style =
-        button.dataset.style;
+      const filter = button.dataset.filter;
 
-      updateEngine();
+      const filtered =
+        filter === "all"
+          ? stories
+          : stories.filter(story => story.campaign === filter);
+
+      grid.innerHTML = filtered.map(createStoryCard).join("");
 
     });
 
   });
+}
 
 
-/* EMOTION SELECT */
+/* =========================================
+   STORY CARD
+========================================= */
 
-document
-  .getElementById("emotion")
-  .addEventListener("change", event => {
+function createStoryCard(story) {
 
-    const value = event.target.value;
+  return `
+    <article
+      class="story-card ${story.ratio}"
+      onclick="openStory('${story.id}')"
+    >
 
-    state.emotion =
-      emotionNames[value];
+      <div class="card-image">
 
-    updateEngine();
+        <img
+          src="${story.image}"
+          alt="${escapeHTML(story.quote)}"
+          loading="lazy"
+        >
 
-  });
+      </div>
+
+      <div class="card-body">
+
+        <div class="card-meta">
+          <span>${escapeHTML(story.campaign)}</span>
+          <span>·</span>
+          <span>${escapeHTML(story.emotion)}</span>
+        </div>
+
+        <h3>
+          “${escapeHTML(story.quote)}”
+        </h3>
+
+        <p>
+          ${escapeHTML(story.context)} ·
+          ${escapeHTML(story.style)}
+        </p>
+
+      </div>
+
+    </article>
+  `;
+}
 
 
-/* FORM */
+/* =========================================
+   STORY DETAIL
+========================================= */
 
-document
-  .getElementById("visualForm")
-  .addEventListener("submit", event => {
+function openStory(id) {
+
+  window.location.href = `story.html?id=${encodeURIComponent(id)}`;
+}
+
+
+function renderStory() {
+
+  const container = document.getElementById("storyPage");
+
+  if (!container) return;
+
+  const params = new URLSearchParams(window.location.search);
+
+  const id = params.get("id");
+
+  const story = stories.find(item => item.id === id);
+
+  if (!story) {
+
+    container.innerHTML = `
+      <div class="page-header">
+        <p class="eyebrow">FEELFRAME</p>
+        <h1>Story not found.</h1>
+        <a href="index.html" class="primary-btn">
+          Back home →
+        </a>
+      </div>
+    `;
+
+    return;
+  }
+
+  container.innerHTML = `
+
+    <div class="story-hero">
+
+      <div class="story-hero-image">
+        <img
+          src="${story.image}"
+          alt="${escapeHTML(story.quote)}"
+        >
+      </div>
+
+      <div class="story-copy">
+
+        <p class="eyebrow">
+          ${escapeHTML(story.campaign)}
+        </p>
+
+        <h1>
+          ${escapeHTML(story.moment)}
+          <em>— made visible.</em>
+        </h1>
+
+        <div class="story-quote">
+          “${escapeHTML(story.quote)}”
+        </div>
+
+        <p class="story-description">
+          ${escapeHTML(story.description)}
+        </p>
+
+        <div class="story-tags">
+
+          <span class="story-tag">
+            ${escapeHTML(story.emotion)}
+          </span>
+
+          <span class="story-tag">
+            ${escapeHTML(story.context)}
+          </span>
+
+          <span class="story-tag">
+            ${escapeHTML(story.style)}
+          </span>
+
+          <span class="story-tag">
+            ${escapeHTML(story.recipe)}
+          </span>
+
+        </div>
+
+        <p class="eyebrow" style="margin-bottom:15px;">
+          MADE TO EXPRESS A MOMENT THAT DESERVED TO BE SEEN.
+        </p>
+
+        <a href="create.html" class="primary-btn">
+          Make your own <span>→</span>
+        </a>
+
+      </div>
+
+    </div>
+
+  `;
+}
+
+
+/* =========================================
+   CREATE FORM
+========================================= */
+
+function initialiseCreateForm() {
+
+  const form = document.getElementById("feelFrameForm");
+
+  if (!form) return;
+
+
+  /* Reference image preview */
+
+  const reference = document.getElementById("reference");
+
+  const preview = document.getElementById("imagePreview");
+
+
+  if (reference && preview) {
+
+    reference.addEventListener("change", () => {
+
+      const file = reference.files[0];
+
+      if (!file) {
+
+        preview.style.display = "none";
+        preview.innerHTML = "";
+
+        return;
+      }
+
+      if (!file.type.startsWith("image/")) {
+
+        reference.value = "";
+
+        alert("Please choose an image file.");
+
+        return;
+      }
+
+      const imageURL = URL.createObjectURL(file);
+
+      preview.innerHTML = `
+        <img
+          src="${imageURL}"
+          alt="Reference preview"
+        >
+      `;
+
+      preview.style.display = "block";
+
+    });
+
+  }
+
+
+  /* Submit */
+
+  form.addEventListener("submit", event => {
 
     event.preventDefault();
 
-    const name =
-      document.getElementById("name").value.trim();
+    const formData = new FormData(form);
 
-    const school =
-      document.getElementById("school").value.trim();
+    const data = {
 
-    const course =
-      document.getElementById("course").value.trim();
+      name: formData.get("name")?.trim(),
 
-    const story =
-      document.getElementById("story").value.trim();
+      university:
+        formData.get("university")?.trim() || "Not provided",
 
-    const message =
-      document.getElementById("message").value.trim();
+      course:
+        formData.get("course")?.trim() || "Not provided",
 
+      moment:
+        formData.get("moment") || "Not provided",
 
-    if (!name || !school || !course || !story || !message) {
+      feeling:
+        formData.get("feeling") || "Not provided",
 
-      alert(
-        "Tell us a little more about your moment first."
-      );
+      goingThrough:
+        formData.get("goingThrough")?.trim(),
 
-      return;
-    }
+      communicate:
+        formData.get("communicate")?.trim(),
 
+      style:
+        formData.get("style") || "Not provided",
 
-    resultTitle.textContent =
-      `${name}'s story.`;
+      reference:
+        reference?.files?.[0]?.name || "No reference image"
 
-
-    document
-      .getElementById("engine")
-      .scrollIntoView({
-        behavior: "smooth"
-      });
+    };
 
 
-    setTimeout(() => {
+    const message = buildWhatsAppMessage(data);
 
-      const modal =
-        document.getElementById("experienceModal");
+    const whatsappURL =
+      `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`;
 
-      document
-        .getElementById("modalTitle")
-        .textContent =
-        `We see the moment, ${name}.`;
 
-      document
-        .getElementById("modalText")
-        .textContent =
-        `${school} · ${course} · ${state.emotion}`;
-
-      modal.classList.add("active");
-
-    }, 900);
+    window.location.href = whatsappURL;
 
   });
 
-
-/* EXPERIENCE BUTTONS */
-
-document
-  .querySelectorAll(".experience-btn")
-  .forEach(button => {
-
-    button.addEventListener("click", () => {
-
-      state.package =
-        button.dataset.package;
-
-      document
-        .getElementById("selectedPackage")
-        .textContent =
-        state.package;
-
-      document
-        .getElementById("experienceModal")
-        .classList.add("active");
-
-    });
-
-  });
+}
 
 
-/* FEATURED CTA */
+/* =========================================
+   WHATSAPP REQUEST ENGINE
+========================================= */
 
-document
-  .getElementById("startExperience")
-  .addEventListener("click", () => {
+function buildWhatsAppMessage(data) {
 
-    document
-      .getElementById("create")
-      .scrollIntoView({
-        behavior: "smooth"
-      });
-
-  });
+  const commands = getVisualCommands(
+    data.moment,
+    data.feeling,
+    data.style
+  );
 
 
-/* CLOSE MODAL */
+  return `
+FEELFRAME™ — NEW VISUAL REQUEST
 
-document
-  .getElementById("closeModal")
-  .addEventListener("click", () => {
+━━━━━━━━━━━━━━━━━━━━
 
-    document
-      .getElementById("experienceModal")
-      .classList.remove("active");
+PERSONAL DETAILS
 
-  });
+Name: ${data.name}
+University / School: ${data.university}
+Course / Field: ${data.course}
+
+━━━━━━━━━━━━━━━━━━━━
+
+THE MOMENT
+
+Campaign: ${data.moment}
+Feeling: ${data.feeling}
+
+WHAT I'M GOING THROUGH
+
+${data.goingThrough}
+
+━━━━━━━━━━━━━━━━━━━━
+
+WHAT I WANT THE IMAGE TO COMMUNICATE
+
+${data.communicate}
+
+━━━━━━━━━━━━━━━━━━━━
+
+VISUAL LANGUAGE
+
+${data.style}
+
+REFERENCE IMAGE
+
+${data.reference}
+
+━━━━━━━━━━━━━━━━━━━━
+
+FEELFRAME CREATIVE DIRECTION
+
+Emotion → ${data.feeling}
+Condition → ${getCondition(data.moment)}
+Style → ${data.style}
+
+COMMANDS
+
+${commands.map(command => `/` + command).join("\n")}
+
+━━━━━━━━━━━━━━━━━━━━
+
+Please create my FeelFrame visual.
+`.trim();
+
+}
 
 
-document
-  .getElementById("experienceModal")
-  .addEventListener("click", event => {
+/* =========================================
+   INTERNAL VISUAL COMMAND ENGINE
+========================================= */
 
-    if (
-      event.target.id === "experienceModal"
-    ) {
+function getVisualCommands(moment, feeling, style) {
 
-      event.currentTarget
-        .classList
-        .remove("active");
-
-    }
-
-  });
+  const commands = [
+    "hdreal"
+  ];
 
 
-/* INITIALIZE */
+  /* Moment */
 
-renderMoments();
+  if (moment === "Exam Era") {
 
-updateEngine();
+    commands.push(
+      "cinematic",
+      "closeup",
+      "35mmfilm",
+      "shallowdepth"
+    );
+
+  } else if (moment === "Graduation") {
+
+    commands.push(
+      "editorial",
+      "goldenhour",
+      "wideangle",
+      "filmgrain"
+    );
+
+  } else if (moment === "New Chapter") {
+
+    commands.push(
+      "cinematic",
+      "sunrise",
+      "backlight",
+      "softlighting"
+    );
+
+  } else if (moment === "Personal Comeback") {
+
+    commands.push(
+      "dramaticlighting",
+      "lowangle",
+      "35mmfilm",
+      "shallowdepth"
+    );
+
+  } else if (moment === "Entrepreneur") {
+
+    commands.push(
+      "editorial",
+      "luxury",
+      "studio",
+      "rimlight"
+    );
+
+  } else {
+
+    commands.push(
+      "cinematic",
+      "editorial",
+      "softlighting"
+    );
+
+  }
+
+
+  /* Emotion */
+
+  if (feeling === "Determined") {
+
+    commands.push("lowangle");
+
+  }
+
+  if (feeling === "Hopeful") {
+
+    commands.push("sunrise");
+
+  }
+
+  if (feeling === "Proud") {
+
+    commands.push("backlight");
+
+  }
+
+  if (feeling === "Exhausted") {
+
+    commands.push("dramaticlighting");
+
+  }
+
+  if (feeling === "Confident") {
+
+    commands.push("editorial");
+
+  }
+
+  if (feeling === "Starting Again") {
+
+    commands.push("goldenhour");
+
+  }
+
+
+  /* Style */
+
+  if (style === "Cinematic") {
+
+    commands.push(
+      "cinematic",
+      "anamorphic"
+    );
+
+  }
+
+  if (style === "Editorial") {
+
+    commands.push(
+      "editorial",
+      "magazinecover"
+    );
+
+  }
+
+  if (style === "Luxury") {
+
+    commands.push(
+      "luxury",
+      "studio"
+    );
+
+  }
+
+  if (style === "Film") {
+
+    commands.push(
+      "35mmfilm",
+      "filmgrain"
+    );
+
+  }
+
+  if (style === "Dreamlike") {
+
+    commands.push(
+      "dreamcore",
+      "softlighting",
+      "bokeh"
+    );
+
+  }
+
+  if (style === "Dark & Moody") {
+
+    commands.push(
+      "dramaticlighting",
+      "lowangle",
+      "shallowdepth"
+    );
+
+  }
+
+
+  return [...new Set(commands)];
+
+}
+
+
+/* =========================================
+   CONDITION TRANSLATOR
+========================================= */
+
+function getCondition(moment) {
+
+  const conditions = {
+
+    "Exam Era": "Exam Season",
+
+    "Graduation": "Graduation",
+
+    "New Chapter": "New Beginning",
+
+    "Entrepreneur": "Entrepreneurial Journey",
+
+    "Personal Comeback": "Personal Comeback",
+
+    "Something Else": "Personal Life Moment"
+
+  };
+
+  return conditions[moment] || moment;
+
+}
+
+
+/* =========================================
+   SECURITY / TEXT CLEANING
+========================================= */
+
+function escapeHTML(value) {
+
+  if (!value) return "";
+
+  return String(value)
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&#039;");
+
+}
+
+
+/* =========================================
+   START
+========================================= */
+
+document.addEventListener("DOMContentLoaded", () => {
+
+  loadStories();
+
+});
