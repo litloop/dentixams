@@ -1,0 +1,265 @@
+{
+  "brand": {
+    "name": "FeelFrame",
+    "tagline": "Some feelings deserve to be seen.",
+    "promise": "Turn your moment into a visual."
+  },
+
+  "emotions": [
+    {
+      "id": "determined",
+      "name": "I'm determined",
+      "description": "Tired, but still moving.",
+      "tags": ["focus", "strength", "ambition"],
+      "commands": [
+        "/cinematic",
+        "/closeup",
+        "/dramaticlighting",
+        "/35mmfilm",
+        "/shallowdepth"
+      ]
+    },
+    {
+      "id": "exhausted",
+      "name": "I'm exhausted",
+      "description": "The weight is real, but so is the effort.",
+      "tags": ["tired", "quiet", "resilience"],
+      "commands": [
+        "/cinematic",
+        "/softlighting",
+        "/mist",
+        "/closeup",
+        "/filmgrain"
+      ]
+    },
+    {
+      "id": "hopeful",
+      "name": "I'm hopeful",
+      "description": "I don't know exactly how, but I believe.",
+      "tags": ["hope", "future", "light"],
+      "commands": [
+        "/sunrise",
+        "/goldenhour",
+        "/cinematic",
+        "/wideangle"
+      ]
+    },
+    {
+      "id": "proud",
+      "name": "I'm making myself proud",
+      "description": "This one is personal.",
+      "tags": ["achievement", "identity", "confidence"],
+      "commands": [
+        "/editorial",
+        "/dramaticlighting",
+        "/lowangle",
+        "/studio"
+      ]
+    }
+  ],
+
+  "conditions": [
+    {
+      "id": "exam-era",
+      "name": "Exam Era",
+      "icon": "🎓",
+      "featured": true,
+      "description": "The season of pressure, persistence and possibility.",
+      "recipe": "exam-era"
+    },
+    {
+      "id": "graduation",
+      "name": "Graduation",
+      "icon": "🎉",
+      "featured": false,
+      "description": "The moment one chapter becomes another.",
+      "recipe": "graduation-story"
+    },
+    {
+      "id": "new-chapter",
+      "name": "New Chapter",
+      "icon": "🚀",
+      "featured": false,
+      "description": "Starting again with a different version of yourself.",
+      "recipe": "new-chapter"
+    },
+    {
+      "id": "future",
+      "name": "Building My Future",
+      "icon": "💼",
+      "featured": false,
+      "description": "Ambition translated into visual identity.",
+      "recipe": "entrepreneur-story"
+    },
+    {
+      "id": "personal",
+      "name": "Personal Story",
+      "icon": "❤️",
+      "featured": false,
+      "description": "A visual interpretation of something only you understand.",
+      "recipe": "cinematic-portrait"
+    }
+  ],
+
+  "visualCommands": [
+    {
+      "command": "/cinematic",
+      "category": "cinematic",
+      "description": "Cinematic lighting, composition and mood."
+    },
+    {
+      "command": "/closeup",
+      "category": "camera",
+      "description": "Close framing focused on the subject."
+    },
+    {
+      "command": "/dramaticlighting",
+      "category": "lighting",
+      "description": "Strong, high-contrast cinematic lighting."
+    },
+    {
+      "command": "/35mmfilm",
+      "category": "film",
+      "description": "Classic 35mm film photography aesthetic."
+    },
+    {
+      "command": "/shallowdepth",
+      "category": "lens",
+      "description": "Sharp subject with a softly blurred background."
+    },
+    {
+      "command": "/goldenhour",
+      "category": "lighting",
+      "description": "Warm cinematic golden-hour light."
+    },
+    {
+      "command": "/sunrise",
+      "category": "lighting",
+      "description": "Soft early-morning sunrise lighting."
+    },
+    {
+      "command": "/editorial",
+      "category": "style",
+      "description": "Professional magazine editorial photography."
+    },
+    {
+      "command": "/lowangle",
+      "category": "camera",
+      "description": "Dramatic perspective from below."
+    },
+    {
+      "command": "/studio",
+      "category": "environment",
+      "description": "Professional studio photography setup."
+    },
+    {
+      "command": "/mist",
+      "category": "atmosphere",
+      "description": "Soft misty atmospheric environment."
+    },
+    {
+      "command": "/filmgrain",
+      "category": "texture",
+      "description": "Subtle analog film texture."
+    }
+  ],
+
+  "recipes": [
+    {
+      "id": "exam-era",
+      "name": "Exam Era",
+      "type": "personal",
+      "structure": [
+        "subject",
+        "identity",
+        "exam_context",
+        "emotion",
+        "visual_metaphor",
+        "camera",
+        "lighting",
+        "environment",
+        "texture",
+        "composition",
+        "finish"
+      ],
+      "template": "Create a sophisticated visual story centered around {name}, a {course} student at {school}, during exam season. The image should communicate {emotion} and visually express {message}. The environment should subtly reference the emotional reality of academic pressure while preserving dignity, aspiration and individuality. Apply {style} visual direction with carefully controlled composition, lighting, depth, realistic materials and cinematic detail."
+    },
+
+    {
+      "id": "cinematic-portrait",
+      "name": "Cinematic Portrait",
+      "type": "personal",
+      "structure": [
+        "subject",
+        "identity",
+        "emotion",
+        "environment",
+        "lighting",
+        "camera",
+        "finish"
+      ],
+      "template": "Create a cinematic portrait representing {name} and the emotional state of {emotion}. The visual should communicate {message} through composition, expression, environment, lighting and subtle visual symbolism."
+    },
+
+    {
+      "id": "product-studio",
+      "name": "Product Studio Transformation",
+      "type": "commercial",
+      "structure": [
+        "reference",
+        "product_isolation",
+        "hero_subject",
+        "supporting_elements",
+        "composition",
+        "surface",
+        "lighting",
+        "background",
+        "micro_detail",
+        "negative_space",
+        "commercial_finish"
+      ],
+      "template": "Isolate the product from the reference image and rebuild it as a premium advertising composition. Keep the hero product centered and sharply defined, surrounded by relevant supporting ingredients arranged with intention and depth. Use tactile materials, controlled studio lighting, realistic shadows, a background aligned with the product's color palette and mood, visible micro-details, subtle reflections, intentional negative space and polished commercial finishing."
+    }
+  ],
+
+  "packages": [
+    {
+      "id": "one-moment",
+      "name": "One Moment",
+      "price": 700,
+      "currency": "NGN",
+      "description": "One personalized visual concept."
+    },
+    {
+      "id": "three-day",
+      "name": "3-Day Experience",
+      "price": 2000,
+      "currency": "NGN",
+      "description": "Three personalized visual moments."
+    },
+    {
+      "id": "exam-era",
+      "name": "Exam Era",
+      "price": 3500,
+      "currency": "NGN",
+      "description": "A multi-image exam-season visual collection."
+    },
+    {
+      "id": "your-story",
+      "name": "Your Story",
+      "price": 5000,
+      "priceMax": 10000,
+      "currency": "NGN",
+      "description": "A deeper personalized visual story."
+    },
+    {
+      "id": "club",
+      "name": "FeelFrame Club",
+      "price": 3000,
+      "priceMax": 5000,
+      "currency": "NGN",
+      "billing": "monthly",
+      "description": "Recurring access to new emotional collections and visual experiences."
+    }
+  ]
+}
