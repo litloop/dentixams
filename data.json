@@ -1,106 +1,290 @@
-[
-  {
-    "id": "exam-era-01",
-    "campaign": "Exam Era",
-    "emotion": "Determined",
-    "moment": "Exam Season",
-    "context": "YSU · Nursing Science",
-    "quote": "Nobody sees how hard I've worked.",
-    "description": "A visual story about the quiet pressure behind exam season — the late nights, uncertainty and decision to keep going.",
-    "style": "Cinematic",
-    "recipe": "Exam Era",
-    "image": "https://images.unsplash.com/photo-1523240795612-9a054b0db644?auto=format&fit=crop&w=1200&q=85",
-    "ratio": "tall"
+{
+  "site": {
+    "name": "FeelFrame™",
+    "tagline": "Some feelings deserve to be seen.",
+    "description": "Visual stories built around real emotions, milestones and human moments.",
+    "whatsappNumber": "2349012728201",
+    "currency": "NGN"
   },
-  {
-    "id": "new-chapter-01",
-    "campaign": "New Chapter",
-    "emotion": "Hopeful",
-    "moment": "New Beginning",
-    "context": "Starting again",
-    "quote": "I don't have everything figured out. I'm starting anyway.",
-    "description": "A quiet portrait of the courage required to begin before everything makes sense.",
-    "style": "Golden-hour Editorial",
-    "recipe": "New Chapter",
-    "image": "https://images.unsplash.com/photo-1499750310107-5fef28a66643?auto=format&fit=crop&w=1200&q=85",
-    "ratio": "square"
-  },
-  {
-    "id": "comeback-01",
-    "campaign": "Personal Comeback",
-    "emotion": "Proud",
-    "moment": "New Chapter",
-    "context": "Personal growth",
-    "quote": "This version of me didn't exist a year ago.",
-    "description": "A visual representation of growth that happened quietly, long before anyone else noticed.",
-    "style": "Dark Editorial",
-    "recipe": "Personal Comeback",
-    "image": "https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=1200&q=85",
-    "ratio": "wide"
-  },
-  {
-    "id": "future-01",
-    "campaign": "Building My Future",
-    "emotion": "Ambitious",
-    "moment": "Entrepreneurial Journey",
-    "context": "Building something from scratch",
-    "quote": "Nobody is coming to build it for me.",
-    "description": "An editorial portrait of the person behind the work — ambition before recognition.",
-    "style": "Luxury Editorial",
-    "recipe": "Entrepreneur Story",
-    "image": "https://images.unsplash.com/photo-1556761175-b413da4baf72?auto=format&fit=crop&w=1200&q=85",
-    "ratio": "tall"
-  },
-  {
-    "id": "graduation-01",
-    "campaign": "Graduation",
-    "emotion": "Proud",
-    "moment": "Graduation Day",
-    "context": "A milestone finally reached",
-    "quote": "For a moment, I want to remember how far I came.",
-    "description": "Not just a graduation photograph — a visual pause between everything that was and everything that comes next.",
-    "style": "Film",
-    "recipe": "Graduation Story",
-    "image": "https://images.unsplash.com/photo-1523050854058-8df90110c9f1?auto=format&fit=crop&w=1200&q=85",
-    "ratio": "portrait"
-  },
-  {
-    "id": "starting-again-01",
-    "campaign": "Starting Again",
-    "emotion": "Hopeful",
-    "moment": "Personal Comeback",
-    "context": "Choosing to begin again",
-    "quote": "Starting over doesn't mean starting from nothing.",
-    "description": "A softer visual story about rebuilding, learning and moving forward without needing to erase the past.",
-    "style": "Dreamlike",
-    "recipe": "Personal Comeback",
-    "image": "https://images.unsplash.com/photo-1470770841072-f978cf4d019e?auto=format&fit=crop&w=1200&q=85",
-    "ratio": "square"
-  },
-  {
-    "id": "almost-there-01",
-    "campaign": "Exam Era",
-    "emotion": "Exhausted",
-    "moment": "Exam Season",
-    "context": "Almost at the finish line",
-    "quote": "I'm tired. But I'm almost there.",
-    "description": "A visual translation of exhaustion and determination existing in the same moment.",
-    "style": "35mm Cinematic",
-    "recipe": "Exam Era",
-    "image": "https://images.unsplash.com/photo-1434030216411-0b793f4b4173?auto=format&fit=crop&w=1200&q=85",
-    "ratio": "wide"
-  },
-  {
-    "id": "celebrate-01",
-    "campaign": "Achievement",
-    "emotion": "Confident",
-    "moment": "Milestone",
-    "context": "A moment worth celebrating",
-    "quote": "I worked for this version of my life.",
-    "description": "A polished personal-brand visual designed around earned confidence rather than performance.",
-    "style": "Luxury",
-    "recipe": "Personal Brand Portrait",
-    "image": "https://images.unsplash.com/photo-1529139574466-a303027c1d8b?auto=format&fit=crop&w=1200&q=85",
-    "ratio": "portrait"
-  }
-]
+
+  "stories": [
+    {
+      "id": "exam-era-01",
+      "featured": true,
+      "campaign": "Exam Era",
+      "emotion": "Determined",
+      "moment": "Exam Season",
+      "title": "I'm going to make myself proud.",
+      "quote": "I'm tired. I'm scared. But I'm still going.",
+      "context": "Late nights, demanding coursework and the pressure of knowing that these exams matter. I may not feel ready every day, but I'm refusing to give up.",
+      "description": "A cinematic portrait about quiet determination during exam season. The visual captures the moment when exhaustion exists alongside the decision to keep moving.",
+      "style": "Cinematic",
+      "visualLanguage": "Cinematic, intimate, emotional, realistic",
+      "condition": "Exhausted but determined",
+      "recipe": "Quiet student portrait + late-night study atmosphere + subtle signs of fatigue + hopeful cinematic light",
+      "commands": [
+        "/hdreal",
+        "/cinematic",
+        "/closeup",
+        "/35mmfilm",
+        "/shallowdepth",
+        "/filmgrain"
+      ],
+      "image": "images/exam-era-01.jpg",
+      "ratio": "4:5",
+
+      "promptTitle": "EXAM ERA — CINEMATIC PORTRAIT",
+      "price": 700,
+      "compareAt": 1100,
+      "selarUrl": "REAL-SELAR-LINK"
+    },
+
+    {
+      "id": "exam-era-02",
+      "featured": true,
+      "campaign": "Exam Era",
+      "emotion": "Exhausted",
+      "moment": "Exam Season",
+      "title": "Nobody sees how hard I've worked.",
+      "quote": "Some battles happen quietly.",
+      "context": "I've spent hours studying when nobody was watching. The pressure, tiredness and uncertainty aren't always visible to other people.",
+      "description": "A deeply personal visual story representing the invisible effort behind academic progress.",
+      "style": "Dark & Moody",
+      "visualLanguage": "Dark, atmospheric, intimate, editorial",
+      "condition": "Mentally drained but still committed",
+      "recipe": "Solitary study environment + low-key lighting + quiet expression + cinematic shadows + authentic academic details",
+      "commands": [
+        "/hdreal",
+        "/dramaticlighting",
+        "/closeup",
+        "/35mmfilm",
+        "/filmgrain",
+        "/shallowdepth"
+      ],
+      "image": "images/exam-era-02.jpg",
+      "ratio": "4:5",
+
+      "promptTitle": "EXAM ERA — THE QUIET BATTLE",
+      "price": 700,
+      "compareAt": 1100,
+      "selarUrl": "REAL-SELAR-LINK"
+    },
+
+    {
+      "id": "exam-era-03",
+      "featured": true,
+      "campaign": "Exam Era",
+      "emotion": "Hopeful",
+      "moment": "Exam Season",
+      "title": "I'm almost there.",
+      "quote": "One more push.",
+      "context": "The semester has been demanding, but the finish line is finally beginning to feel real.",
+      "description": "A hopeful visual representing the final stretch of a difficult academic season.",
+      "style": "Golden Hour",
+      "visualLanguage": "Warm, cinematic, hopeful, natural",
+      "condition": "Tired but optimistic",
+      "recipe": "Student leaving a long study session + warm sunset light + subtle smile + visual feeling of transition and progress",
+      "commands": [
+        "/hdreal",
+        "/cinematic",
+        "/goldenhour",
+        "/backlight",
+        "/35mmfilm",
+        "/shallowdepth"
+      ],
+      "image": "images/exam-era-03.jpg",
+      "ratio": "4:5",
+
+      "promptTitle": "EXAM ERA — ALMOST THERE",
+      "price": 700,
+      "compareAt": 1100,
+      "selarUrl": "REAL-SELAR-LINK"
+    },
+
+    {
+      "id": "graduation-01",
+      "featured": true,
+      "campaign": "Graduation",
+      "emotion": "Proud",
+      "moment": "Graduation",
+      "title": "I became the person I hoped I'd become.",
+      "quote": "This moment carries every version of me that came before it.",
+      "context": "Years of lectures, assignments, setbacks, friendships, uncertainty and growth have led to this moment.",
+      "description": "A refined graduation portrait focused less on the ceremony and more on the emotional meaning behind reaching the finish line.",
+      "style": "Editorial",
+      "visualLanguage": "Editorial, sophisticated, emotional, timeless",
+      "condition": "Proud and reflective",
+      "recipe": "Graduation portrait + architectural environment + confident posture + restrained emotion + premium editorial composition",
+      "commands": [
+        "/hdreal",
+        "/editorial",
+        "/magazinecover",
+        "/35mmfilm",
+        "/shallowdepth",
+        "/softlighting"
+      ],
+      "image": "images/graduation-01.jpg",
+      "ratio": "4:5",
+
+      "promptTitle": "GRADUATION — THE MOMENT",
+      "price": 700,
+      "compareAt": 1100,
+      "selarUrl": "REAL-SELAR-LINK"
+    },
+
+    {
+      "id": "graduation-02",
+      "featured": false,
+      "campaign": "Graduation",
+      "emotion": "Confident",
+      "moment": "Graduation",
+      "title": "I earned this version of myself.",
+      "quote": "The certificate is one part of the story.",
+      "context": "Graduation represents more than completing a course. It represents becoming more capable, independent and confident.",
+      "description": "A sophisticated graduation concept designed around identity, confidence and personal evolution.",
+      "style": "Luxury",
+      "visualLanguage": "Luxury editorial, polished, confident",
+      "condition": "Confident and accomplished",
+      "recipe": "Modern graduate portrait + luxury editorial framing + architectural background + controlled studio-quality light",
+      "commands": [
+        "/hdreal",
+        "/luxury",
+        "/editorial",
+        "/lowangle",
+        "/rimlight",
+        "/magazinecover"
+      ],
+      "image": "images/graduation-02.jpg",
+      "ratio": "4:5",
+
+      "promptTitle": "GRADUATION — EARNED",
+      "price": 700,
+      "compareAt": 1100,
+      "selarUrl": "REAL-SELAR-LINK"
+    },
+
+    {
+      "id": "new-chapter-01",
+      "featured": true,
+      "campaign": "New Chapter",
+      "emotion": "Hopeful",
+      "moment": "New Chapter",
+      "title": "Something new is beginning.",
+      "quote": "I don't know exactly what's next. And that's okay.",
+      "context": "A transition is happening. The old routine is ending and something unfamiliar is beginning.",
+      "description": "A visual metaphor for entering a new chapter without needing to know exactly where it leads.",
+      "style": "Dreamlike",
+      "visualLanguage": "Dreamlike, cinematic, minimal, poetic",
+      "condition": "Uncertain but hopeful",
+      "recipe": "Person standing between familiar and unfamiliar spaces + atmospheric light + visual transition + subtle symbolism",
+      "commands": [
+        "/hdreal",
+        "/dreamcore",
+        "/cinematic",
+        "/wideangle",
+        "/backlight",
+        "/filmgrain"
+      ],
+      "image": "images/new-chapter-01.jpg",
+      "ratio": "4:5",
+
+      "promptTitle": "NEW CHAPTER — BEGINNING",
+      "price": 700,
+      "compareAt": 1100,
+      "selarUrl": "REAL-SELAR-LINK"
+    },
+
+    {
+      "id": "future-builder-01",
+      "featured": true,
+      "campaign": "Building My Future",
+      "emotion": "Determined",
+      "moment": "Building My Future",
+      "title": "I'm building something that matters.",
+      "quote": "It doesn't look big yet. But I'm building.",
+      "context": "I'm working on my skills, ideas and future even though the results aren't always visible yet.",
+      "description": "A future-focused visual for the person quietly building a career, business, skill or personal legacy.",
+      "style": "Cinematic Editorial",
+      "visualLanguage": "Modern, cinematic, ambitious, editorial",
+      "condition": "Focused and ambitious",
+      "recipe": "Young creator at work + modern workspace + subtle technology + cinematic depth + premium editorial framing",
+      "commands": [
+        "/hdreal",
+        "/cinematic",
+        "/editorial",
+        "/lowangle",
+        "/anamorphic",
+        "/35mmfilm"
+      ],
+      "image": "images/future-builder-01.jpg",
+      "ratio": "4:5",
+
+      "promptTitle": "BUILDING MY FUTURE — THE BUILDER",
+      "price": 700,
+      "compareAt": 1100,
+      "selarUrl": "REAL-SELAR-LINK"
+    },
+
+    {
+      "id": "comeback-01",
+      "featured": false,
+      "campaign": "Personal Comeback",
+      "emotion": "Starting Again",
+      "moment": "Personal Comeback",
+      "title": "I'm starting again.",
+      "quote": "Starting over doesn't erase how far I've come.",
+      "context": "Things didn't go exactly as planned. Now I'm choosing to begin again with what I've learned.",
+      "description": "A grounded visual story about rebuilding confidence and moving forward after a difficult chapter.",
+      "style": "Cinematic",
+      "visualLanguage": "Cinematic, intimate, grounded, realistic",
+      "condition": "Reflective and quietly determined",
+      "recipe": "Solitary reflective portrait + morning light + restrained expression + visual symbolism of a fresh beginning",
+      "commands": [
+        "/hdreal",
+        "/cinematic",
+        "/sunrise",
+        "/softlighting",
+        "/closeup",
+        "/35mmfilm"
+      ],
+      "image": "images/comeback-01.jpg",
+      "ratio": "4:5",
+
+      "promptTitle": "COMEBACK — STARTING AGAIN",
+      "price": 700,
+      "compareAt": 1100,
+      "selarUrl": "REAL-SELAR-LINK"
+    },
+
+    {
+      "id": "personal-moment-01",
+      "featured": false,
+      "campaign": "Something Else",
+      "emotion": "Proud",
+      "moment": "Personal Moment",
+      "title": "I want to remember this version of me.",
+      "quote": "Some moments deserve to become memories.",
+      "context": "This is a personal moment that matters to me. I want the feeling of this period captured visually rather than simply described.",
+      "description": "A flexible FeelFrame concept for personal milestones, private victories and meaningful moments that don't fit into a predefined category.",
+      "style": "Editorial",
+      "visualLanguage": "Editorial, personal, cinematic, timeless",
+      "condition": "Present and reflective",
+      "recipe": "Personal portrait + meaningful environment + authentic details + cinematic editorial composition",
+      "commands": [
+        "/hdreal",
+        "/editorial",
+        "/35mmfilm",
+        "/shallowdepth",
+        "/softlighting",
+        "/filmgrain"
+      ],
+      "image": "images/personal-moment-01.jpg",
+      "ratio": "4:5",
+
+      "promptTitle": "YOUR MOMENT — VISUAL MEMORY",
+      "price": 700,
+      "compareAt": 1100,
+      "selarUrl": "REAL-SELAR-LINK"
+    }
+  ]
+}
