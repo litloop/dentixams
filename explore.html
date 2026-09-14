@@ -2,84 +2,290 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Explore — FeelFrame™</title>
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0, viewport-fit=cover"
+  >
+
+  <meta
+    name="description"
+    content="Explore FeelFrame™ visual stories — moments, emotions and stories made visible."
+  >
+
+  <meta name="theme-color" content="#f5f3ee">
+
+  <title>FeelFrame™ — Explore</title>
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,500;0,600;1,500&display=swap" rel="stylesheet">
+
+  <link
+    href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@500;600;700&display=swap"
+    rel="stylesheet"
+  >
 
   <link rel="stylesheet" href="style.css">
 </head>
 
-<body data-page="explore">
+<body class="explore-page">
 
-<header class="topbar">
-  <a href="index.html" class="brand">
-    <span class="brand-mark">F</span>
-    <span>FeelFrame<span class="tm">™</span></span>
-  </a>
+  <main>
 
-  <a href="create.html" class="top-create">Create yours <span>↗</span></a>
-</header>
+    <!-- =====================================================
+         HEADER
+         ===================================================== -->
 
-<main>
+    <header class="explore-header">
 
-  <section class="page-header">
-    <p class="eyebrow">EXPLORE</p>
+      <a
+        href="index.html"
+        class="explore-back"
+        aria-label="Back to FeelFrame home"
+      >
+        <span aria-hidden="true">←</span>
+        <span>Back</span>
+      </a>
 
-    <h1>
-      Find a moment<br>
-      <em>that feels like you.</em>
-    </h1>
+      <a
+        href="index.html"
+        class="explore-logo"
+        aria-label="FeelFrame home"
+      >
+        FeelFrame™
+      </a>
 
-    <p>
-      Browse emotions, milestones and visual stories
-      created to make invisible moments visible.
-    </p>
-  </section>
+      <a
+        href="create.html"
+        class="explore-create"
+      >
+        Create
+        <span aria-hidden="true">↗</span>
+      </a>
 
-  <section class="filter-section">
+    </header>
 
-    <div class="filter-row" id="filters">
-      <button class="filter active" data-filter="all">Everything</button>
-      <button class="filter" data-filter="Exam Era">Exam Era</button>
-      <button class="filter" data-filter="Graduation">Graduation</button>
-      <button class="filter" data-filter="New Chapter">New Chapter</button>
-      <button class="filter" data-filter="Personal Comeback">Comeback</button>
-      <button class="filter" data-filter="Entrepreneur">Building</button>
+
+    <!-- =====================================================
+         INTRO
+         ===================================================== -->
+
+    <section class="explore-intro">
+
+      <p class="eyebrow">
+        Explore
+      </p>
+
+      <h1>
+        Moments worth<br>
+        seeing.
+      </h1>
+
+      <p class="explore-intro-copy">
+        Browse visual stories built around emotions,
+        experiences and chapters of real life.
+      </p>
+
+    </section>
+
+
+    <!-- =====================================================
+         FILTERS
+         ===================================================== -->
+
+    <section
+      class="explore-controls"
+      aria-label="Story filters"
+    >
+
+      <div class="explore-filter-label">
+        Filter stories
+      </div>
+
+
+      <div
+        class="explore-filter-scroll"
+        id="exploreFilters"
+      >
+
+        <button
+          type="button"
+          class="explore-filter active"
+          data-filter="all"
+        >
+          All
+        </button>
+
+        <button
+          type="button"
+          class="explore-filter"
+          data-filter="Exam Era"
+        >
+          Exam Era
+        </button>
+
+        <button
+          type="button"
+          class="explore-filter"
+          data-filter="Graduation"
+        >
+          Graduation
+        </button>
+
+        <button
+          type="button"
+          class="explore-filter"
+          data-filter="New Chapter"
+        >
+          New Chapter
+        </button>
+
+        <button
+          type="button"
+          class="explore-filter"
+          data-filter="Building My Future"
+        >
+          Building My Future
+        </button>
+
+        <button
+          type="button"
+          class="explore-filter"
+          data-filter="Personal Comeback"
+        >
+          Personal Comeback
+        </button>
+
+      </div>
+
+    </section>
+
+
+    <!-- =====================================================
+         STORY COUNT
+         ===================================================== -->
+
+    <div class="explore-results-bar">
+
+      <span
+        id="exploreResultCount"
+      >
+        Stories
+      </span>
+
+      <span
+        id="exploreActiveFilter"
+      >
+        All moments
+      </span>
+
     </div>
 
-  </section>
 
-  <section class="explore-grid" id="exploreGrid"></section>
+    <!-- =====================================================
+         EXPLORE GRID
+         ===================================================== -->
 
-</main>
+    <section
+      class="explore-story-grid"
+      id="exploreStoryGrid"
+      aria-live="polite"
+    >
 
-<footer class="footer">
-  <div>
-    <strong>FeelFrame™</strong>
-    <p>Some feelings deserve to be seen.</p>
-  </div>
-</footer>
+      <div class="explore-loading">
+        Loading stories…
+      </div>
 
-<nav class="mobile-nav">
-  <a href="index.html">
-    <span>⌂</span>
-    <small>Home</small>
-  </a>
+    </section>
 
-  <a href="explore.html" class="active">
-    <span>◉</span>
-    <small>Explore</small>
-  </a>
 
-  <a href="create.html">
-    <span>＋</span>
-    <small>Create</small>
-  </a>
-</nav>
+    <!-- =====================================================
+         CREATE CTA
+         ===================================================== -->
 
-<script src="script.js"></script>
+    <section class="explore-create-cta">
+
+      <div class="explore-create-cta-inner">
+
+        <p class="eyebrow">
+          Your turn
+        </p>
+
+        <h2>
+          Your moment<br>
+          could be next.
+        </h2>
+
+        <p>
+          Tell us what's happening.
+          We'll turn the feeling into a visual story.
+        </p>
+
+        <a
+          href="create.html"
+          class="explore-create-button"
+        >
+          Make it yours
+          <span aria-hidden="true">→</span>
+        </a>
+
+      </div>
+
+    </section>
+
+
+    <!-- =====================================================
+         FOOTER
+         ===================================================== -->
+
+    <footer class="site-footer">
+
+      <div class="site-footer-brand">
+        FeelFrame™
+      </div>
+
+      <p>
+        Visual stories for human moments.
+      </p>
+
+      <small>
+        © 2026 FeelFrame™
+      </small>
+
+    </footer>
+
+  </main>
+
+
+  <!-- =======================================================
+       STICKY NAVIGATION
+       ======================================================= -->
+
+  <nav
+    class="bottom-nav"
+    aria-label="Primary navigation"
+  >
+
+    <a href="index.html">
+      Home
+    </a>
+
+    <a
+      href="explore.html"
+      class="active"
+      aria-current="page"
+    >
+      Explore
+    </a>
+
+    <a href="create.html">
+      Create
+    </a>
+
+  </nav>
+
+
+  <script src="script.js"></script>
+
 </body>
 </html>
