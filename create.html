@@ -2,364 +2,864 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <title>Make It Yours — FeelFrame™</title>
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0, viewport-fit=cover"
+  >
+
+  <meta
+    name="description"
+    content="Create a personalized FeelFrame™ visual story from your emotions, experiences and moments."
+  >
+
+  <meta name="theme-color" content="#f5f3ee">
+
+  <title>FeelFrame™ — Create Your Moment</title>
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,500;0,600;1,500&display=swap" rel="stylesheet">
+
+  <link
+    href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@500;600;700&display=swap"
+    rel="stylesheet"
+  >
 
   <link rel="stylesheet" href="style.css">
 </head>
 
-<body data-page="create">
+<body class="create-page">
 
-<header class="topbar">
-  <a href="index.html" class="brand">
-    <span class="brand-mark">F</span>
-    <span>FeelFrame<span class="tm">™</span></span>
-  </a>
+  <main>
 
-  <a href="explore.html" class="top-create">Explore <span>↗</span></a>
-</header>
+    <!-- =====================================================
+         HEADER
+         ===================================================== -->
 
-<main>
+    <header class="create-header">
 
-<section class="create-header">
-
-  <p class="eyebrow">MAKE IT YOURS</p>
-
-  <h1>
-    Tell us what<br>
-    <em>this moment feels like.</em>
-  </h1>
-
-  <p>
-    You bring the feeling. FeelFrame turns the moment
-    into a visual story made around you.
-  </p>
-
-</section>
-
-
-<form id="feelFrameForm" class="feel-form">
-
-  <div class="form-section">
-    <span class="form-number">01</span>
-
-    <div class="form-content">
-      <label for="name">What's your name?</label>
-
-      <input
-        type="text"
-        id="name"
-        name="name"
-        placeholder="e.g. Aisha"
-        required
+      <a
+        href="index.html"
+        class="create-back"
+        aria-label="Back to FeelFrame home"
       >
-    </div>
-  </div>
+        <span aria-hidden="true">←</span>
+        <span>Back</span>
+      </a>
 
-
-  <div class="form-section">
-    <span class="form-number">02</span>
-
-    <div class="form-content">
-      <label for="university">School / University</label>
-
-      <input
-        type="text"
-        id="university"
-        name="university"
-        placeholder="e.g. YSU"
+      <a
+        href="index.html"
+        class="create-logo"
+        aria-label="FeelFrame home"
       >
-    </div>
-  </div>
+        FeelFrame™
+      </a>
+
+      <span class="create-header-space" aria-hidden="true"></span>
+
+    </header>
 
 
-  <div class="form-section">
-    <span class="form-number">03</span>
+    <!-- =====================================================
+         INTRO
+         ===================================================== -->
 
-    <div class="form-content">
-      <label for="course">Course / Field</label>
+    <section class="create-intro">
 
-      <input
-        type="text"
-        id="course"
-        name="course"
-        placeholder="e.g. Nursing Science"
+      <p class="eyebrow">
+        Create your moment
+      </p>
+
+      <h1>
+        Tell us what<br>
+        you're feeling.
+      </h1>
+
+      <p class="create-intro-copy">
+        You bring the moment.
+        FeelFrame turns it into a visual story.
+      </p>
+
+    </section>
+
+
+    <!-- =====================================================
+         FORM
+         ===================================================== -->
+
+    <section class="create-form-section">
+
+      <form
+        id="feelFrameForm"
+        class="feel-frame-form"
+        novalidate
       >
-    </div>
-  </div>
+
+        <!-- =================================================
+             PERSONAL DETAILS
+             ================================================= -->
+
+        <div class="form-section">
+
+          <div class="form-section-heading">
+
+            <span class="form-number">
+              01
+            </span>
+
+            <div>
+              <p class="form-kicker">
+                Personal details
+              </p>
+
+              <h2>
+                Who is this visual for?
+              </h2>
+            </div>
+
+          </div>
 
 
-  <div class="form-section">
-    <span class="form-number">04</span>
+          <div class="form-grid">
 
-    <div class="form-content">
-      <label>What kind of moment is this?</label>
+            <div class="form-field">
 
-      <div class="choice-grid">
+              <label for="name">
+                Name
+              </label>
 
-        <label class="choice">
-          <input type="radio" name="moment" value="Exam Era" required>
-          <span>🎓 Exam Era</span>
-        </label>
+              <input
+                type="text"
+                id="name"
+                name="name"
+                placeholder="Your name"
+                autocomplete="name"
+                required
+              >
 
-        <label class="choice">
-          <input type="radio" name="moment" value="Graduation">
-          <span>🎓 Graduation</span>
-        </label>
+            </div>
 
-        <label class="choice">
-          <input type="radio" name="moment" value="New Chapter">
-          <span>🌱 New Chapter</span>
-        </label>
 
-        <label class="choice">
-          <input type="radio" name="moment" value="Entrepreneur">
-          <span>🚀 Building My Future</span>
-        </label>
+            <div class="form-field">
 
-        <label class="choice">
-          <input type="radio" name="moment" value="Personal Comeback">
-          <span>↻ Personal Comeback</span>
-        </label>
+              <label for="school">
+                University / School
+              </label>
 
-        <label class="choice">
-          <input type="radio" name="moment" value="Something Else">
-          <span>✦ Something Else</span>
-        </label>
+              <input
+                type="text"
+                id="school"
+                name="school"
+                placeholder="Your university or school"
+                autocomplete="organization"
+                required
+              >
 
+            </div>
+
+
+            <div class="form-field form-field-full">
+
+              <label for="course">
+                Course / Field
+              </label>
+
+              <input
+                type="text"
+                id="course"
+                name="course"
+                placeholder="e.g. Medicine, Computer Science, Business"
+                required
+              >
+
+            </div>
+
+          </div>
+
+        </div>
+
+
+        <!-- =================================================
+             THE MOMENT
+             ================================================= -->
+
+        <div class="form-section">
+
+          <div class="form-section-heading">
+
+            <span class="form-number">
+              02
+            </span>
+
+            <div>
+              <p class="form-kicker">
+                The moment
+              </p>
+
+              <h2>
+                What chapter are you in?
+              </h2>
+            </div>
+
+          </div>
+
+
+          <div
+            class="choice-grid"
+            id="momentChoices"
+          >
+
+            <label class="choice-card">
+
+              <input
+                type="radio"
+                name="moment"
+                value="Exam Era"
+                required
+              >
+
+              <span class="choice-card-content">
+
+                <strong>
+                  Exam Era
+                </strong>
+
+                <small>
+                  Pressure, preparation & persistence
+                </small>
+
+              </span>
+
+            </label>
+
+
+            <label class="choice-card">
+
+              <input
+                type="radio"
+                name="moment"
+                value="Graduation"
+              >
+
+              <span class="choice-card-content">
+
+                <strong>
+                  Graduation
+                </strong>
+
+                <small>
+                  I made it this far
+                </small>
+
+              </span>
+
+            </label>
+
+
+            <label class="choice-card">
+
+              <input
+                type="radio"
+                name="moment"
+                value="New Chapter"
+              >
+
+              <span class="choice-card-content">
+
+                <strong>
+                  New Chapter
+                </strong>
+
+                <small>
+                  Something new is beginning
+                </small>
+
+              </span>
+
+            </label>
+
+
+            <label class="choice-card">
+
+              <input
+                type="radio"
+                name="moment"
+                value="Building My Future"
+              >
+
+              <span class="choice-card-content">
+
+                <strong>
+                  Building My Future
+                </strong>
+
+                <small>
+                  Ambition, work & becoming
+                </small>
+
+              </span>
+
+            </label>
+
+
+            <label class="choice-card">
+
+              <input
+                type="radio"
+                name="moment"
+                value="Personal Comeback"
+              >
+
+              <span class="choice-card-content">
+
+                <strong>
+                  Personal Comeback
+                </strong>
+
+                <small>
+                  Starting again
+                </small>
+
+              </span>
+
+            </label>
+
+
+            <label class="choice-card">
+
+              <input
+                type="radio"
+                name="moment"
+                value="Something Else"
+              >
+
+              <span class="choice-card-content">
+
+                <strong>
+                  Something Else
+                </strong>
+
+                <small>
+                  My story doesn't fit a category
+                </small>
+
+              </span>
+
+            </label>
+
+          </div>
+
+        </div>
+
+
+        <!-- =================================================
+             FEELING
+             ================================================= -->
+
+        <div class="form-section">
+
+          <div class="form-section-heading">
+
+            <span class="form-number">
+              03
+            </span>
+
+            <div>
+              <p class="form-kicker">
+                The feeling
+              </p>
+
+              <h2>
+                What are you feeling?
+              </h2>
+            </div>
+
+          </div>
+
+
+          <div
+            class="choice-grid choice-grid-compact"
+            id="feelingChoices"
+          >
+
+            <label class="choice-card">
+
+              <input
+                type="radio"
+                name="feeling"
+                value="Determined"
+                required
+              >
+
+              <span class="choice-card-content">
+                <strong>Determined</strong>
+              </span>
+
+            </label>
+
+
+            <label class="choice-card">
+
+              <input
+                type="radio"
+                name="feeling"
+                value="Exhausted"
+              >
+
+              <span class="choice-card-content">
+                <strong>Exhausted</strong>
+              </span>
+
+            </label>
+
+
+            <label class="choice-card">
+
+              <input
+                type="radio"
+                name="feeling"
+                value="Proud"
+              >
+
+              <span class="choice-card-content">
+                <strong>Proud</strong>
+              </span>
+
+            </label>
+
+
+            <label class="choice-card">
+
+              <input
+                type="radio"
+                name="feeling"
+                value="Hopeful"
+              >
+
+              <span class="choice-card-content">
+                <strong>Hopeful</strong>
+              </span>
+
+            </label>
+
+
+            <label class="choice-card">
+
+              <input
+                type="radio"
+                name="feeling"
+                value="Confident"
+              >
+
+              <span class="choice-card-content">
+                <strong>Confident</strong>
+              </span>
+
+            </label>
+
+
+            <label class="choice-card">
+
+              <input
+                type="radio"
+                name="feeling"
+                value="Starting Again"
+              >
+
+              <span class="choice-card-content">
+                <strong>Starting Again</strong>
+              </span>
+
+            </label>
+
+          </div>
+
+        </div>
+
+
+        <!-- =================================================
+             STORY
+             ================================================= -->
+
+        <div class="form-section">
+
+          <div class="form-section-heading">
+
+            <span class="form-number">
+              04
+            </span>
+
+            <div>
+              <p class="form-kicker">
+                Your story
+              </p>
+
+              <h2>
+                Give us the part people don't see.
+              </h2>
+            </div>
+
+          </div>
+
+
+          <div class="form-field">
+
+            <label for="context">
+              What's happening / What are you going through?
+            </label>
+
+            <textarea
+              id="context"
+              name="context"
+              rows="6"
+              maxlength="1200"
+              placeholder="Tell us what's really happening. It doesn't have to sound perfect."
+              required
+            ></textarea>
+
+            <div class="field-hint">
+              The more honestly you describe the moment,
+              the more personal the visual direction can become.
+            </div>
+
+          </div>
+
+
+          <div class="form-field">
+
+            <label for="message">
+              What should the image communicate?
+            </label>
+
+            <textarea
+              id="message"
+              name="message"
+              rows="5"
+              maxlength="800"
+              placeholder="What do you want someone to feel when they see it?"
+              required
+            ></textarea>
+
+          </div>
+
+        </div>
+
+
+        <!-- =================================================
+             VISUAL LANGUAGE
+             ================================================= -->
+
+        <div class="form-section">
+
+          <div class="form-section-heading">
+
+            <span class="form-number">
+              05
+            </span>
+
+            <div>
+              <p class="form-kicker">
+                Visual language
+              </p>
+
+              <h2>
+                How should your story look?
+              </h2>
+            </div>
+
+          </div>
+
+
+          <div
+            class="choice-grid choice-grid-compact"
+            id="styleChoices"
+          >
+
+            <label class="choice-card">
+
+              <input
+                type="radio"
+                name="visualStyle"
+                value="Cinematic"
+                required
+              >
+
+              <span class="choice-card-content">
+                <strong>Cinematic</strong>
+              </span>
+
+            </label>
+
+
+            <label class="choice-card">
+
+              <input
+                type="radio"
+                name="visualStyle"
+                value="Editorial"
+              >
+
+              <span class="choice-card-content">
+                <strong>Editorial</strong>
+              </span>
+
+            </label>
+
+
+            <label class="choice-card">
+
+              <input
+                type="radio"
+                name="visualStyle"
+                value="Luxury"
+              >
+
+              <span class="choice-card-content">
+                <strong>Luxury</strong>
+              </span>
+
+            </label>
+
+
+            <label class="choice-card">
+
+              <input
+                type="radio"
+                name="visualStyle"
+                value="Film"
+              >
+
+              <span class="choice-card-content">
+                <strong>Film</strong>
+              </span>
+
+            </label>
+
+
+            <label class="choice-card">
+
+              <input
+                type="radio"
+                name="visualStyle"
+                value="Dreamlike"
+              >
+
+              <span class="choice-card-content">
+                <strong>Dreamlike</strong>
+              </span>
+
+            </label>
+
+
+            <label class="choice-card">
+
+              <input
+                type="radio"
+                name="visualStyle"
+                value="Dark & Moody"
+              >
+
+              <span class="choice-card-content">
+                <strong>Dark & Moody</strong>
+              </span>
+
+            </label>
+
+          </div>
+
+        </div>
+
+
+        <!-- =================================================
+             REFERENCE IMAGE
+             ================================================= -->
+
+        <div class="form-section">
+
+          <div class="form-section-heading">
+
+            <span class="form-number">
+              06
+            </span>
+
+            <div>
+              <p class="form-kicker">
+                Optional reference
+              </p>
+
+              <h2>
+                Is there a visual you want us to see?
+              </h2>
+            </div>
+
+          </div>
+
+
+          <div class="reference-upload">
+
+            <label
+              for="referenceImage"
+              class="reference-upload-box"
+            >
+
+              <span class="reference-upload-icon">
+                +
+              </span>
+
+              <span class="reference-upload-title">
+                Add a reference image
+              </span>
+
+              <span class="reference-upload-copy">
+                Optional · JPG, PNG or WEBP
+              </span>
+
+            </label>
+
+
+            <input
+              type="file"
+              id="referenceImage"
+              name="referenceImage"
+              accept="image/jpeg,image/png,image/webp"
+              hidden
+            >
+
+
+            <div
+              class="reference-preview"
+              id="referencePreview"
+              hidden
+            >
+
+              <img
+                id="referencePreviewImage"
+                src=""
+                alt="Selected reference preview"
+              >
+
+              <div class="reference-preview-info">
+
+                <strong id="referenceFileName">
+                  Reference image
+                </strong>
+
+                <button
+                  type="button"
+                  id="removeReference"
+                  class="reference-remove"
+                >
+                  Remove
+                </button>
+
+              </div>
+
+            </div>
+
+          </div>
+
+        </div>
+
+
+        <!-- =================================================
+             SUBMIT
+             ================================================= -->
+
+        <div class="create-submit-section">
+
+          <div class="create-submit-copy">
+
+            <span class="create-submit-mark">
+              ✦
+            </span>
+
+            <p>
+              Your answers become the creative direction
+              behind your FeelFrame visual.
+            </p>
+
+          </div>
+
+
+          <button
+            type="submit"
+            class="create-submit-button"
+          >
+
+            <span>
+              Create My FeelFrame
+            </span>
+
+            <span aria-hidden="true">
+              →
+            </span>
+
+          </button>
+
+
+          <p class="create-submit-note">
+            You'll continue through WhatsApp to submit your request.
+          </p>
+
+        </div>
+
+      </form>
+
+    </section>
+
+
+    <!-- =====================================================
+         FOOTER
+         ===================================================== -->
+
+    <footer class="site-footer">
+
+      <div class="site-footer-brand">
+        FeelFrame™
       </div>
-    </div>
-  </div>
-
-
-  <div class="form-section">
-    <span class="form-number">05</span>
-
-    <div class="form-content">
-      <label>How do you feel?</label>
-
-      <div class="choice-grid">
-
-        <label class="choice">
-          <input type="radio" name="feeling" value="Determined" required>
-          <span>Determined</span>
-        </label>
-
-        <label class="choice">
-          <input type="radio" name="feeling" value="Exhausted">
-          <span>Exhausted</span>
-        </label>
-
-        <label class="choice">
-          <input type="radio" name="feeling" value="Proud">
-          <span>Proud</span>
-        </label>
-
-        <label class="choice">
-          <input type="radio" name="feeling" value="Hopeful">
-          <span>Hopeful</span>
-        </label>
-
-        <label class="choice">
-          <input type="radio" name="feeling" value="Confident">
-          <span>Confident</span>
-        </label>
-
-        <label class="choice">
-          <input type="radio" name="feeling" value="Starting Again">
-          <span>Starting Again</span>
-        </label>
-
-      </div>
-    </div>
-  </div>
-
-
-  <div class="form-section">
-    <span class="form-number">06</span>
-
-    <div class="form-content">
-
-      <label for="goingThrough">
-        What's happening in your life right now?
-      </label>
-
-      <textarea
-        id="goingThrough"
-        name="goingThrough"
-        rows="5"
-        placeholder="Tell us the real story. What are you going through?"
-        required
-      ></textarea>
-
-    </div>
-  </div>
-
-
-  <div class="form-section">
-    <span class="form-number">07</span>
-
-    <div class="form-content">
-
-      <label for="communicate">
-        What should the image communicate?
-      </label>
-
-      <textarea
-        id="communicate"
-        name="communicate"
-        rows="5"
-        placeholder="What should someone feel when they see it?"
-        required
-      ></textarea>
-
-    </div>
-  </div>
-
-
-  <div class="form-section">
-    <span class="form-number">08</span>
-
-    <div class="form-content">
-
-      <label>Choose your visual language</label>
-
-      <div class="choice-grid">
-
-        <label class="choice">
-          <input type="radio" name="style" value="Cinematic" required>
-          <span>🎬 Cinematic</span>
-        </label>
-
-        <label class="choice">
-          <input type="radio" name="style" value="Editorial">
-          <span>📰 Editorial</span>
-        </label>
-
-        <label class="choice">
-          <input type="radio" name="style" value="Luxury">
-          <span>✦ Luxury</span>
-        </label>
-
-        <label class="choice">
-          <input type="radio" name="style" value="Film">
-          <span>📷 Film</span>
-        </label>
-
-        <label class="choice">
-          <input type="radio" name="style" value="Dreamlike">
-          <span>☁ Dreamlike</span>
-        </label>
-
-        <label class="choice">
-          <input type="radio" name="style" value="Dark & Moody">
-          <span>◐ Dark & Moody</span>
-        </label>
-
-      </div>
-
-    </div>
-  </div>
-
-
-  <div class="form-section">
-    <span class="form-number">09</span>
-
-    <div class="form-content">
-
-      <label for="reference">
-        Reference image <span class="optional">Optional</span>
-      </label>
-
-      <label class="upload-box" for="reference">
-
-        <input
-          type="file"
-          id="reference"
-          accept="image/*"
-        >
-
-        <span class="upload-icon">＋</span>
-
-        <strong>Choose a reference image</strong>
-
-        <small>
-          We'll preview it here. After WhatsApp opens,
-          attach the image to the conversation.
-        </small>
-
-      </label>
-
-      <div id="imagePreview" class="image-preview"></div>
-
-    </div>
-  </div>
-
-
-  <div class="request-summary">
-
-    <div>
-      <span class="eyebrow">YOUR REQUEST</span>
-
-      <h2>
-        Ready to turn<br>
-        this moment <em>into something visible?</em>
-      </h2>
 
       <p>
-        Your answers will be organized into a FeelFrame
-        creative brief and opened in WhatsApp.
+        Visual stories for human moments.
       </p>
-    </div>
 
-    <button type="submit" class="whatsapp-btn">
-      Create My FeelFrame
-      <span>→</span>
-    </button>
+      <small>
+        © 2026 FeelFrame™
+      </small>
 
-    <small class="form-note">
-      WhatsApp will open with your request already written.
-      You can review it before sending.
-    </small>
+    </footer>
 
-  </div>
-
-</form>
-
-</main>
+  </main>
 
 
-<footer class="footer">
-  <div>
-    <strong>FeelFrame™</strong>
-    <p>Some feelings deserve to be seen.</p>
-  </div>
-</footer>
+  <!-- =======================================================
+       STICKY NAVIGATION
+       ======================================================= -->
+
+  <nav
+    class="bottom-nav"
+    aria-label="Primary navigation"
+  >
+
+    <a href="index.html">
+      Home
+    </a>
+
+    <a href="explore.html">
+      Explore
+    </a>
+
+    <a
+      href="create.html"
+      class="bottom-nav-create active"
+      aria-current="page"
+    >
+      Create
+    </a>
+
+  </nav>
 
 
-<nav class="mobile-nav">
-  <a href="index.html">
-    <span>⌂</span>
-    <small>Home</small>
-  </a>
-
-  <a href="explore.html">
-    <span>◉</span>
-    <small>Explore</small>
-  </a>
-
-  <a href="create.html" class="active">
-    <span>＋</span>
-    <small>Create</small>
-  </a>
-</nav>
-
-<script src="script.js"></script>
+  <script src="script.js"></script>
 
 </body>
 </html>
