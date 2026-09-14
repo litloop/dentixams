@@ -1,0 +1,765 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>FeelFrame™ — Some feelings deserve to be seen.</title>
+
+  <meta
+    name="description"
+    content="Turn your moment into a visual story with FeelFrame."
+  />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+  <link
+    href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@500;600&display=swap"
+    rel="stylesheet"
+  />
+
+  <link rel="stylesheet" href="style.css" />
+</head>
+
+<body>
+
+<header class="nav">
+  <a href="#" class="logo">FeelFrame<span>™</span></a>
+
+  <nav class="desktop-nav">
+    <a href="#how">How it works</a>
+    <a href="#explore">Explore</a>
+    <a href="#experiences">Experiences</a>
+  </nav>
+
+  <a href="#create" class="nav-cta">Create yours</a>
+</header>
+
+
+<main>
+
+<!-- HERO -->
+
+<section class="hero">
+
+  <div class="hero-copy">
+
+    <p class="eyebrow">A visual engine for human moments</p>
+
+    <h1>
+      Some feelings
+      <em>deserve to be seen.</em>
+    </h1>
+
+    <p class="hero-text">
+      Tell us what you're going through.
+      We'll turn the moment into a visual story made around you.
+    </p>
+
+    <div class="hero-actions">
+      <a href="#create" class="btn btn-primary">
+        Create My Visual <span>→</span>
+      </a>
+
+      <a href="#explore" class="btn btn-secondary">
+        Explore visuals
+      </a>
+    </div>
+
+    <div class="trust-line">
+      <span>✦</span>
+      Built around your moment, emotion and identity.
+    </div>
+
+  </div>
+
+
+  <div class="hero-art">
+
+    <div class="portrait-card">
+
+      <div class="portrait-overlay">
+        <span>YOUR MOMENT</span>
+        <strong>becomes a visual story.</strong>
+      </div>
+
+      <div class="portrait-light"></div>
+
+      <div class="portrait-person">
+        <div class="head"></div>
+        <div class="body"></div>
+      </div>
+
+      <div class="portrait-orbit orbit-one"></div>
+      <div class="portrait-orbit orbit-two"></div>
+
+    </div>
+
+  </div>
+
+</section>
+
+
+<!-- HOW -->
+
+<section class="section" id="how">
+
+  <div class="section-heading">
+    <p class="eyebrow">HOW IT WORKS</p>
+    <h2>Not another prompt shop.</h2>
+    <p>
+      You bring the moment. FeelFrame builds the visual language around it.
+    </p>
+  </div>
+
+  <div class="steps">
+
+    <article class="step-card">
+      <span>01</span>
+      <h3>Tell us.</h3>
+      <p>
+        Choose what you're going through and how you feel about it.
+      </p>
+    </article>
+
+    <article class="step-card">
+      <span>02</span>
+      <h3>Make it yours.</h3>
+      <p>
+        Add the details that make the story belong to you.
+      </p>
+    </article>
+
+    <article class="step-card">
+      <span>03</span>
+      <h3>See it differently.</h3>
+      <p>
+        Our visual system turns the moment into a cinematic concept.
+      </p>
+    </article>
+
+  </div>
+
+</section>
+
+
+<!-- EXAM ERA -->
+
+<section class="featured-section" id="create">
+
+  <div class="featured-content">
+
+    <div class="featured-copy">
+
+      <p class="eyebrow">FEATURED EXPERIENCE</p>
+
+      <h2>
+        EXAM
+        <em>ERA™</em>
+      </h2>
+
+      <p>
+        For the student who is tired, determined, scared,
+        hopeful — and still showing up.
+      </p>
+
+      <button class="btn btn-light" id="startExperience">
+        Enter Exam Era <span>→</span>
+      </button>
+
+    </div>
+
+    <div class="featured-visual">
+
+      <div class="exam-poster">
+
+        <div class="poster-small">EXAM ERA™</div>
+
+        <div class="poster-title">
+          STILL<br>
+          <i>SHOWING UP.</i>
+        </div>
+
+        <div class="poster-bottom">
+          <span>YOUR STORY</span>
+          <span>2026</span>
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</section>
+
+
+<!-- EXPLORER -->
+
+<section class="section" id="explore">
+
+  <div class="section-heading split-heading">
+
+    <div>
+      <p class="eyebrow">EXPLORE THE ENGINE</p>
+      <h2>Choose a moment.</h2>
+    </div>
+
+    <p>
+      Every experience starts with something real.
+    </p>
+
+  </div>
+
+  <div class="moment-grid" id="momentGrid"></div>
+
+</section>
+
+
+<!-- ENGINE -->
+
+<section class="engine-section" id="engine">
+
+  <div class="engine-header">
+
+    <p class="eyebrow">THE VISUAL ENGINE</p>
+
+    <h2>
+      Emotion → Moment → <em>Visual.</em>
+    </h2>
+
+  </div>
+
+
+  <div class="engine">
+
+    <div class="engine-panel">
+
+      <div class="engine-step">
+        <small>YOUR MOMENT</small>
+        <strong id="engineMoment">Exam Season</strong>
+      </div>
+
+      <div class="engine-step">
+        <small>YOUR FEELING</small>
+        <strong id="engineEmotion">Determined</strong>
+      </div>
+
+      <div class="engine-step">
+        <small>YOUR STYLE</small>
+        <strong id="engineStyle">Cinematic</strong>
+      </div>
+
+      <div class="engine-step">
+        <small>CREATIVE RECIPE</small>
+        <strong id="engineRecipe">Exam Era</strong>
+      </div>
+
+      <div class="command-list" id="commandList"></div>
+
+    </div>
+
+
+    <div class="result-panel">
+
+      <div class="result-image">
+
+        <div class="result-glow"></div>
+
+        <div class="result-subject">
+          <div class="result-head"></div>
+          <div class="result-body"></div>
+        </div>
+
+        <div class="result-caption">
+          <small>YOUR VISUAL STORY</small>
+          <strong id="resultTitle">Still Showing Up.</strong>
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</section>
+
+
+<!-- PERSONALIZATION -->
+
+<section class="creator-section">
+
+  <div class="creator-container">
+
+    <div class="section-heading">
+      <p class="eyebrow">MAKE IT YOURS</p>
+      <h2>Your story needs a few details.</h2>
+      <p>
+        Nothing complicated. Just enough for the visual to feel like you.
+      </p>
+    </div>
+
+
+    <form id="visualForm" class="visual-form">
+
+      <div class="field-grid">
+
+        <label>
+          <span>Your name</span>
+          <input
+            type="text"
+            id="name"
+            placeholder="e.g. Amina"
+            required
+          />
+        </label>
+
+        <label>
+          <span>School / university</span>
+          <input
+            type="text"
+            id="school"
+            placeholder="e.g. YSU"
+            required
+          />
+        </label>
+
+        <label>
+          <span>Course / field</span>
+          <input
+            type="text"
+            id="course"
+            placeholder="e.g. Computer Science"
+            required
+          />
+        </label>
+
+        <label>
+          <span>Choose your feeling</span>
+
+          <select id="emotion">
+            <option value="determined">I'm determined</option>
+            <option value="exhausted">I'm exhausted</option>
+            <option value="hopeful">I'm hopeful</option>
+            <option value="proud">I'm making myself proud</option>
+            <option value="almost">I'm almost there</option>
+          </select>
+
+        </label>
+
+      </div>
+
+
+      <label>
+        <span>What are you going through?</span>
+
+        <textarea
+          id="story"
+          rows="4"
+          placeholder="Tell us in your own words..."
+          required
+        ></textarea>
+
+      </label>
+
+
+      <label>
+        <span>What should the image communicate?</span>
+
+        <textarea
+          id="message"
+          rows="3"
+          placeholder="e.g. I want it to show that I'm tired but I refuse to give up."
+          required
+        ></textarea>
+
+      </label>
+
+
+      <div class="style-selector">
+
+        <span class="field-label">Choose your visual language</span>
+
+        <div class="style-options">
+
+          <button type="button" class="style-option active" data-style="Cinematic">
+            Cinematic
+          </button>
+
+          <button type="button" class="style-option" data-style="Editorial">
+            Editorial
+          </button>
+
+          <button type="button" class="style-option" data-style="Film">
+            Film
+          </button>
+
+          <button type="button" class="style-option" data-style="Luxury">
+            Luxury
+          </button>
+
+          <button type="button" class="style-option" data-style="Dreamlike">
+            Dreamlike
+          </button>
+
+          <button type="button" class="style-option" data-style="Minimal">
+            Minimal
+          </button>
+
+          <button type="button" class="style-option" data-style="Artistic">
+            Artistic
+          </button>
+
+          <button type="button" class="style-option" data-style="Dark & Moody">
+            Dark & Moody
+          </button>
+
+        </div>
+
+      </div>
+
+
+      <button type="submit" class="btn btn-primary submit-btn">
+        Build My Visual <span>→</span>
+      </button>
+
+    </form>
+
+  </div>
+
+</section>
+
+
+<!-- RECIPES -->
+
+<section class="section recipes-section">
+
+  <div class="section-heading">
+    <p class="eyebrow">CREATIVE RECIPES</p>
+    <h2>One engine. Endless moments.</h2>
+    <p>
+      FeelFrame combines emotional context with visual architecture.
+    </p>
+  </div>
+
+
+  <div class="recipe-grid">
+
+    <article class="recipe-card large">
+      <span>01 / PERSONAL</span>
+      <h3>Cinematic<br>Portrait</h3>
+      <p>Turn identity into atmosphere.</p>
+    </article>
+
+    <article class="recipe-card">
+      <span>02 / MILESTONE</span>
+      <h3>New Chapter</h3>
+      <p>Visualize the moment you begin again.</p>
+    </article>
+
+    <article class="recipe-card">
+      <span>03 / BUSINESS</span>
+      <h3>Product Studio</h3>
+      <p>Transform ordinary products into premium campaigns.</p>
+    </article>
+
+    <article class="recipe-card">
+      <span>04 / IDENTITY</span>
+      <h3>Nigerian Story</h3>
+      <p>Culture, ambition and personal identity.</p>
+    </article>
+
+  </div>
+
+</section>
+
+
+<!-- WHY -->
+
+<section class="difference-section">
+
+  <div class="difference-copy">
+
+    <p class="eyebrow">WHY FEELFRAME</p>
+
+    <h2>
+      We don't start with
+      <em>the image.</em>
+    </h2>
+
+    <p>
+      We start with the human moment behind it.
+    </p>
+
+  </div>
+
+
+  <div class="difference-points">
+
+    <div>
+      <strong>01</strong>
+      <h3>Seen</h3>
+      <p>Your context matters.</p>
+    </div>
+
+    <div>
+      <strong>02</strong>
+      <h3>Understood</h3>
+      <p>Your emotion shapes the visual.</p>
+    </div>
+
+    <div>
+      <strong>03</strong>
+      <h3>Expressed</h3>
+      <p>Your story becomes something tangible.</p>
+    </div>
+
+  </div>
+
+</section>
+
+
+<!-- PRICING -->
+
+<section class="section pricing-section" id="experiences">
+
+  <div class="section-heading">
+
+    <p class="eyebrow">CHOOSE YOUR EXPERIENCE</p>
+
+    <h2>
+      Start with one moment.
+      <em>Go deeper if you want.</em>
+    </h2>
+
+  </div>
+
+
+  <div class="experience-grid">
+
+    <article class="experience-card">
+
+      <p>ONE MOMENT</p>
+
+      <h3>₦700</h3>
+
+      <span>One personalized visual concept.</span>
+
+      <ul>
+        <li>1 visual concept</li>
+        <li>1 emotional direction</li>
+        <li>1 personalized prompt</li>
+      </ul>
+
+      <button class="experience-btn" data-package="One Moment">
+        Start
+      </button>
+
+    </article>
+
+
+    <article class="experience-card featured-price">
+
+      <div class="popular">MOST POPULAR</div>
+
+      <p>3-DAY EXPERIENCE</p>
+
+      <h3>₦2,000</h3>
+
+      <span>Three moments. One story.</span>
+
+      <ul>
+        <li>Day 1 — Where I am</li>
+        <li>Day 2 — What I'm fighting</li>
+        <li>Day 3 — Where I'm going</li>
+      </ul>
+
+      <button class="experience-btn" data-package="3-Day Experience">
+        Choose this
+      </button>
+
+    </article>
+
+
+    <article class="experience-card">
+
+      <p>EXAM ERA™</p>
+
+      <h3>₦3,500</h3>
+
+      <span>Your complete exam-season collection.</span>
+
+      <ul>
+        <li>Multiple visual concepts</li>
+        <li>Personalized emotional direction</li>
+        <li>Exam-season story arc</li>
+      </ul>
+
+      <button class="experience-btn" data-package="Exam Era">
+        Enter Exam Era
+      </button>
+
+    </article>
+
+
+    <article class="experience-card">
+
+      <p>YOUR STORY</p>
+
+      <h3>₦5k–₦10k</h3>
+
+      <span>A deeper visual story built around you.</span>
+
+      <ul>
+        <li>Extended personalization</li>
+        <li>Multiple visual directions</li>
+        <li>Premium creative treatment</li>
+      </ul>
+
+      <button class="experience-btn" data-package="Your Story">
+        Tell my story
+      </button>
+
+    </article>
+
+  </div>
+
+</section>
+
+
+<!-- SOCIAL PROOF -->
+
+<section class="proof-section">
+
+  <p class="eyebrow">EARLY REACTIONS</p>
+
+  <h2>
+    Built to feel personal.
+  </h2>
+
+  <div class="proof-grid">
+
+    <blockquote>
+      “This doesn't feel like one of those random AI pictures. It actually feels like my situation.”
+      <span>— Early tester</span>
+    </blockquote>
+
+    <blockquote>
+      “I like that I choose what I'm feeling before choosing how it looks.”
+      <span>— Early tester</span>
+    </blockquote>
+
+    <blockquote>
+      “It's basically turning your current life into artwork.”
+      <span>— Early tester</span>
+    </blockquote>
+
+  </div>
+
+</section>
+
+
+<!-- FINAL CTA -->
+
+<section class="final-cta">
+
+  <p class="eyebrow">YOUR MOMENT IS ALREADY A STORY.</p>
+
+  <h2>
+    What does your
+    <em>moment</em> look like?
+  </h2>
+
+  <a href="#create" class="btn btn-light">
+    Create My Visual <span>→</span>
+  </a>
+
+</section>
+
+</main>
+
+
+<footer>
+
+  <div class="footer-top">
+
+    <div>
+      <a href="#" class="logo">FeelFrame<span>™</span></a>
+
+      <p>
+        A visual engine for human moments.
+      </p>
+    </div>
+
+    <div class="footer-links">
+
+      <a href="#how">How it works</a>
+      <a href="#explore">Explore</a>
+      <a href="#experiences">Experiences</a>
+
+    </div>
+
+  </div>
+
+  <div class="footer-bottom">
+    <span>© 2026 FeelFrame™</span>
+    <span>Some feelings deserve to be seen.</span>
+  </div>
+
+</footer>
+
+
+<!-- EXPERIENCE MODAL -->
+
+<div class="modal" id="experienceModal">
+
+  <div class="modal-card">
+
+    <button class="modal-close" id="closeModal">×</button>
+
+    <p class="eyebrow">YOUR VISUAL EXPERIENCE</p>
+
+    <h2 id="modalTitle">
+      Your visual is taking shape.
+    </h2>
+
+    <p id="modalText">
+      Your moment has been captured.
+    </p>
+
+    <div class="modal-result">
+
+      <div class="modal-result-art">
+        <div class="modal-art-person"></div>
+      </div>
+
+      <div>
+        <small>SELECTED EXPERIENCE</small>
+        <strong id="selectedPackage">One Moment</strong>
+      </div>
+
+    </div>
+
+    <a
+      href="https://wa.me/2340000000000?text=Hi%20FeelFrame%2C%20I%20want%20to%20create%20my%20visual."
+      class="btn btn-primary full-btn"
+      target="_blank"
+      rel="noopener"
+    >
+      Continue on WhatsApp →
+    </a>
+
+    <p class="modal-note">
+      Payment and automated delivery will be connected in the launch version.
+    </p>
+
+  </div>
+
+</div>
+
+
+<script src="script.js"></script>
+
+</body>
+</html>
