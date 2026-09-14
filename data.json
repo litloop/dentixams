@@ -1,265 +1,106 @@
-{
-  "brand": {
-    "name": "FeelFrame",
-    "tagline": "Some feelings deserve to be seen.",
-    "promise": "Turn your moment into a visual."
+[
+  {
+    "id": "exam-era-01",
+    "campaign": "Exam Era",
+    "emotion": "Determined",
+    "moment": "Exam Season",
+    "context": "YSU · Nursing Science",
+    "quote": "Nobody sees how hard I've worked.",
+    "description": "A visual story about the quiet pressure behind exam season — the late nights, uncertainty and decision to keep going.",
+    "style": "Cinematic",
+    "recipe": "Exam Era",
+    "image": "https://images.unsplash.com/photo-1523240795612-9a054b0db644?auto=format&fit=crop&w=1200&q=85",
+    "ratio": "tall"
   },
-
-  "emotions": [
-    {
-      "id": "determined",
-      "name": "I'm determined",
-      "description": "Tired, but still moving.",
-      "tags": ["focus", "strength", "ambition"],
-      "commands": [
-        "/cinematic",
-        "/closeup",
-        "/dramaticlighting",
-        "/35mmfilm",
-        "/shallowdepth"
-      ]
-    },
-    {
-      "id": "exhausted",
-      "name": "I'm exhausted",
-      "description": "The weight is real, but so is the effort.",
-      "tags": ["tired", "quiet", "resilience"],
-      "commands": [
-        "/cinematic",
-        "/softlighting",
-        "/mist",
-        "/closeup",
-        "/filmgrain"
-      ]
-    },
-    {
-      "id": "hopeful",
-      "name": "I'm hopeful",
-      "description": "I don't know exactly how, but I believe.",
-      "tags": ["hope", "future", "light"],
-      "commands": [
-        "/sunrise",
-        "/goldenhour",
-        "/cinematic",
-        "/wideangle"
-      ]
-    },
-    {
-      "id": "proud",
-      "name": "I'm making myself proud",
-      "description": "This one is personal.",
-      "tags": ["achievement", "identity", "confidence"],
-      "commands": [
-        "/editorial",
-        "/dramaticlighting",
-        "/lowangle",
-        "/studio"
-      ]
-    }
-  ],
-
-  "conditions": [
-    {
-      "id": "exam-era",
-      "name": "Exam Era",
-      "icon": "🎓",
-      "featured": true,
-      "description": "The season of pressure, persistence and possibility.",
-      "recipe": "exam-era"
-    },
-    {
-      "id": "graduation",
-      "name": "Graduation",
-      "icon": "🎉",
-      "featured": false,
-      "description": "The moment one chapter becomes another.",
-      "recipe": "graduation-story"
-    },
-    {
-      "id": "new-chapter",
-      "name": "New Chapter",
-      "icon": "🚀",
-      "featured": false,
-      "description": "Starting again with a different version of yourself.",
-      "recipe": "new-chapter"
-    },
-    {
-      "id": "future",
-      "name": "Building My Future",
-      "icon": "💼",
-      "featured": false,
-      "description": "Ambition translated into visual identity.",
-      "recipe": "entrepreneur-story"
-    },
-    {
-      "id": "personal",
-      "name": "Personal Story",
-      "icon": "❤️",
-      "featured": false,
-      "description": "A visual interpretation of something only you understand.",
-      "recipe": "cinematic-portrait"
-    }
-  ],
-
-  "visualCommands": [
-    {
-      "command": "/cinematic",
-      "category": "cinematic",
-      "description": "Cinematic lighting, composition and mood."
-    },
-    {
-      "command": "/closeup",
-      "category": "camera",
-      "description": "Close framing focused on the subject."
-    },
-    {
-      "command": "/dramaticlighting",
-      "category": "lighting",
-      "description": "Strong, high-contrast cinematic lighting."
-    },
-    {
-      "command": "/35mmfilm",
-      "category": "film",
-      "description": "Classic 35mm film photography aesthetic."
-    },
-    {
-      "command": "/shallowdepth",
-      "category": "lens",
-      "description": "Sharp subject with a softly blurred background."
-    },
-    {
-      "command": "/goldenhour",
-      "category": "lighting",
-      "description": "Warm cinematic golden-hour light."
-    },
-    {
-      "command": "/sunrise",
-      "category": "lighting",
-      "description": "Soft early-morning sunrise lighting."
-    },
-    {
-      "command": "/editorial",
-      "category": "style",
-      "description": "Professional magazine editorial photography."
-    },
-    {
-      "command": "/lowangle",
-      "category": "camera",
-      "description": "Dramatic perspective from below."
-    },
-    {
-      "command": "/studio",
-      "category": "environment",
-      "description": "Professional studio photography setup."
-    },
-    {
-      "command": "/mist",
-      "category": "atmosphere",
-      "description": "Soft misty atmospheric environment."
-    },
-    {
-      "command": "/filmgrain",
-      "category": "texture",
-      "description": "Subtle analog film texture."
-    }
-  ],
-
-  "recipes": [
-    {
-      "id": "exam-era",
-      "name": "Exam Era",
-      "type": "personal",
-      "structure": [
-        "subject",
-        "identity",
-        "exam_context",
-        "emotion",
-        "visual_metaphor",
-        "camera",
-        "lighting",
-        "environment",
-        "texture",
-        "composition",
-        "finish"
-      ],
-      "template": "Create a sophisticated visual story centered around {name}, a {course} student at {school}, during exam season. The image should communicate {emotion} and visually express {message}. The environment should subtly reference the emotional reality of academic pressure while preserving dignity, aspiration and individuality. Apply {style} visual direction with carefully controlled composition, lighting, depth, realistic materials and cinematic detail."
-    },
-
-    {
-      "id": "cinematic-portrait",
-      "name": "Cinematic Portrait",
-      "type": "personal",
-      "structure": [
-        "subject",
-        "identity",
-        "emotion",
-        "environment",
-        "lighting",
-        "camera",
-        "finish"
-      ],
-      "template": "Create a cinematic portrait representing {name} and the emotional state of {emotion}. The visual should communicate {message} through composition, expression, environment, lighting and subtle visual symbolism."
-    },
-
-    {
-      "id": "product-studio",
-      "name": "Product Studio Transformation",
-      "type": "commercial",
-      "structure": [
-        "reference",
-        "product_isolation",
-        "hero_subject",
-        "supporting_elements",
-        "composition",
-        "surface",
-        "lighting",
-        "background",
-        "micro_detail",
-        "negative_space",
-        "commercial_finish"
-      ],
-      "template": "Isolate the product from the reference image and rebuild it as a premium advertising composition. Keep the hero product centered and sharply defined, surrounded by relevant supporting ingredients arranged with intention and depth. Use tactile materials, controlled studio lighting, realistic shadows, a background aligned with the product's color palette and mood, visible micro-details, subtle reflections, intentional negative space and polished commercial finishing."
-    }
-  ],
-
-  "packages": [
-    {
-      "id": "one-moment",
-      "name": "One Moment",
-      "price": 700,
-      "currency": "NGN",
-      "description": "One personalized visual concept."
-    },
-    {
-      "id": "three-day",
-      "name": "3-Day Experience",
-      "price": 2000,
-      "currency": "NGN",
-      "description": "Three personalized visual moments."
-    },
-    {
-      "id": "exam-era",
-      "name": "Exam Era",
-      "price": 3500,
-      "currency": "NGN",
-      "description": "A multi-image exam-season visual collection."
-    },
-    {
-      "id": "your-story",
-      "name": "Your Story",
-      "price": 5000,
-      "priceMax": 10000,
-      "currency": "NGN",
-      "description": "A deeper personalized visual story."
-    },
-    {
-      "id": "club",
-      "name": "FeelFrame Club",
-      "price": 3000,
-      "priceMax": 5000,
-      "currency": "NGN",
-      "billing": "monthly",
-      "description": "Recurring access to new emotional collections and visual experiences."
-    }
-  ]
-}
+  {
+    "id": "new-chapter-01",
+    "campaign": "New Chapter",
+    "emotion": "Hopeful",
+    "moment": "New Beginning",
+    "context": "Starting again",
+    "quote": "I don't have everything figured out. I'm starting anyway.",
+    "description": "A quiet portrait of the courage required to begin before everything makes sense.",
+    "style": "Golden-hour Editorial",
+    "recipe": "New Chapter",
+    "image": "https://images.unsplash.com/photo-1499750310107-5fef28a66643?auto=format&fit=crop&w=1200&q=85",
+    "ratio": "square"
+  },
+  {
+    "id": "comeback-01",
+    "campaign": "Personal Comeback",
+    "emotion": "Proud",
+    "moment": "New Chapter",
+    "context": "Personal growth",
+    "quote": "This version of me didn't exist a year ago.",
+    "description": "A visual representation of growth that happened quietly, long before anyone else noticed.",
+    "style": "Dark Editorial",
+    "recipe": "Personal Comeback",
+    "image": "https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=1200&q=85",
+    "ratio": "wide"
+  },
+  {
+    "id": "future-01",
+    "campaign": "Building My Future",
+    "emotion": "Ambitious",
+    "moment": "Entrepreneurial Journey",
+    "context": "Building something from scratch",
+    "quote": "Nobody is coming to build it for me.",
+    "description": "An editorial portrait of the person behind the work — ambition before recognition.",
+    "style": "Luxury Editorial",
+    "recipe": "Entrepreneur Story",
+    "image": "https://images.unsplash.com/photo-1556761175-b413da4baf72?auto=format&fit=crop&w=1200&q=85",
+    "ratio": "tall"
+  },
+  {
+    "id": "graduation-01",
+    "campaign": "Graduation",
+    "emotion": "Proud",
+    "moment": "Graduation Day",
+    "context": "A milestone finally reached",
+    "quote": "For a moment, I want to remember how far I came.",
+    "description": "Not just a graduation photograph — a visual pause between everything that was and everything that comes next.",
+    "style": "Film",
+    "recipe": "Graduation Story",
+    "image": "https://images.unsplash.com/photo-1523050854058-8df90110c9f1?auto=format&fit=crop&w=1200&q=85",
+    "ratio": "portrait"
+  },
+  {
+    "id": "starting-again-01",
+    "campaign": "Starting Again",
+    "emotion": "Hopeful",
+    "moment": "Personal Comeback",
+    "context": "Choosing to begin again",
+    "quote": "Starting over doesn't mean starting from nothing.",
+    "description": "A softer visual story about rebuilding, learning and moving forward without needing to erase the past.",
+    "style": "Dreamlike",
+    "recipe": "Personal Comeback",
+    "image": "https://images.unsplash.com/photo-1470770841072-f978cf4d019e?auto=format&fit=crop&w=1200&q=85",
+    "ratio": "square"
+  },
+  {
+    "id": "almost-there-01",
+    "campaign": "Exam Era",
+    "emotion": "Exhausted",
+    "moment": "Exam Season",
+    "context": "Almost at the finish line",
+    "quote": "I'm tired. But I'm almost there.",
+    "description": "A visual translation of exhaustion and determination existing in the same moment.",
+    "style": "35mm Cinematic",
+    "recipe": "Exam Era",
+    "image": "https://images.unsplash.com/photo-1434030216411-0b793f4b4173?auto=format&fit=crop&w=1200&q=85",
+    "ratio": "wide"
+  },
+  {
+    "id": "celebrate-01",
+    "campaign": "Achievement",
+    "emotion": "Confident",
+    "moment": "Milestone",
+    "context": "A moment worth celebrating",
+    "quote": "I worked for this version of my life.",
+    "description": "A polished personal-brand visual designed around earned confidence rather than performance.",
+    "style": "Luxury",
+    "recipe": "Personal Brand Portrait",
+    "image": "https://images.unsplash.com/photo-1529139574466-a303027c1d8b?auto=format&fit=crop&w=1200&q=85",
+    "ratio": "portrait"
+  }
+]
