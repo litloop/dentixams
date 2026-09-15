@@ -60,7 +60,7 @@
         "/filmgrain",
         "/shallowdepth"
       ],
-      "image": "images/exam-era-02.jpg",
+      "image": "https://res.cloudinary.com/mo6vulz7/image/upload/v1789469502/CBEB5D53-BD19-44B6-99F8-484254B1E58C.png",
       "ratio": "4:5",
       "promptTitle": "EXAM ERA — THE QUIET BATTLE",
       "price": 700,
@@ -90,7 +90,7 @@
         "/35mmfilm",
         "/shallowdepth"
       ],
-      "image": "images/exam-era-03.jpg",
+      "image": "https://res.cloudinary.com/mo6vulz7/image/upload/f_auto,q_auto/IMG_1239",
       "ratio": "4:5",
       "promptTitle": "EXAM ERA — ALMOST THERE",
       "price": 700,
@@ -120,7 +120,7 @@
         "/shallowdepth",
         "/softlighting"
       ],
-      "image": "images/graduation-01.jpg",
+      "image": "https://res.cloudinary.com/mo6vulz7/image/upload/v1789469502/CBEB5D53-BD19-44B6-99F8-484254B1E58C.png",
       "ratio": "4:5",
       "promptTitle": "GRADUATION — THE MOMENT",
       "price": 700,
@@ -150,7 +150,7 @@
         "/rimlight",
         "/magazinecover"
       ],
-      "image": "images/graduation-02.jpg",
+      "image": "https://res.cloudinary.com/mo6vulz7/image/upload/f_auto,q_auto/IMG_1239",
       "ratio": "4:5",
       "promptTitle": "GRADUATION — EARNED",
       "price": 700,
@@ -180,7 +180,7 @@
         "/backlight",
         "/filmgrain"
       ],
-      "image": "images/new-chapter-01.jpg",
+      "image": "https://res.cloudinary.com/mo6vulz7/image/upload/v1789469502/CBEB5D53-BD19-44B6-99F8-484254B1E58C.png",
       "ratio": "4:5",
       "promptTitle": "NEW CHAPTER — BEGINNING",
       "price": 700,
@@ -210,7 +210,7 @@
         "/anamorphic",
         "/35mmfilm"
       ],
-      "image": "images/future-builder-01.jpg",
+      "image": "https://res.cloudinary.com/mo6vulz7/image/upload/f_auto,q_auto/IMG_1239",
       "ratio": "4:5",
       "promptTitle": "BUILDING MY FUTURE — THE BUILDER",
       "price": 700,
@@ -240,7 +240,7 @@
         "/closeup",
         "/35mmfilm"
       ],
-      "image": "images/comeback-01.jpg",
+      "image": "https://res.cloudinary.com/mo6vulz7/image/upload/v1789469502/CBEB5D53-BD19-44B6-99F8-484254B1E58C.png",
       "ratio": "4:5",
       "promptTitle": "COMEBACK — STARTING AGAIN",
       "price": 700,
@@ -270,7 +270,7 @@
         "/softlighting",
         "/filmgrain"
       ],
-      "image": "images/personal-moment-01.jpg",
+      "image": "https://res.cloudinary.com/mo6vulz7/image/upload/f_auto,q_auto/IMG_1239",
       "ratio": "4:5",
       "promptTitle": "YOUR MOMENT — VISUAL MEMORY",
       "price": 700,
