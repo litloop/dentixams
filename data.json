@@ -9,6 +9,36 @@
 
   "stories": [
     {
+      "id": "new-chapter-02",
+      "featured": true,
+      "campaign": "New Chapter",
+      "emotion": "Confident",
+      "moment": "Stepping into a new environment while remaining fully yourself.",
+      "title": "Same man. New chapter.",
+      "quote": "A new chapter doesn't require becoming someone else.",
+      "context": "A man is being visually transported into a new environment while his identity and original appearance remain authentic and recognizable.",
+      "description": "A cinematic visual about entering a new environment without losing the identity that made you who you are. The image communicates confidence, authenticity, personal growth and forward movement.",
+      "style": "Cinematic",
+      "visualLanguage": "Cinematic, photorealistic, authentic, environmental",
+      "condition": "Confident and authentic",
+      "recipe": "Identity-locked portrait + environmental transformation + natural integration + cinematic realism + authentic personal presence",
+      "commands": [
+        "/hdreal",
+        "/cinematic",
+        "/editorial",
+        "/35mmfilm",
+        "/shallowdepth"
+      ],
+      "image": "https://res.cloudinary.com/mo6vulz7/image/upload/v1789534655/FC2F3830-63D5-498A-9F2B-BAB2366E92C9.png",
+      "ratio": "4:5",
+
+      "promptTitle": "MALE IDENTITY-LOCKED — BACKGROUND & HAIRSTYLE TRANSFORMATION",
+      "price": 700,
+      "compareAt": 1100,
+      "selarUrl": "https://selar.com/918t15c498"
+    },
+
+    {
       "id": "exam-era-01",
       "featured": true,
       "campaign": "Exam Era",
@@ -32,6 +62,7 @@
       ],
       "image": "https://res.cloudinary.com/mo6vulz7/image/upload/f_auto,q_auto/IMG_1239",
       "ratio": "4:5",
+
       "promptTitle": "EXAM ERA — CINEMATIC PORTRAIT",
       "price": 700,
       "compareAt": 1100,
@@ -62,6 +93,7 @@
       ],
       "image": "https://res.cloudinary.com/mo6vulz7/image/upload/v1789469502/CBEB5D53-BD19-44B6-99F8-484254B1E58C.png",
       "ratio": "4:5",
+
       "promptTitle": "EXAM ERA — THE QUIET BATTLE",
       "price": 700,
       "compareAt": 1100,
@@ -92,6 +124,7 @@
       ],
       "image": "https://res.cloudinary.com/mo6vulz7/image/upload/f_auto,q_auto/IMG_1239",
       "ratio": "4:5",
+
       "promptTitle": "EXAM ERA — ALMOST THERE",
       "price": 700,
       "compareAt": 1100,
@@ -122,6 +155,7 @@
       ],
       "image": "https://res.cloudinary.com/mo6vulz7/image/upload/v1789469502/CBEB5D53-BD19-44B6-99F8-484254B1E58C.png",
       "ratio": "4:5",
+
       "promptTitle": "GRADUATION — THE MOMENT",
       "price": 700,
       "compareAt": 1100,
@@ -152,6 +186,7 @@
       ],
       "image": "https://res.cloudinary.com/mo6vulz7/image/upload/f_auto,q_auto/IMG_1239",
       "ratio": "4:5",
+
       "promptTitle": "GRADUATION — EARNED",
       "price": 700,
       "compareAt": 1100,
@@ -182,6 +217,7 @@
       ],
       "image": "https://res.cloudinary.com/mo6vulz7/image/upload/v1789469502/CBEB5D53-BD19-44B6-99F8-484254B1E58C.png",
       "ratio": "4:5",
+
       "promptTitle": "NEW CHAPTER — BEGINNING",
       "price": 700,
       "compareAt": 1100,
@@ -212,6 +248,7 @@
       ],
       "image": "https://res.cloudinary.com/mo6vulz7/image/upload/f_auto,q_auto/IMG_1239",
       "ratio": "4:5",
+
       "promptTitle": "BUILDING MY FUTURE — THE BUILDER",
       "price": 700,
       "compareAt": 1100,
@@ -242,6 +279,7 @@
       ],
       "image": "https://res.cloudinary.com/mo6vulz7/image/upload/v1789469502/CBEB5D53-BD19-44B6-99F8-484254B1E58C.png",
       "ratio": "4:5",
+
       "promptTitle": "COMEBACK — STARTING AGAIN",
       "price": 700,
       "compareAt": 1100,
@@ -272,6 +310,7 @@
       ],
       "image": "https://res.cloudinary.com/mo6vulz7/image/upload/f_auto,q_auto/IMG_1239",
       "ratio": "4:5",
+
       "promptTitle": "YOUR MOMENT — VISUAL MEMORY",
       "price": 700,
       "compareAt": 1100,
