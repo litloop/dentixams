@@ -1,94 +1,190 @@
 {
   "site": {
-    "name": "FeelFrame™",
-    "shortName": "FeelFrame",
-    "type": "Visual Stories",
+    "name": "DANGOTE IPO DECODED™",
+    "shortName": "IPO DECODED™",
+    "type": "Digital Books",
     "language": "en-NG",
-    "currency": "NGN",
-    "themeColor": "#f4f2ed"
+    "currency": "NGN"
   },
 
   "seo": {
-    "title": "Explore — FeelFrame™",
-    "description": "Explore visual stories built around real emotions, milestones and human moments.",
+    "title": "DANGOTE IPO DECODED™ | Digital Books",
+    "description": "Practical digital books for understanding money, business and opportunity.",
     "keywords": [
-      "FeelFrame",
-      "AI visual storytelling",
-      "visual stories",
-      "personalized AI images",
-      "emotional storytelling",
+      "DANGOTE IPO DECODED",
+      "Dangote Refinery IPO",
+      "Nigerian business books",
+      "digital business books",
+      "financial education",
       "Nigeria"
     ]
   },
 
   "navigation": {
-    "primaryAction": {
-      "label": "Create ↗",
-      "target": "create.html"
-    },
+    "links": [
+      {
+        "label": "Books",
+        "target": "#bookshelf"
+      },
+      {
+        "label": "About",
+        "target": "#about"
+      }
+    ],
 
-    "exploreAction": {
-      "label": "Make It Yours",
-      "target": "create.html"
+    "primaryAction": {
+      "label": "Shop Now",
+      "target": "#bookshelf"
     }
   },
 
   "hero": {
-    "eyebrow": "THE FEELFRAME ARCHIVE",
+    "eyebrow": "DIGITAL EDITIONS",
 
-    "title": "Moments worth seeing.",
+    "title": "Books worth opening.",
 
-    "description": "A collection of visual stories shaped around real feelings, personal chapters and the moments that stay with us.",
+    "subtitle": "Practical ideas for understanding money, business and opportunity.",
 
-    "primaryCTA": "Make It Yours",
+    "description": "Practical digital books designed to help you understand important ideas clearly and make better-informed decisions.",
 
-    "primaryTarget": "create.html"
+    "primaryCTA": "Get the Book",
+
+    "secondaryCTA": "View Collection"
   },
 
-  "featured": {
-    "eyebrow": "FEATURED",
-
-    "title": "A moment, framed.",
-
-    "description": "Stories that capture more than how a moment looks — they capture what it feels like to be there."
-  },
-
-  "collection": {
+  "bookshelf": {
     "eyebrow": "THE COLLECTION",
 
-    "title": "Explore the archive.",
+    "title": "Choose your book.",
 
-    "description": "Move through different emotions, seasons and personal chapters. Every story begins with something human.",
+    "books": [
+      {
+        "id": "dangote-ipo-decoded",
 
-    "filters": [
-      "All",
-      "Exam Era",
-      "Graduation",
-      "New Chapter",
-      "Building My Future",
-      "Personal Comeback",
-      "Personal Moment",
-      "Something Else"
+        "status": "available",
+
+        "featured": true,
+
+        "badge": "FLAGSHIP",
+
+        "number": "01",
+
+        "title": "DANGOTE IPO DECODED™",
+
+        "shortDescription": "A practical Nigerian guide to understanding the Dangote Refinery IPO—from what an IPO and shares mean to verifying information, examining the business and financials, understanding valuation and risk, preparing for participation, and making an informed independent judgment.",
+
+        "hook": "Instead of asking only whether you should participate, learn how to understand what is being offered, what the information means, what could go wrong, and what you still need to know before deciding.",
+
+        "cover": "https://i.postimg.cc/Ny0hV0JX/IMG-1087.jpg",
+
+        "price": "₦2,333",
+
+        "cta": "Get the Book",
+
+        "checkout": "https://selar.com/ak798k7597",
+
+        "tags": [
+          "IPO",
+          "Dangote Refinery",
+          "Nigeria",
+          "Financial Education",
+          "Investment Analysis"
+        ],
+
+        "highlights": [
+          "Understand how IPOs, shares, ownership, offer prices, market prices, subscription, allotment, and listing fit together.",
+          "Learn how to identify authoritative information, verify changing IPO claims, and distinguish facts from interpretation and speculation.",
+          "Examine the refinery business, its operating drivers, financial information, valuation concepts, and the difference between price and value.",
+          "Use practical calculations and structured frameworks to understand subscription costs, financial information, valuation considerations, and investment risks.",
+          "Recognize FOMO, social proof, anchoring, overconfidence, and other behavioral biases that can affect financial decision-making.",
+          "Follow a repeatable process—UNDERSTAND → VERIFY → EVALUATE → CALCULATE → PREPARE → DECIDE → MONITOR—without the book making the investment decision for you."
+        ],
+
+        "preview": []
+      },
+
+      {
+        "id": "digital-mind",
+
+        "status": "available",
+
+        "featured": false,
+
+        "badge": "NEW",
+
+        "number": "02",
+
+        "title": "DIGITAL MIND",
+
+        "shortDescription": "A practical digital book exploring the ideas, habits and thinking patterns needed to navigate the modern digital world.",
+
+        "hook": "Understand the digital world. Think better inside it.",
+
+        "cover": "https://i.postimg.cc/Jyhwgh6Z/43A0FCA1-BA30-4FD0-A561-77800EC21D6B.png",
+
+        "price": "See current price",
+
+        "cta": "Get the Book",
+
+        "checkout": "https://selar.com/o19419or39",
+
+        "tags": [
+          "Digital",
+          "Mindset",
+          "Ideas"
+        ],
+
+        "highlights": [
+          "Understand digital thinking",
+          "Recognize modern digital patterns",
+          "Think more clearly about technology",
+          "Build better digital awareness",
+          "Apply ideas to everyday life"
+        ],
+
+        "preview": []
+      }
     ]
   },
 
-  "manifesto": {
-    "eyebrow": "WHY FEELFRAME",
+  "about": {
+    "eyebrow": "ABOUT",
 
-    "title": "Some moments are too personal to remain invisible.",
+    "title": "Practical books. No unnecessary noise.",
 
-    "text": "A photograph can show where you were. A FeelFrame is built to express what that moment meant to you — the pressure, the progress, the uncertainty, the confidence, the hope."
+    "text": "A collection of practical digital books designed to make complicated business, financial and digital concepts easier to understand and apply."
   },
 
-  "cta": {
-    "eyebrow": "YOUR TURN",
+  "faq": {
+    "items": [
+      {
+        "question": "Are these physical books?",
+        "answer": "No. The collection is made up of digital books."
+      },
 
-    "title": "Your moment could be next.",
+      {
+        "question": "Where do I purchase a book?",
+        "answer": "Available books can be purchased through their individual checkout buttons."
+      },
 
-    "description": "Tell us what you're feeling, what you're going through and what you want the image to communicate. We'll turn the moment into a visual direction made around you.",
+      {
+        "question": "How do I receive my book?",
+        "answer": "After completing your purchase, delivery is handled through the checkout platform."
+      },
 
-    "button": "Create My FeelFrame",
+      {
+        "question": "Is DANGOTE IPO DECODED™ investment advice?",
+        "answer": "No. It is an educational resource and does not provide individualized investment recommendations."
+      }
+    ]
+  },
 
-    "target": "create.html"
+  "disclaimer": {
+    "text": "DANGOTE IPO DECODED™ is an educational resource and is not individualized financial, investment, legal or tax advice."
+  },
+
+  "footer": {
+    "copyright": "© 2026 DANGOTE IPO DECODED™. All rights reserved.",
+    "privacy": "Privacy Policy"
   }
 }
