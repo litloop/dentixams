@@ -1,1375 +1,1366 @@
 /* =========================================================
-   FEELFRAME™
-   EXPLORE.JS
-   Explore Page Application
+   FEELFRAME™ — EXPLORE / STOREFRONT
+   explore.js
    ========================================================= */
 
-(() => {
-
-  "use strict";
+"use strict";
 
 
-  /* =======================================================
-     DATA SOURCES
-  ======================================================= */
+/* =========================================================
+   01. CONFIG
+   ========================================================= */
 
-  const EXPLORE_CONTENT_URL = "./explore.json";
-  const STORIES_CONTENT_URL = "./data.json";
-
-
-  /* =======================================================
-     STATE
-  ======================================================= */
-
-  const state = {
-
-    explore: null,
-
-    stories: [],
-
-    featuredStories: [],
-
-    activeFilter: "All"
-
-  };
+const DATA_URL = "./explore.json";
 
 
-  /* =======================================================
-     HELPERS
-  ======================================================= */
+/* =========================================================
+   02. DOM
+   ========================================================= */
 
-  const $ = (
-    selector,
-    parent = document
-  ) => parent.querySelector(selector);
+const DOM = {
+  pageTitle: document.getElementById("page-title"),
+  metaDescription: document.getElementById("meta-description"),
+  metaKeywords: document.getElementById("meta-keywords"),
+
+  siteNames: document.querySelectorAll("[data-site-name]"),
+
+  desktopNavigation:
+    document.getElementById("desktop-navigation"),
+
+  primaryAction:
+    document.querySelector("[data-primary-action]"),
+
+  heroEyebrow:
+    document.getElementById("hero-eyebrow"),
+
+  heroTitle:
+    document.getElementById("hero-title"),
+
+  heroSubtitle:
+    document.getElementById("hero-subtitle"),
+
+  heroDescription:
+    document.getElementById("hero-description"),
+
+  heroPrimary:
+    document.querySelector("[data-hero-primary]"),
+
+  heroSecondary:
+    document.querySelector("[data-hero-secondary]"),
+
+  bookshelfEyebrow:
+    document.getElementById("bookshelf-eyebrow"),
+
+  bookshelfTitle:
+    document.getElementById("bookshelf-title"),
+
+  bookshelfDescription:
+    document.getElementById("bookshelf-description"),
+
+  bookshelfGrid:
+    document.getElementById("bookshelf-grid"),
+
+  bookshelfEmpty:
+    document.getElementById("bookshelf-empty"),
+
+  aboutEyebrow:
+    document.getElementById("about-eyebrow"),
+
+  aboutTitle:
+    document.getElementById("about-title"),
+
+  aboutText:
+    document.getElementById("about-text"),
+
+  faqList:
+    document.getElementById("faq-list"),
+
+  disclaimer:
+    document.getElementById("disclaimer-text"),
+
+  footerCopyright:
+    document.getElementById("footer-copyright"),
+
+  privacyLink:
+    document.getElementById("privacy-link"),
+
+  modal:
+    document.getElementById("product-modal"),
+
+  modalClose:
+    document.getElementById("modal-close"),
+
+  modalCover:
+    document.getElementById("modal-cover"),
+
+  modalBadge:
+    document.getElementById("modal-badge"),
+
+  modalNumber:
+    document.getElementById("modal-number"),
+
+  modalTitle:
+    document.getElementById("modal-title"),
+
+  modalDescription:
+    document.getElementById("modal-description"),
+
+  modalTags:
+    document.getElementById("modal-tags"),
+
+  modalHighlights:
+    document.getElementById("modal-highlights-list"),
+
+  modalPrice:
+    document.getElementById("modal-price"),
+
+  modalBuy:
+    document.getElementById("modal-buy")
+};
 
 
-  const $$ = (
-    selector,
-    parent = document
-  ) => Array.from(
-    parent.querySelectorAll(selector)
-  );
+/* =========================================================
+   03. STORE STATE
+   ========================================================= */
+
+let storeData = null;
+
+let books = [];
 
 
-  function setText(
-    selector,
-    value
-  ) {
+/* =========================================================
+   04. INITIALIZE
+   ========================================================= */
 
-    const element = $(selector);
-
-    if (!element) {
-      return;
-    }
-
-    element.textContent =
-      value !== undefined &&
-      value !== null
-        ? String(value)
-        : "";
-
-  }
+document.addEventListener("DOMContentLoaded", init);
 
 
-  function escapeHTML(value) {
+async function init() {
 
-    return String(value ?? "")
+  try {
 
-      .replace(/&/g, "&amp;")
-
-      .replace(/</g, "&lt;")
-
-      .replace(/>/g, "&gt;")
-
-      .replace(/"/g, "&quot;")
-
-      .replace(/'/g, "&#039;");
-
-  }
-
-
-  function safeURL(url) {
-
-    if (
-      !url ||
-      typeof url !== "string"
-    ) {
-      return "";
-    }
-
-
-    try {
-
-      const parsed =
-        new URL(
-          url,
-          window.location.href
-        );
-
-
-      if (
-        parsed.protocol === "https:" ||
-        parsed.protocol === "http:"
-      ) {
-
-        return parsed.href;
-
-      }
-
-    } catch (error) {
-
-      return "";
-
-    }
-
-
-    return "";
-
-  }
-
-
-  async function loadJSON(url) {
-
-    const response =
-      await fetch(
-        url,
-        {
-          cache: "no-store"
-        }
-      );
-
+    const response = await fetch(DATA_URL, {
+      cache: "no-store"
+    });
 
     if (!response.ok) {
-
       throw new Error(
-        `Unable to load ${url} (${response.status})`
+        `Unable to load ${DATA_URL}`
       );
-
     }
 
-
-    const data =
-      await response.json();
-
-
-    if (
-      !data ||
-      typeof data !== "object"
-    ) {
-
-      throw new Error(
-        `${url} contains invalid JSON.`
-      );
-
-    }
-
-
-    return data;
-
-  }
-
-
-
-  /* =======================================================
-     META / SEO
-     ======================================================= */
-
-  function renderMeta(content) {
-
-    const site =
-      content.site || {};
-
-    const seo =
-      content.seo || {};
-
-
-    document.title =
-      seo.title ||
-      `Explore — ${site.name || "FeelFrame™"}`;
-
-
-    const descriptionMeta =
-      $('meta[name="description"]');
-
-
-    if (descriptionMeta) {
-
-      descriptionMeta.content =
-        seo.description || "";
-
-    }
-
-
-    const ogTitle =
-      $('meta[property="og:title"]');
-
-
-    if (ogTitle) {
-
-      ogTitle.content =
-        seo.title ||
-        site.name ||
-        "FeelFrame™";
-
-    }
-
-
-    const ogDescription =
-      $('meta[property="og:description"]');
-
-
-    if (ogDescription) {
-
-      ogDescription.content =
-        seo.description || "";
-
-    }
-
-
-    const themeColor =
-      $('meta[name="theme-color"]');
-
-
-    if (
-      themeColor &&
-      site.themeColor
-    ) {
-
-      themeColor.content =
-        site.themeColor;
-
-    }
-
-  }
-
-
-
-  /* =======================================================
-     NAVIGATION
-     ======================================================= */
-
-  function renderNavigation(content) {
-
-    const navigation =
-      content.navigation || {};
-
-
-    const primaryAction =
-      navigation.primaryAction;
-
-
-    const headerCTA =
-      $('[data-header-cta]');
-
-
-    if (
-      headerCTA &&
-      primaryAction
-    ) {
-
-      headerCTA.textContent =
-        primaryAction.label ||
-        "Create ↗";
-
-
-      const target =
-        safeURL(
-          primaryAction.target ||
-          "create.html"
-        );
-
-
-      if (target) {
-
-        headerCTA.href =
-          target;
-
-      }
-
-    }
-
-
-    const primaryExploreCTA =
-      $('[data-explore-primary-cta]');
-
-
-    if (
-      primaryExploreCTA &&
-      navigation.exploreAction
-    ) {
-
-      primaryExploreCTA.textContent =
-        navigation.exploreAction.label ||
-        "Make It Yours";
-
-
-      primaryExploreCTA.href =
-        navigation.exploreAction.target ||
-        "create.html";
-
-    }
-
-  }
-
-
-
-  /* =======================================================
-     HERO
-     ======================================================= */
-
-  function renderHero(content) {
-
-    const hero =
-      content.hero || {};
-
-
-    setText(
-      "#explore-eyebrow",
-      hero.eyebrow ||
-      "THE FEELFRAME ARCHIVE"
-    );
-
-
-    setText(
-      "#explore-title",
-      hero.title ||
-      "Moments worth seeing."
-    );
-
-
-    setText(
-      "#explore-description",
-      hero.description ||
-      ""
-    );
-
-
-    const primaryCTA =
-      $('[data-explore-primary-cta]');
-
-
-    if (primaryCTA) {
-
-      primaryCTA.textContent =
-        hero.primaryCTA ||
-        "Make It Yours";
-
-
-      primaryCTA.href =
-        hero.primaryTarget ||
-        "create.html";
-
-    }
-
-  }
-
-
-
-  /* =======================================================
-     FEATURED SECTION COPY
-     ======================================================= */
-
-  function renderFeaturedHeading(content) {
-
-    const featured =
-      content.featured || {};
-
-
-    setText(
-      "#featured-eyebrow",
-      featured.eyebrow ||
-      "FEATURED"
-    );
-
-
-    setText(
-      "#featured-title",
-      featured.title ||
-      "A moment, framed."
-    );
-
-
-    setText(
-      "#featured-description",
-      featured.description ||
-      ""
-    );
-
-  }
-
-
-
-  /* =======================================================
-     FEATURED STORY
-     ======================================================= */
-
-  function getFeaturedStories(stories) {
-
-    return stories.filter(
-      story =>
-        story &&
-        story.featured === true
-    );
-
-  }
-
-
-  function renderFeaturedStory(story) {
-
-    const container =
-      $("#exploreFeatured");
-
-
-    if (!container) {
-      return;
-    }
-
-
-    if (!story) {
-
-      container.innerHTML = `
-
-        <div class="story-empty">
-
-          <h3>
-            No featured story yet.
-          </h3>
-
-          <p>
-            The FeelFrame archive is waiting for
-            its next featured moment.
-          </p>
-
-        </div>
-
-      `;
-
-      return;
-
-    }
-
-
-    const image =
-      safeURL(story.image);
-
-
-    const storyURL =
-      `story.html?id=${
-        encodeURIComponent(
-          story.id || ""
-        )
-      }`;
-
-
-    container.innerHTML = `
-
-      <article
-        class="explore-featured-card"
-        data-story-id="${escapeHTML(story.id)}"
-      >
-
-
-        <a
-          href="${storyURL}"
-          class="explore-featured-image-link"
-          aria-label="Open ${escapeHTML(
-            story.title ||
-            "FeelFrame story"
-          )}"
-        >
-
-          <img
-            class="explore-featured-image"
-            src="${escapeHTML(image)}"
-            alt="${escapeHTML(
-              story.title ||
-              "FeelFrame visual story"
-            )}"
-            loading="eager"
-          >
-
-        </a>
-
-
-        <div class="explore-featured-content">
-
-
-          <p class="eyebrow">
-            ${escapeHTML(
-              story.campaign ||
-              "FEATURED"
-            )}
-          </p>
-
-
-          <h3>
-            ${escapeHTML(
-              story.title ||
-              ""
-            )}
-          </h3>
-
-
-          ${
-            story.quote
-              ? `
-                <blockquote>
-                  “${escapeHTML(
-                    story.quote
-                  )}”
-                </blockquote>
-              `
-              : ""
-          }
-
-
-          <p>
-            ${escapeHTML(
-              story.description ||
-              story.context ||
-              ""
-            )}
-          </p>
-
-
-          <div class="explore-story-meta">
-
-
-            ${
-              story.emotion
-                ? `
-                  <span>
-                    ${escapeHTML(
-                      story.emotion
-                    )}
-                  </span>
-                `
-                : ""
-            }
-
-
-            ${
-              story.style
-                ? `
-                  <span>
-                    ${escapeHTML(
-                      story.style
-                    )}
-                  </span>
-                `
-                : ""
-            }
-
-
-          </div>
-
-
-          <a
-            href="${storyURL}"
-            class="button button-primary"
-          >
-            View Story →
-          </a>
-
-
-        </div>
-
-
-      </article>
-
-    `;
-
-
-    setupImageFallbacks();
-
-  }
-
-
-
-  /* =======================================================
-     COLLECTION COPY
-     ======================================================= */
-
-  function renderCollectionHeading(content) {
-
-    const collection =
-      content.collection || {};
-
-
-    setText(
-      "#collection-eyebrow",
-      collection.eyebrow ||
-      "THE COLLECTION"
-    );
-
-
-    setText(
-      "#collection-title",
-      collection.title ||
-      "Explore the archive."
-    );
-
-
-    setText(
-      "#collection-description",
-      collection.description ||
-      ""
-    );
-
-  }
-
-
-
-  /* =======================================================
-     FILTERS
-     ======================================================= */
-
-  function renderFilters(content) {
-
-    const collection =
-      content.collection || {};
-
-
-    const filters =
-      Array.isArray(
-        collection.filters
-      )
-        ? collection.filters
-        : [];
-
-
-    const container =
-      $("#exploreFilters");
-
-
-    if (!container) {
-      return;
-    }
-
-
-    container.innerHTML = "";
-
-
-    filters.forEach(
-      filter => {
-
-        const button =
-          document.createElement(
-            "button"
-          );
-
-
-        button.type = "button";
-
-
-        button.className =
-          "filter-button";
-
-
-        button.dataset.filter =
-          filter;
-
-
-        button.textContent =
-          filter;
-
-
-        const active =
-          filter ===
-          state.activeFilter;
-
-
-        button.classList.toggle(
-          "is-active",
-          active
-        );
-
-
-        button.setAttribute(
-          "aria-pressed",
-          String(active)
-        );
-
-
-        container.appendChild(
-          button
-        );
-
-      }
-    );
-
-
-    bindFilters();
-
-  }
-
-
-
-  function bindFilters() {
-
-    $$(".filter-button")
-      .forEach(
-        button => {
-
-          if (
-            button.dataset.bound ===
-            "true"
-          ) {
-
-            return;
-
-          }
-
-
-          button.dataset.bound =
-            "true";
-
-
-          button.addEventListener(
-            "click",
-            () => {
-
-              state.activeFilter =
-                button.dataset.filter ||
-                "All";
-
-
-              updateFilterState();
-
-
-              renderStoryGrid();
-
-            }
-          );
-
-        }
-      );
-
-  }
-
-
-
-  function updateFilterState() {
-
-    $$(".filter-button")
-      .forEach(
-        button => {
-
-          const active =
-            button.dataset.filter ===
-            state.activeFilter;
-
-
-          button.classList.toggle(
-            "is-active",
-            active
-          );
-
-
-          button.setAttribute(
-            "aria-pressed",
-            String(active)
-          );
-
-        }
-      );
-
-  }
-
-
-
-  /* =======================================================
-     STORY FILTERING
-     ======================================================= */
-
-  function getFilteredStories() {
-
-    if (
-      state.activeFilter ===
-      "All"
-    ) {
-
-      return state.stories;
-
-    }
-
-
-    return state.stories.filter(
-      story =>
-        story.campaign ===
-        state.activeFilter
-    );
-
-  }
-
-
-
-  /* =======================================================
-     STORY GRID
-     ======================================================= */
-
-  function renderStoryGrid() {
-
-    const container =
-      $("#exploreStoryGrid");
-
-
-    const empty =
-      $("#exploreEmpty");
-
-
-    if (!container) {
-      return;
-    }
-
-
-    const stories =
-      getFilteredStories();
-
-
-    container.innerHTML =
-      "";
-
-
-    setText(
-      "#exploreResultCount",
-      `${stories.length} ${
-        stories.length === 1
-          ? "story"
-          : "stories"
-      }`
-    );
-
-
-    if (!stories.length) {
-
-      if (empty) {
-        empty.hidden = false;
-      }
-
-      return;
-
-    }
-
-
-    if (empty) {
-      empty.hidden = true;
-    }
-
-
-    stories.forEach(
-      story => {
-
-        const card =
-          document.createElement(
-            "article"
-          );
-
-
-        card.className =
-          "story-card";
-
-
-        const storyURL =
-          `story.html?id=${
-            encodeURIComponent(
-              story.id || ""
-            )
-          }`;
-
-
-        const image =
-          safeURL(story.image);
-
-
-        card.innerHTML = `
-
-          <a
-            href="${storyURL}"
-            class="story-card-link"
-            aria-label="Open ${escapeHTML(
-              story.title ||
-              "FeelFrame story"
-            )}"
-          >
-
-
-            <div class="story-card-image-wrap">
-
-              <img
-                class="story-card-image"
-                src="${escapeHTML(image)}"
-                alt="${escapeHTML(
-                  story.title ||
-                  "FeelFrame visual story"
-                )}"
-                loading="lazy"
-              >
-
-            </div>
-
-
-            <div class="story-card-content">
-
-
-              <p class="eyebrow">
-
-                ${escapeHTML(
-                  story.campaign ||
-                  ""
-                )}
-
-              </p>
-
-
-              <h3 class="story-card-title">
-
-                ${escapeHTML(
-                  story.title ||
-                  ""
-                )}
-
-              </h3>
-
-
-              <p class="story-card-description">
-
-                ${escapeHTML(
-                  story.description ||
-                  story.context ||
-                  ""
-                )}
-
-              </p>
-
-
-              <div class="story-card-meta">
-
-
-                ${
-                  story.emotion
-                    ? `
-                      <span>
-                        ${escapeHTML(
-                          story.emotion
-                        )}
-                      </span>
-                    `
-                    : ""
-                }
-
-
-                ${
-                  story.style
-                    ? `
-                      <span>
-                        ${escapeHTML(
-                          story.style
-                        )}
-                      </span>
-                    `
-                    : ""
-                }
-
-
-              </div>
-
-
-            </div>
-
-
-          </a>
-
-        `;
-
-
-        container.appendChild(
-          card
-        );
-
-      }
-    );
-
-
-    setupImageFallbacks();
-
-  }
-
-
-
-  /* =======================================================
-     MANIFESTO
-     ======================================================= */
-
-  function renderManifesto(content) {
-
-    const manifesto =
-      content.manifesto || {};
-
-
-    setText(
-      "#manifesto-eyebrow",
-      manifesto.eyebrow ||
-      "WHY FEELFRAME"
-    );
-
-
-    setText(
-      "#manifesto-title",
-      manifesto.title ||
-      ""
-    );
-
-
-    setText(
-      "#manifesto-text",
-      manifesto.text ||
-      ""
-    );
-
-  }
-
-
-
-  /* =======================================================
-     FINAL CTA
-     ======================================================= */
-
-  function renderCTA(content) {
-
-    const cta =
-      content.cta || {};
-
-
-    setText(
-      "#explore-cta-eyebrow",
-      cta.eyebrow ||
-      "YOUR TURN"
-    );
-
-
-    setText(
-      "#explore-cta-title",
-      cta.title ||
-      "Your moment could be next."
-    );
-
-
-    setText(
-      "#explore-cta-description",
-      cta.description ||
-      ""
-    );
-
-
-    const button =
-      $("#explore-cta-button");
-
-
-    if (!button) {
-      return;
-    }
-
-
-    button.textContent =
-      cta.button ||
-      "Create My FeelFrame";
-
-
-    button.href =
-      cta.target ||
-      "create.html";
-
-  }
-
-
-
-  /* =======================================================
-     IMAGE FALLBACKS
-     ======================================================= */
-
-  function setupImageFallbacks() {
-
-    $$("img").forEach(
-      image => {
-
-        if (
-          image.dataset.fallbackBound ===
-          "true"
-        ) {
-
-          return;
-
-        }
-
-
-        image.dataset.fallbackBound =
-          "true";
-
-
-        image.addEventListener(
-          "error",
-          () => {
-
-            image.classList.add(
-              "image-error"
-            );
-
-
-            console.warn(
-              "FeelFrame image could not be loaded:",
-              image.src
-            );
-
-          }
-        );
-
-      }
-    );
-
-  }
-
-
-
-  /* =======================================================
-     LOADING STATE
-     ======================================================= */
-
-  function showLoading() {
-
-    document.body.classList.add(
-      "content-loading"
-    );
-
-  }
-
-
-  function hideLoading() {
-
-    document.body.classList.remove(
-      "content-loading"
-    );
-
-
-    document.body.classList.add(
-      "content-loaded"
-    );
-
-  }
-
-
-
-  /* =======================================================
-     ERROR STATE
-     ======================================================= */
-
-  function showError(error) {
+    storeData = await response.json();
+
+    books = Array.isArray(
+      storeData?.bookshelf?.books
+    )
+      ? storeData.bookshelf.books
+      : [];
+
+    renderSiteMeta();
+    renderNavigation();
+    renderHero();
+    renderBookshelf();
+    renderAbout();
+    renderFAQ();
+    renderDisclaimer();
+    renderFooter();
+
+    bindGlobalEvents();
+
+  } catch (error) {
 
     console.error(
-      "FeelFrame Explore error:",
+      "FeelFrame™ storefront error:",
       error
     );
 
+    showLoadError();
 
-    document.body.classList.remove(
-      "content-loading"
+  }
+
+}
+
+
+/* =========================================================
+   05. SITE META
+   ========================================================= */
+
+function renderSiteMeta() {
+
+  const site = storeData.site || {};
+  const seo = storeData.seo || {};
+
+  const siteName =
+    site.name || "FeelFrame™";
+
+  const title =
+    seo.title || siteName;
+
+  const description =
+    seo.description || "";
+
+  const keywords =
+    Array.isArray(seo.keywords)
+      ? seo.keywords.join(", ")
+      : "";
+
+  document.documentElement.lang =
+    site.language || "en";
+
+  document.title = title;
+
+  if (DOM.pageTitle) {
+    DOM.pageTitle.textContent = title;
+  }
+
+  if (DOM.metaDescription) {
+    DOM.metaDescription.setAttribute(
+      "content",
+      description
     );
+  }
 
-
-    document.body.classList.add(
-      "content-error"
+  if (DOM.metaKeywords) {
+    DOM.metaKeywords.setAttribute(
+      "content",
+      keywords
     );
+  }
+
+  DOM.siteNames.forEach((element) => {
+    element.textContent = siteName;
+  });
+
+}
 
 
-    const grid =
-      $("#exploreStoryGrid");
+/* =========================================================
+   06. NAVIGATION
+   ========================================================= */
 
+function renderNavigation() {
 
-    if (grid) {
+  const navigation =
+    storeData.navigation || {};
 
-      grid.innerHTML = `
+  const links =
+    Array.isArray(navigation.links)
+      ? navigation.links
+      : [];
 
-        <div class="empty-state">
+  DOM.desktopNavigation.innerHTML = "";
 
-          <h3>
-            Explore is temporarily unavailable.
-          </h3>
+  links.forEach((link) => {
 
-          <p>
-            Please refresh the page and try again.
-          </p>
-
-        </div>
-
-      `;
-
+    if (!link?.label || !link?.target) {
+      return;
     }
 
-  }
+    const anchor =
+      document.createElement("a");
 
+    anchor.href = link.target;
+    anchor.textContent = link.label;
 
-
-  /* =======================================================
-     RENDER EVERYTHING
-     ======================================================= */
-
-  function renderSite() {
-
-    renderMeta(
-      state.explore
+    DOM.desktopNavigation.appendChild(
+      anchor
     );
 
+  });
 
-    renderNavigation(
-      state.explore
-    );
+  if (
+    navigation.primaryAction &&
+    DOM.primaryAction
+  ) {
 
+    DOM.primaryAction.textContent =
+      navigation.primaryAction.label || "Shop Now";
 
-    renderHero(
-      state.explore
-    );
-
-
-    renderFeaturedHeading(
-      state.explore
-    );
-
-
-    renderFeaturedStory(
-      state.featuredStories[0]
-    );
-
-
-    renderCollectionHeading(
-      state.explore
-    );
-
-
-    renderFilters(
-      state.explore
-    );
-
-
-    renderStoryGrid();
-
-
-    renderManifesto(
-      state.explore
-    );
-
-
-    renderCTA(
-      state.explore
-    );
+    DOM.primaryAction.href =
+      navigation.primaryAction.target || "#bookshelf";
 
   }
 
+}
 
 
-  /* =======================================================
-     INITIALIZATION
-     ======================================================= */
+/* =========================================================
+   07. HERO
+   ========================================================= */
 
-  async function init() {
+function renderHero() {
 
-    showLoading();
+  const hero =
+    storeData.hero || {};
 
+  DOM.heroEyebrow.textContent =
+    hero.eyebrow || "";
 
-    try {
+  DOM.heroTitle.textContent =
+    hero.title || "";
 
+  DOM.heroSubtitle.textContent =
+    hero.subtitle || "";
 
-      const [
-        exploreContent,
-        storyContent
-      ] = await Promise.all([
+  DOM.heroDescription.textContent =
+    hero.description || "";
 
-        loadJSON(
-          EXPLORE_CONTENT_URL
-        ),
+  DOM.heroPrimary.textContent =
+    hero.primaryCTA || "Shop Now";
 
-        loadJSON(
-          STORIES_CONTENT_URL
-        )
+  DOM.heroSecondary.textContent =
+    hero.secondaryCTA || "View Collection";
 
-      ]);
+  DOM.heroPrimary.href =
+    "#bookshelf";
 
+  DOM.heroSecondary.href =
+    "#bookshelf";
 
-      state.explore =
-        exploreContent;
-
-
-      state.stories =
-        Array.isArray(
-          storyContent.stories
-        )
-          ? storyContent.stories
-          : [];
+}
 
 
-      /*
-        Featured status is independent
-        of story order.
+/* =========================================================
+   08. BOOKSHELF
+   ========================================================= */
 
-        This means a newly added story can
-        be placed at index 0 in data.json
-        without automatically becoming
-        featured unless featured:true.
-      */
+function renderBookshelf() {
 
-      state.featuredStories =
-        getFeaturedStories(
-          state.stories
+  const bookshelf =
+    storeData.bookshelf || {};
+
+  DOM.bookshelfEyebrow.textContent =
+    bookshelf.eyebrow || "";
+
+  DOM.bookshelfTitle.textContent =
+    bookshelf.title || "";
+
+  DOM.bookshelfDescription.textContent =
+    bookshelf.description || "";
+
+  DOM.bookshelfGrid.innerHTML = "";
+
+  if (!books.length) {
+
+    DOM.bookshelfEmpty.hidden = false;
+
+    return;
+
+  }
+
+  DOM.bookshelfEmpty.hidden = true;
+
+  const sortedBooks =
+    [...books].sort(
+      sortFeaturedFirst
+    );
+
+  sortedBooks.forEach((book, index) => {
+
+    const card =
+      createBookCard(book, index);
+
+    DOM.bookshelfGrid.appendChild(card);
+
+  });
+
+}
+
+
+/* =========================================================
+   09. PRODUCT CARD
+   ========================================================= */
+
+function createBookCard(book, index) {
+
+  const article =
+    document.createElement("article");
+
+  article.className = "product-card";
+
+  article.dataset.bookId =
+    book.id || "";
+
+  article.style.animationDelay =
+    `${Math.min(index * 80, 500)}ms`;
+
+
+  /* -----------------------------------------
+     Cover
+  ----------------------------------------- */
+
+  const coverWrap =
+    document.createElement("div");
+
+  coverWrap.className =
+    "product-cover-wrap";
+
+
+  const image =
+    document.createElement("img");
+
+  image.className =
+    "product-cover";
+
+  image.src =
+    book.cover || "";
+
+  image.alt =
+    book.title
+      ? `${book.title} cover`
+      : "Book cover";
+
+  image.loading =
+    index < 2
+      ? "eager"
+      : "lazy";
+
+  image.decoding =
+    "async";
+
+
+  const overlay =
+    document.createElement("div");
+
+  overlay.className =
+    "product-cover-overlay";
+
+
+  const viewButton =
+    document.createElement("button");
+
+  viewButton.type =
+    "button";
+
+  viewButton.className =
+    "product-view";
+
+  viewButton.textContent =
+    "View Details";
+
+  viewButton.addEventListener(
+    "click",
+    () => openProduct(book)
+  );
+
+
+  overlay.appendChild(
+    viewButton
+  );
+
+  coverWrap.appendChild(image);
+  coverWrap.appendChild(overlay);
+
+
+  /* -----------------------------------------
+     Information
+  ----------------------------------------- */
+
+  const information =
+    document.createElement("div");
+
+  information.className =
+    "product-information";
+
+
+  const topline =
+    document.createElement("div");
+
+  topline.className =
+    "product-topline";
+
+
+  if (book.badge) {
+
+    const badge =
+      document.createElement("span");
+
+    badge.className =
+      "product-badge";
+
+    badge.textContent =
+      book.badge;
+
+    topline.appendChild(badge);
+
+  } else {
+
+    const spacer =
+      document.createElement("span");
+
+    spacer.className =
+      "product-badge";
+
+    spacer.style.visibility =
+      "hidden";
+
+    spacer.textContent =
+      "BOOK";
+
+    topline.appendChild(spacer);
+
+  }
+
+
+  const number =
+    document.createElement("span");
+
+  number.className =
+    "product-number";
+
+  number.textContent =
+    book.number
+      ? `NO. ${book.number}`
+      : "";
+
+  topline.appendChild(number);
+
+
+  const title =
+    document.createElement("h3");
+
+  title.className =
+    "product-title";
+
+  title.textContent =
+    book.title || "Untitled";
+
+
+  const description =
+    document.createElement("p");
+
+  description.className =
+    "product-description";
+
+  description.textContent =
+    book.shortDescription || "";
+
+
+  information.appendChild(topline);
+  information.appendChild(title);
+  information.appendChild(description);
+
+
+  /* -----------------------------------------
+     Hook
+  ----------------------------------------- */
+
+  if (book.hook) {
+
+    const hook =
+      document.createElement("p");
+
+    hook.className =
+      "product-hook";
+
+    hook.textContent =
+      book.hook;
+
+    information.appendChild(hook);
+
+  }
+
+
+  /* -----------------------------------------
+     Tags
+  ----------------------------------------- */
+
+  if (
+    Array.isArray(book.tags) &&
+    book.tags.length
+  ) {
+
+    const tags =
+      document.createElement("div");
+
+    tags.className =
+      "product-tags";
+
+    book.tags.forEach((tag) => {
+
+      const tagElement =
+        document.createElement("span");
+
+      tagElement.className =
+        "product-tag";
+
+      tagElement.textContent =
+        tag;
+
+      tags.appendChild(
+        tagElement
+      );
+
+    });
+
+    information.appendChild(tags);
+
+  }
+
+
+  /* -----------------------------------------
+     Bottom / Purchase
+  ----------------------------------------- */
+
+  const bottom =
+    document.createElement("div");
+
+  bottom.className =
+    "product-bottom";
+
+
+  const price =
+    document.createElement("div");
+
+  price.className =
+    "product-price";
+
+
+  const priceLabel =
+    document.createElement("span");
+
+  priceLabel.className =
+    "product-price-label";
+
+  priceLabel.textContent =
+    "Digital Edition";
+
+
+  const priceValue =
+    document.createElement("strong");
+
+  priceValue.className =
+    "product-price-value";
+
+  priceValue.textContent =
+    book.price || "See current price";
+
+
+  price.appendChild(
+    priceLabel
+  );
+
+  price.appendChild(
+    priceValue
+  );
+
+
+  const actions =
+    document.createElement("div");
+
+  actions.className =
+    "product-actions";
+
+
+  const infoButton =
+    document.createElement("button");
+
+  infoButton.type =
+    "button";
+
+  infoButton.className =
+    "product-info-button";
+
+  infoButton.textContent =
+    "Details";
+
+  infoButton.addEventListener(
+    "click",
+    () => openProduct(book)
+  );
+
+
+  const buyButton =
+    document.createElement("a");
+
+  buyButton.className =
+    "product-buy-button";
+
+  buyButton.textContent =
+    book.cta || "Get the Book";
+
+  buyButton.href =
+    book.checkout || "#";
+
+  buyButton.target =
+    "_blank";
+
+  buyButton.rel =
+    "noopener noreferrer";
+
+
+  actions.appendChild(
+    infoButton
+  );
+
+  actions.appendChild(
+    buyButton
+  );
+
+
+  bottom.appendChild(price);
+  bottom.appendChild(actions);
+
+  information.appendChild(bottom);
+
+
+  article.appendChild(coverWrap);
+  article.appendChild(information);
+
+
+  return article;
+
+}
+
+
+/* =========================================================
+   10. PRODUCT SORT
+   ========================================================= */
+
+function sortFeaturedFirst(a, b) {
+
+  if (a.featured && !b.featured) {
+    return -1;
+  }
+
+  if (!a.featured && b.featured) {
+    return 1;
+  }
+
+  return (
+    Number(a.number || 999) -
+    Number(b.number || 999)
+  );
+
+}
+
+
+/* =========================================================
+   11. PRODUCT MODAL
+   ========================================================= */
+
+function openProduct(book) {
+
+  if (!book || !DOM.modal) {
+    return;
+  }
+
+  DOM.modalCover.src =
+    book.cover || "";
+
+  DOM.modalCover.alt =
+    book.title
+      ? `${book.title} cover`
+      : "Book cover";
+
+
+  /* Badge */
+
+  if (book.badge) {
+
+    DOM.modalBadge.textContent =
+      book.badge;
+
+    DOM.modalBadge.style.display =
+      "inline-flex";
+
+  } else {
+
+    DOM.modalBadge.style.display =
+      "none";
+
+  }
+
+
+  /* Number */
+
+  DOM.modalNumber.textContent =
+    book.number
+      ? `NO. ${book.number}`
+      : "";
+
+
+  /* Main information */
+
+  DOM.modalTitle.textContent =
+    book.title || "";
+
+  DOM.modalDescription.textContent =
+    book.shortDescription || "";
+
+
+  /* Tags */
+
+  DOM.modalTags.innerHTML = "";
+
+  if (
+    Array.isArray(book.tags)
+  ) {
+
+    book.tags.forEach((tag) => {
+
+      const element =
+        document.createElement("span");
+
+      element.className =
+        "product-tag";
+
+      element.textContent =
+        tag;
+
+      DOM.modalTags.appendChild(
+        element
+      );
+
+    });
+
+  }
+
+
+  /* Highlights */
+
+  DOM.modalHighlights.innerHTML = "";
+
+  if (
+    Array.isArray(book.highlights)
+  ) {
+
+    book.highlights.forEach(
+      (highlight) => {
+
+        const li =
+          document.createElement("li");
+
+        li.textContent =
+          highlight;
+
+        DOM.modalHighlights.appendChild(
+          li
         );
 
+      }
+    );
 
-      renderSite();
+  }
 
 
-      hideLoading();
+  /* Price */
+
+  DOM.modalPrice.textContent =
+    book.price || "See current price";
 
 
-    } catch (error) {
+  /* Checkout */
 
-      showError(
-        error
+  DOM.modalBuy.textContent =
+    book.cta || "Get the Book";
+
+  DOM.modalBuy.href =
+    book.checkout || "#";
+
+
+  DOM.modal.classList.add(
+    "active"
+  );
+
+  DOM.modal.setAttribute(
+    "aria-hidden",
+    "false"
+  );
+
+  document.body.classList.add(
+    "modal-open"
+  );
+
+  DOM.modalClose.focus();
+
+}
+
+
+/* =========================================================
+   12. CLOSE PRODUCT MODAL
+   ========================================================= */
+
+function closeProduct() {
+
+  if (!DOM.modal) {
+    return;
+  }
+
+  DOM.modal.classList.remove(
+    "active"
+  );
+
+  DOM.modal.setAttribute(
+    "aria-hidden",
+    "true"
+  );
+
+  document.body.classList.remove(
+    "modal-open"
+  );
+
+}
+
+
+/* =========================================================
+   13. ABOUT
+   ========================================================= */
+
+function renderAbout() {
+
+  const about =
+    storeData.about || {};
+
+  DOM.aboutEyebrow.textContent =
+    about.eyebrow || "";
+
+  DOM.aboutTitle.textContent =
+    about.title || "";
+
+  DOM.aboutText.textContent =
+    about.text || "";
+
+}
+
+
+/* =========================================================
+   14. FAQ
+   ========================================================= */
+
+function renderFAQ() {
+
+  const faq =
+    storeData.faq || {};
+
+  const items =
+    Array.isArray(faq.items)
+      ? faq.items
+      : [];
+
+  DOM.faqList.innerHTML = "";
+
+  items.forEach((item, index) => {
+
+    if (
+      !item?.question ||
+      !item?.answer
+    ) {
+      return;
+    }
+
+    const wrapper =
+      document.createElement("div");
+
+    wrapper.className =
+      "faq-item";
+
+    if (index === 0) {
+      wrapper.classList.add("open");
+    }
+
+
+    const question =
+      document.createElement("button");
+
+    question.type =
+      "button";
+
+    question.className =
+      "faq-question";
+
+    question.setAttribute(
+      "aria-expanded",
+      index === 0
+        ? "true"
+        : "false"
+    );
+
+
+    const questionText =
+      document.createElement("span");
+
+    questionText.textContent =
+      item.question;
+
+
+    const icon =
+      document.createElement("span");
+
+    icon.className =
+      "faq-icon";
+
+    icon.setAttribute(
+      "aria-hidden",
+      "true"
+    );
+
+
+    question.appendChild(
+      questionText
+    );
+
+    question.appendChild(
+      icon
+    );
+
+
+    const answer =
+      document.createElement("div");
+
+    answer.className =
+      "faq-answer";
+
+
+    const answerInner =
+      document.createElement("div");
+
+    answerInner.className =
+      "faq-answer-inner";
+
+
+    const answerText =
+      document.createElement("p");
+
+    answerText.textContent =
+      item.answer;
+
+
+    answerInner.appendChild(
+      answerText
+    );
+
+    answer.appendChild(
+      answerInner
+    );
+
+
+    question.addEventListener(
+      "click",
+      () => {
+
+        const isOpen =
+          wrapper.classList.contains(
+            "open"
+          );
+
+        closeAllFAQs();
+
+        if (!isOpen) {
+
+          wrapper.classList.add(
+            "open"
+          );
+
+          question.setAttribute(
+            "aria-expanded",
+            "true"
+          );
+
+        }
+
+      }
+    );
+
+
+    wrapper.appendChild(question);
+    wrapper.appendChild(answer);
+
+    DOM.faqList.appendChild(
+      wrapper
+    );
+
+  });
+
+}
+
+
+/* =========================================================
+   15. CLOSE ALL FAQ ITEMS
+   ========================================================= */
+
+function closeAllFAQs() {
+
+  const items =
+    DOM.faqList.querySelectorAll(
+      ".faq-item"
+    );
+
+  items.forEach((item) => {
+
+    item.classList.remove(
+      "open"
+    );
+
+    const button =
+      item.querySelector(
+        ".faq-question"
+      );
+
+    if (button) {
+
+      button.setAttribute(
+        "aria-expanded",
+        "false"
       );
 
     }
 
+  });
+
+}
+
+
+/* =========================================================
+   16. DISCLAIMER
+   ========================================================= */
+
+function renderDisclaimer() {
+
+  const disclaimer =
+    storeData.disclaimer || {};
+
+  DOM.disclaimer.textContent =
+    disclaimer.text || "";
+
+}
+
+
+/* =========================================================
+   17. FOOTER
+   ========================================================= */
+
+function renderFooter() {
+
+  const footer =
+    storeData.footer || {};
+
+  DOM.footerCopyright.textContent =
+    footer.copyright || "";
+
+  if (footer.privacy) {
+
+    DOM.privacyLink.textContent =
+      footer.privacy;
+
   }
 
+}
 
 
-  /* =======================================================
-     START
-     ======================================================= */
+/* =========================================================
+   18. GLOBAL EVENTS
+   ========================================================= */
 
-  function start() {
-
-    init();
-
-  }
+function bindGlobalEvents() {
 
 
-  if (
-    document.readyState ===
-    "loading"
-  ) {
+  /* -----------------------------------------
+     Modal close buttons
+  ----------------------------------------- */
 
-    document.addEventListener(
-      "DOMContentLoaded",
-      start,
-      {
-        once: true
-      }
+  document.querySelectorAll(
+    "[data-close-modal]"
+  ).forEach((element) => {
+
+    element.addEventListener(
+      "click",
+      closeProduct
     );
 
-  } else {
+  });
 
-    start();
 
+  /* -----------------------------------------
+     Escape closes modal
+  ----------------------------------------- */
+
+  document.addEventListener(
+    "keydown",
+    (event) => {
+
+      if (
+        event.key === "Escape" &&
+        DOM.modal.classList.contains(
+          "active"
+        )
+      ) {
+
+        closeProduct();
+
+      }
+
+    }
+  );
+
+
+  /* -----------------------------------------
+     Prevent broken checkout links
+  ----------------------------------------- */
+
+  document.addEventListener(
+    "click",
+    (event) => {
+
+      const link =
+        event.target.closest(
+          "a"
+        );
+
+      if (!link) {
+        return;
+      }
+
+      const href =
+        link.getAttribute("href");
+
+      if (
+        href === "#" &&
+        link.id !== "privacy-link"
+      ) {
+
+        event.preventDefault();
+
+      }
+
+    }
+  );
+
+
+  /* -----------------------------------------
+     Smooth internal navigation
+  ----------------------------------------- */
+
+  document.addEventListener(
+    "click",
+    (event) => {
+
+      const link =
+        event.target.closest(
+          'a[href^="#"]'
+        );
+
+      if (!link) {
+        return;
+      }
+
+      const targetId =
+        link.getAttribute("href");
+
+      if (
+        !targetId ||
+        targetId === "#"
+      ) {
+        return;
+      }
+
+      const target =
+        document.querySelector(
+          targetId
+        );
+
+      if (!target) {
+        return;
+      }
+
+      event.preventDefault();
+
+      target.scrollIntoView({
+        behavior: "smooth",
+        block: "start"
+      });
+
+    }
+  );
+
+}
+
+
+/* =========================================================
+   19. LOAD ERROR
+   ========================================================= */
+
+function showLoadError() {
+
+  if (!DOM.bookshelfGrid) {
+    return;
   }
 
+  DOM.bookshelfGrid.innerHTML = "";
 
-})();
+  DOM.bookshelfEmpty.hidden =
+    false;
+
+  DOM.bookshelfEmpty.innerHTML = `
+    <span class="empty-number">!</span>
+
+    <h3>
+      The collection could not be loaded.
+    </h3>
+
+    <p>
+      Please refresh the page and try again.
+    </p>
+  `;
+
+}
+
+
+/* =========================================================
+   20. IMAGE FALLBACK
+   ========================================================= */
+
+document.addEventListener(
+  "error",
+  (event) => {
+
+    if (
+      event.target &&
+      event.target.tagName === "IMG"
+    ) {
+
+      event.target.classList.add(
+        "image-error"
+      );
+
+    }
+
+  },
+  true
+);
+
+
+/* =========================================================
+   21. PUBLIC STORE API
+   ========================================================= */
+
+window.FeelFrameStorefront = {
+
+  getData() {
+    return storeData;
+  },
+
+  getBooks() {
+    return [...books];
+  },
+
+  openProduct(bookId) {
+
+    const book =
+      books.find(
+        (item) =>
+          item.id === bookId
+      );
+
+    if (book) {
+      openProduct(book);
+    }
+
+  },
+
+  closeProduct() {
+    closeProduct();
+  }
+
+};
