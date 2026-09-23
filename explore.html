@@ -1,588 +1,580 @@
 <!DOCTYPE html>
-<html lang="en-NG">
-
+<html lang="en">
 <head>
-
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
 
   <meta
     name="viewport"
     content="width=device-width, initial-scale=1.0"
-  >
+  />
 
   <meta
     name="description"
-    content="Explore visual stories built around real emotions, milestones and human moments."
-  >
+    content=""
+    id="meta-description"
+  />
 
   <meta
-    name="theme-color"
-    content="#f4f2ed"
-  >
+    name="keywords"
+    content=""
+    id="meta-keywords"
+  />
 
-  <meta
-    property="og:title"
-    content="Explore — FeelFrame™"
-  >
+  <meta name="theme-color" content="#f4f2ed" />
 
-  <meta
-    property="og:description"
-    content="Visual stories built around real emotions, milestones and human moments."
-  >
+  <title id="page-title">Explore — FeelFrame™</title>
 
-  <meta
-    property="og:type"
-    content="website"
-  >
-
-  <title>Explore — FeelFrame™</title>
-
-
-  <!-- =====================================================
-       FONTS
-  ====================================================== -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 
   <link
-    rel="preconnect"
-    href="https://fonts.googleapis.com"
-  >
-
-  <link
-    rel="preconnect"
-    href="https://fonts.gstatic.com"
-    crossorigin
-  >
-
-  <link
-    href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,500;0,600;1,500;1,600&display=swap"
+    href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@500;600;700&display=swap"
     rel="stylesheet"
-  >
+  />
 
-
-  <!-- =====================================================
-       GLOBAL FEELFRAME STYLES
-  ====================================================== -->
-
-  <link
-    rel="stylesheet"
-    href="style.css"
-  >
-
-
-  <!-- =====================================================
-       EXPLORE-ONLY STYLES
-  ====================================================== -->
-
-  <link
-    rel="stylesheet"
-    href="explore.css"
-  >
-
+  <link rel="stylesheet" href="explore.css" />
 </head>
 
+<body>
 
-<body
-  class="explore-page"
-  id="top"
->
+  <!-- =========================================================
+       PAGE
+  ========================================================== -->
 
+  <div class="storefront" id="storefront">
 
-  <!-- =====================================================
-       MINIMAL PAGE HEADER
-  ====================================================== -->
+    <!-- =======================================================
+         HEADER
+    ======================================================== -->
 
-  <header class="page-header">
+    <header class="site-header" id="site-header">
 
-    <a
-      href="index.html"
-      class="page-header-back"
-      aria-label="Back to FeelFrame home"
-    >
-      ← Back
-    </a>
+      <a
+        href="index.html"
+        class="brand"
+        aria-label="Back to home"
+        data-site-name
+      >
+        FeelFrame™
+      </a>
 
+      <nav
+        class="desktop-navigation"
+        id="desktop-navigation"
+        aria-label="Primary navigation"
+      >
+        <!-- Injected by explore.js -->
+      </nav>
 
-    <a
-      href="index.html"
-      class="page-header-logo"
-      aria-label="FeelFrame home"
-    >
-      FeelFrame™
-    </a>
+      <a
+        href="#bookshelf"
+        class="header-action"
+        data-primary-action
+      >
+        Shop Now
+      </a>
 
-
-    <a
-      href="create.html"
-      class="page-header-action"
-      data-header-cta
-    >
-      Create ↗
-    </a>
-
-  </header>
-
-
-
-  <!-- =====================================================
-       MAIN
-  ====================================================== -->
-
-  <main>
+    </header>
 
 
-    <!-- ===================================================
-         HERO
-    ==================================================== -->
+    <!-- =======================================================
+         MAIN
+    ======================================================== -->
 
-    <section
-      class="explore-hero"
-      id="exploreHero"
-    >
+    <main>
 
-      <div class="container">
+      <!-- =====================================================
+           HERO
+      ====================================================== -->
 
-        <div class="explore-hero-grid">
+      <section
+        class="store-hero"
+        id="store-hero"
+        aria-labelledby="hero-title"
+      >
 
+        <div class="hero-inner">
 
-          <!-- HERO COPY -->
-
-          <div class="explore-hero-copy">
+          <div class="hero-copy">
 
             <p
               class="eyebrow"
-              id="explore-eyebrow"
-            >
-              THE FEELFRAME ARCHIVE
-            </p>
+              id="hero-eyebrow"
+            ></p>
 
-
-            <h1 id="explore-title">
-              Moments worth seeing.
-            </h1>
-
+            <h1
+              id="hero-title"
+              class="hero-title"
+            ></h1>
 
             <p
-              class="explore-hero-description"
-              id="explore-description"
-            >
-              Explore visual stories built around real emotions,
-              milestones and human moments.
-            </p>
+              id="hero-subtitle"
+              class="hero-subtitle"
+            ></p>
 
+            <p
+              id="hero-description"
+              class="hero-description"
+            ></p>
 
-            <a
-              href="create.html"
-              class="button button-primary"
-              data-explore-primary-cta
-            >
-              Make It Yours
-            </a>
+            <div class="hero-actions">
+
+              <a
+                href="#bookshelf"
+                class="button button-primary"
+                data-hero-primary
+              ></a>
+
+              <a
+                href="#bookshelf"
+                class="button button-secondary"
+                data-hero-secondary
+              ></a>
+
+            </div>
 
           </div>
 
-
-        </div>
-
-      </div>
-
-    </section>
-
-
-
-    <!-- ===================================================
-         FEATURED
-    ==================================================== -->
-
-    <section
-      class="explore-featured-section"
-      id="featured"
-    >
-
-      <div class="container">
-
-
-        <div class="section-heading explore-section-heading">
-
-          <p
-            class="eyebrow"
-            id="featured-eyebrow"
+          <div
+            class="hero-visual"
+            aria-hidden="true"
           >
-            FEATURED
-          </p>
 
+            <div class="hero-stack">
 
-          <h2 id="featured-title">
-            A moment, framed.
-          </h2>
+              <div class="hero-card hero-card-back"></div>
 
+              <div class="hero-card hero-card-middle"></div>
 
-          <p id="featured-description">
-            Stories that capture more than how a moment looks —
-            they capture what it feels like to be there.
-          </p>
+              <div class="hero-card hero-card-front">
 
-        </div>
+                <span class="hero-card-number">01</span>
 
+                <span class="hero-card-label">
+                  DIGITAL EDITION
+                </span>
 
-        <!-- FEATURED STORY MOUNT POINT -->
+                <span class="hero-card-mark">
+                  FF
+                </span>
 
-        <div
-          class="explore-featured"
-          id="exploreFeatured"
-          aria-live="polite"
-        >
+              </div>
 
-          <div class="story-loading">
-            Loading featured story…
+            </div>
+
           </div>
 
         </div>
 
-      </div>
-
-    </section>
+      </section>
 
 
+      <!-- =====================================================
+           BOOKSHELF / PRODUCT COLLECTION
+      ====================================================== -->
 
-    <!-- ===================================================
-         COLLECTION / ARCHIVE
-    ==================================================== -->
+      <section
+        class="bookshelf-section"
+        id="bookshelf"
+        aria-labelledby="bookshelf-title"
+      >
 
-    <section
-      class="explore-collection-section"
-      id="collection"
-    >
-
-      <div class="container">
-
-
-        <!-- COLLECTION HEADER -->
-
-        <div class="explore-collection-heading">
+        <div class="section-heading">
 
           <div>
 
             <p
               class="eyebrow"
-              id="collection-eyebrow"
-            >
-              THE COLLECTION
-            </p>
+              id="bookshelf-eyebrow"
+            ></p>
 
-
-            <h2 id="collection-title">
-              Explore the archive.
-            </h2>
-
-
-            <p id="collection-description">
-              Move through different emotions, seasons and
-              personal chapters.
-            </p>
+            <h2
+              id="bookshelf-title"
+              class="section-title"
+            ></h2>
 
           </div>
 
-
-          <div
-            class="explore-result-meta"
-            aria-live="polite"
-          >
-
-            <span id="exploreResultCount">
-              0 stories
-            </span>
-
-          </div>
+          <p
+            id="bookshelf-description"
+            class="section-description"
+          ></p>
 
         </div>
 
 
-
-        <!-- =================================================
-             FILTER NAVIGATION
-        ================================================== -->
+        <!-- Products are injected here -->
 
         <div
-          class="explore-filters"
-          id="exploreFilters"
-          role="group"
-          aria-label="Filter visual stories"
-        >
-
-          <!--
-            Buttons are generated from explore.json.
-          -->
-
-        </div>
-
-
-
-        <!-- =================================================
-             STORY COLLECTION
-        ================================================== -->
-
-        <div
-          class="explore-story-grid"
-          id="exploreStoryGrid"
+          class="bookshelf-grid"
+          id="bookshelf-grid"
           aria-live="polite"
-        >
-
-          <div class="story-loading">
-            Loading stories…
-          </div>
-
-        </div>
+        ></div>
 
 
-
-        <!-- EMPTY STATE -->
+        <!-- Empty state -->
 
         <div
           class="empty-state"
-          id="exploreEmpty"
+          id="bookshelf-empty"
           hidden
         >
+          <span class="empty-number">00</span>
 
-          <h3>
-            Nothing here yet.
-          </h3>
-
+          <h3>No books available yet.</h3>
 
           <p>
-            This part of the FeelFrame archive is still waiting
-            for its next story.
+            The collection is currently being prepared.
           </p>
-
         </div>
 
-      </div>
-
-    </section>
+      </section>
 
 
+      <!-- =====================================================
+           ABOUT
+      ====================================================== -->
 
-    <!-- ===================================================
-         MANIFESTO
-    ==================================================== -->
+      <section
+        class="about-section"
+        id="about"
+        aria-labelledby="about-title"
+      >
 
-    <section
-      class="explore-manifesto"
-      id="manifesto"
-    >
+        <div class="about-layout">
 
-      <div class="container">
-
-        <div class="explore-manifesto-card">
-
-
-          <p
-            class="eyebrow"
-            id="manifesto-eyebrow"
-          >
-            WHY FEELFRAME
-          </p>
-
-
-          <h2 id="manifesto-title">
-            Some moments are too personal to remain invisible.
-          </h2>
-
-
-          <p id="manifesto-text">
-            A FeelFrame turns a personal moment into a visual
-            story built around what it actually means to you.
-          </p>
-
-
-        </div>
-
-      </div>
-
-    </section>
-
-
-
-    <!-- ===================================================
-         CREATE / CONVERSION
-    ==================================================== -->
-
-    <section
-      class="explore-create-section"
-      id="create"
-    >
-
-      <div class="container">
-
-        <div class="explore-create-card">
-
-
-          <div>
+          <div class="about-label">
 
             <p
               class="eyebrow"
-              id="explore-cta-eyebrow"
-            >
-              YOUR TURN
-            </p>
-
-
-            <h2 id="explore-cta-title">
-              Your moment could be next.
-            </h2>
-
-
-            <p id="explore-cta-description">
-              Tell us what you're feeling, what you're going
-              through and what you want the image to communicate.
-            </p>
+              id="about-eyebrow"
+            ></p>
 
           </div>
 
+          <div class="about-content">
 
-          <a
-            href="create.html"
-            class="button button-primary"
-            id="explore-cta-button"
-          >
-            Create My FeelFrame
-          </a>
+            <h2
+              id="about-title"
+              class="about-title"
+            ></h2>
 
+            <p
+              id="about-text"
+              class="about-text"
+            ></p>
+
+          </div>
 
         </div>
 
-      </div>
-
-    </section>
-
-  </main>
+      </section>
 
 
+      <!-- =====================================================
+           FAQ
+      ====================================================== -->
 
-  <!-- =====================================================
-       FOOTER
-  ====================================================== -->
+      <section
+        class="faq-section"
+        id="faq"
+        aria-labelledby="faq-title"
+      >
 
-  <footer class="site-footer">
+        <div class="faq-heading">
 
-    <div class="container">
+          <p class="eyebrow">
+            QUESTIONS
+          </p>
 
+          <h2
+            id="faq-title"
+            class="section-title"
+          >
+            Frequently asked.
+          </h2>
 
-      <div class="site-footer-main">
+        </div>
 
-        <a
-          href="index.html"
-          class="site-footer-brand"
-        >
-          FeelFrame™
-        </a>
+        <div
+          class="faq-list"
+          id="faq-list"
+        ></div>
 
-
-        <p>
-          Some feelings deserve to be seen.
-        </p>
-
-      </div>
-
-
-      <div class="site-footer-bottom">
-
-        <span>
-          © 2026 FeelFrame™
-        </span>
+      </section>
 
 
-        <div class="site-footer-links">
+      <!-- =====================================================
+           FINAL STORE CTA
+      ====================================================== -->
+
+      <section
+        class="store-cta"
+        id="store-cta"
+        aria-labelledby="store-cta-title"
+      >
+
+        <div class="store-cta-inner">
+
+          <span class="cta-mark">
+            FF
+          </span>
+
+          <p class="eyebrow">
+            DIGITAL EDITIONS
+          </p>
+
+          <h2 id="store-cta-title">
+            Find something worth opening.
+          </h2>
+
+          <a
+            href="#bookshelf"
+            class="button button-light"
+          >
+            Browse the Collection
+          </a>
+
+        </div>
+
+      </section>
+
+
+      <!-- =====================================================
+           DISCLAIMER
+      ====================================================== -->
+
+      <section
+        class="disclaimer-section"
+        id="disclaimer"
+      >
+
+        <p id="disclaimer-text"></p>
+
+      </section>
+
+    </main>
+
+
+    <!-- =======================================================
+         FOOTER
+    ======================================================== -->
+
+    <footer class="site-footer">
+
+      <div class="footer-inner">
+
+        <div class="footer-brand">
+
+          <a
+            href="index.html"
+            data-site-name
+          >
+            FeelFrame™
+          </a>
+
+          <p>
+            Digital ideas worth keeping.
+          </p>
+
+        </div>
+
+        <div class="footer-links">
+
+          <a href="#bookshelf">
+            Books
+          </a>
+
+          <a href="#about">
+            About
+          </a>
+
+          <a href="#faq">
+            FAQ
+          </a>
 
           <a href="index.html">
             Home
           </a>
 
-          <a
-            href="explore.html"
-            aria-current="page"
-          >
-            Explore
-          </a>
+        </div>
 
-          <a href="create.html">
-            Create
-          </a>
+      </div>
+
+      <div class="footer-bottom">
+
+        <p id="footer-copyright"></p>
+
+        <a
+          href="#"
+          id="privacy-link"
+        >
+          Privacy Policy
+        </a>
+
+      </div>
+
+    </footer>
+
+  </div>
+
+
+  <!-- =========================================================
+       PRODUCT MODAL
+  ========================================================== -->
+
+  <div
+    class="product-modal"
+    id="product-modal"
+    aria-hidden="true"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="modal-title"
+  >
+
+    <div
+      class="modal-backdrop"
+      data-close-modal
+    ></div>
+
+    <div class="modal-panel">
+
+      <button
+        type="button"
+        class="modal-close"
+        id="modal-close"
+        aria-label="Close product information"
+        data-close-modal
+      >
+        <span></span>
+        <span></span>
+      </button>
+
+
+      <div class="modal-product">
+
+        <div class="modal-cover-wrap">
+
+          <img
+            id="modal-cover"
+            class="modal-cover"
+            src=""
+            alt=""
+          />
+
+        </div>
+
+
+        <div class="modal-content">
+
+          <span
+            id="modal-badge"
+            class="product-badge"
+          ></span>
+
+          <span
+            id="modal-number"
+            class="modal-number"
+          ></span>
+
+          <h2
+            id="modal-title"
+          ></h2>
+
+          <p
+            id="modal-description"
+            class="modal-description"
+          ></p>
+
+          <div
+            class="modal-tags"
+            id="modal-tags"
+          ></div>
+
+          <div class="modal-highlights">
+
+            <p class="eyebrow">
+              WHAT'S INSIDE
+            </p>
+
+            <ul id="modal-highlights-list"></ul>
+
+          </div>
+
+          <div class="modal-purchase">
+
+            <div class="modal-price">
+
+              <span class="price-label">
+                Digital Edition
+              </span>
+
+              <strong id="modal-price"></strong>
+
+            </div>
+
+            <a
+              href="#"
+              class="button button-primary modal-buy"
+              id="modal-buy"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Get the Book
+            </a>
+
+          </div>
 
         </div>
 
       </div>
 
-
     </div>
 
-  </footer>
+  </div>
 
 
-
-  <!-- =====================================================
-       STICKY MOBILE NAVIGATION
-  ====================================================== -->
+  <!-- =========================================================
+       MOBILE NAVIGATION
+  ========================================================== -->
 
   <nav
-    class="bottom-nav"
-    aria-label="Primary navigation"
+    class="mobile-navigation"
+    aria-label="Mobile navigation"
   >
 
     <a
       href="index.html"
-      class="bottom-nav-item"
+      class="mobile-nav-item"
     >
-      <span class="bottom-nav-label">
-        Home
-      </span>
+      <span class="mobile-nav-icon">⌂</span>
+      <span>Home</span>
     </a>
 
-
     <a
-      href="explore.html"
-      class="bottom-nav-item is-active"
-      aria-current="page"
+      href="#bookshelf"
+      class="mobile-nav-item active"
     >
-      <span class="bottom-nav-label">
-        Explore
-      </span>
+      <span class="mobile-nav-icon">▦</span>
+      <span>Books</span>
     </a>
 
-
     <a
-      href="create.html"
-      class="bottom-nav-item"
+      href="#about"
+      class="mobile-nav-item"
     >
-      <span class="bottom-nav-label">
-        Create
-      </span>
+      <span class="mobile-nav-icon">○</span>
+      <span>About</span>
     </a>
 
   </nav>
 
 
+  <!-- =========================================================
+       JAVASCRIPT
+  ========================================================== -->
 
-  <!-- =====================================================
-       GLOBAL FEELFRAME JAVASCRIPT
-  ====================================================== -->
-
-  <script
-    src="script.js"
-    defer
-  ></script>
-
-
-
-  <!-- =====================================================
-       EXPLORE-ONLY JAVASCRIPT
-  ====================================================== -->
-
-  <script
-    src="explore.js"
-    defer
-  ></script>
-
+  <script src="explore.js" defer></script>
 
 </body>
-
 </html>
