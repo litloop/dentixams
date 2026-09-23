@@ -1,291 +1,850 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en-NG">
+
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
 
   <meta
     name="viewport"
-    content="width=device-width, initial-scale=1.0, viewport-fit=cover"
-  >
+    content="width=device-width, initial-scale=1.0"
+  />
 
   <meta
     name="description"
-    content="Explore FeelFrame™ visual stories — moments, emotions and stories made visible."
-  >
+    content="Practical digital books on money, business and opportunity."
+  />
 
-  <meta name="theme-color" content="#f5f3ee">
+  <meta
+    name="theme-color"
+    content="#0b5d4b"
+  />
 
-  <title>FeelFrame™ — Explore</title>
+  <meta
+    property="og:title"
+    content="DANGOTE IPO DECODED™"
+  />
 
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <meta
+    property="og:description"
+    content="Understand. Verify. Evaluate. Prepare."
+  />
+
+  <meta
+    property="og:type"
+    content="website"
+  />
+
+  <title>DANGOTE IPO DECODED™</title>
+
+  <!-- =====================================================
+       FONTS
+  ====================================================== -->
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 
   <link
-    href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@500;600;700&display=swap"
+    href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=DM+Serif+Display&display=swap"
     rel="stylesheet"
-  >
+  />
 
-  <link rel="stylesheet" href="style.css">
+  <!-- =====================================================
+       STYLESHEET
+  ====================================================== -->
+
+  <link
+    rel="stylesheet"
+    href="style.css"
+  />
+
 </head>
 
-<body class="explore-page">
+
+<body id="top">
+
+
+  <!-- =====================================================
+       MINIMAL TOP BRAND
+       NO NAVIGATION HEADER
+  ====================================================== -->
+
+  <div class="storefront-brand">
+
+    <a
+      href="#top"
+      aria-label="Back to top"
+    >
+      <span class="brand-main">
+        DANGOTE IPO DECODED™
+      </span>
+
+      <span class="brand-sub">
+        Digital Edition
+      </span>
+    </a>
+
+  </div>
+
+
+  <!-- =====================================================
+       MAIN STOREFRONT
+  ====================================================== -->
 
   <main>
 
-    <!-- =====================================================
-         HEADER
-         ===================================================== -->
 
-    <header class="explore-header">
+    <!-- ===================================================
+         HERO / FIRST IMPRESSION
+    ==================================================== -->
 
-      <a
-        href="index.html"
-        class="explore-back"
-        aria-label="Back to FeelFrame home"
-      >
-        <span aria-hidden="true">←</span>
-        <span>Back</span>
-      </a>
+    <section class="hero storefront-hero">
 
-      <a
-        href="index.html"
-        class="explore-logo"
-        aria-label="FeelFrame home"
-      >
-        FeelFrame™
-      </a>
-
-      <a
-        href="create.html"
-        class="explore-create"
-      >
-        Create
-        <span aria-hidden="true">↗</span>
-      </a>
-
-    </header>
+      <div class="container hero-grid">
 
 
-    <!-- =====================================================
-         INTRO
-         ===================================================== -->
+        <!-- HERO COPY -->
 
-    <section class="explore-intro">
+        <div class="hero-content">
 
-      <p class="eyebrow">
-        Explore
-      </p>
+          <p
+            class="eyebrow"
+            id="hero-eyebrow"
+          >
+            THE PRACTICAL NIGERIAN IPO GUIDE
+          </p>
 
-      <h1>
-        Moments worth<br>
-        seeing.
-      </h1>
 
-      <p class="explore-intro-copy">
-        Browse visual stories built around emotions,
-        experiences and chapters of real life.
-      </p>
+          <h1 id="hero-title">
+            Understand the offer before you decide what to do
+            with it.
+          </h1>
+
+
+          <p
+            class="hero-subtitle"
+            id="hero-subtitle"
+          >
+            DANGOTE IPO DECODED™
+          </p>
+
+
+          <p
+            class="hero-description"
+            id="hero-description"
+          >
+            A practical guide to understanding, evaluating and
+            preparing for the Dangote Refinery IPO.
+          </p>
+
+
+          <div class="hero-actions">
+
+            <a
+              href="#purchase"
+              class="button button-primary button-large"
+              data-primary-cta
+            >
+              Get the Book
+            </a>
+
+            <a
+              href="#bookshelf"
+              class="button button-secondary"
+            >
+              View Books
+            </a>
+
+          </div>
+
+
+          <div
+            class="hero-meta"
+            id="hero-meta"
+          ></div>
+
+        </div>
+
+
+        <!-- HERO BOOK -->
+
+        <div class="hero-visual">
+
+          <div class="hero-book-wrap">
+
+            <div class="hero-book-glow"></div>
+
+            <img
+              id="hero-book-image"
+              class="book-mockup"
+              src="assets/book-mockup.png"
+              alt="DANGOTE IPO DECODED book cover mockup"
+              loading="eager"
+            />
+
+          </div>
+
+        </div>
+
+      </div>
 
     </section>
 
 
-    <!-- =====================================================
-         FILTERS
-         ===================================================== -->
 
-    <section
-      class="explore-controls"
-      aria-label="Story filters"
-    >
+    <!-- ===================================================
+         TRUST / MICRO INFORMATION
+    ==================================================== -->
 
-      <div class="explore-filter-label">
-        Filter stories
-      </div>
-
+    <section class="trust-strip">
 
       <div
-        class="explore-filter-scroll"
-        id="exploreFilters"
-      >
+        class="container trust-items"
+        id="trust-items"
+      ></div>
 
-        <button
-          type="button"
-          class="explore-filter active"
-          data-filter="all"
-        >
-          All
-        </button>
+    </section>
 
-        <button
-          type="button"
-          class="explore-filter"
-          data-filter="Exam Era"
-        >
-          Exam Era
-        </button>
 
-        <button
-          type="button"
-          class="explore-filter"
-          data-filter="Graduation"
-        >
-          Graduation
-        </button>
 
-        <button
-          type="button"
-          class="explore-filter"
-          data-filter="New Chapter"
-        >
-          New Chapter
-        </button>
+    <!-- ===================================================
+         FEATURED BOOK
+    ==================================================== -->
 
-        <button
-          type="button"
-          class="explore-filter"
-          data-filter="Building My Future"
-        >
-          Building My Future
-        </button>
+    <section
+      class="section featured-book-section"
+      id="featured-book"
+    >
 
-        <button
-          type="button"
-          class="explore-filter"
-          data-filter="Personal Comeback"
-        >
-          Personal Comeback
-        </button>
+      <div class="container">
+
+        <div class="section-heading">
+
+          <p class="eyebrow">
+            FEATURED
+          </p>
+
+          <h2 id="featured-title">
+            DANGOTE IPO DECODED™
+          </h2>
+
+          <p id="featured-description">
+            The practical Nigerian guide to understanding,
+            evaluating and preparing for the Dangote Refinery
+            IPO.
+          </p>
+
+        </div>
+
+
+        <div class="featured-book-card">
+
+
+          <!-- COVER -->
+
+          <div class="featured-book-cover">
+
+            <img
+              id="featured-book-image"
+              src="assets/book-mockup.png"
+              alt="DANGOTE IPO DECODED book"
+              loading="lazy"
+            />
+
+          </div>
+
+
+          <!-- INFORMATION -->
+
+          <div class="featured-book-info">
+
+            <div
+              class="book-badge"
+              id="featured-badge"
+            >
+              FLAGSHIP
+            </div>
+
+
+            <p
+              class="book-hook"
+              id="featured-hook"
+            >
+              Understand the offer before you decide what to do
+              with it.
+            </p>
+
+
+            <ul
+              class="book-highlights"
+              id="featured-highlights"
+            ></ul>
+
+
+            <div class="featured-book-purchase">
+
+              <div class="book-price">
+
+                <span class="price-label">
+                  DIGITAL EDITION
+                </span>
+
+                <strong id="featured-price">
+                  See current price
+                </strong>
+
+              </div>
+
+
+              <a
+                href="#"
+                class="button button-primary button-large"
+                data-featured-checkout
+              >
+                Get the Book
+              </a>
+
+            </div>
+
+          </div>
+
+        </div>
 
       </div>
 
     </section>
 
 
-    <!-- =====================================================
-         STORY COUNT
-         ===================================================== -->
 
-    <div class="explore-results-bar">
+    <!-- ===================================================
+         COLLECTION
+    ==================================================== -->
 
-      <span
-        id="exploreResultCount"
+    <section
+      class="section bookshelf-section section-soft"
+      id="bookshelf"
+    >
+
+      <div class="container">
+
+        <div class="section-heading">
+
+          <p class="eyebrow">
+            THE COLLECTION
+          </p>
+
+          <h2>
+            More books.
+          </h2>
+
+          <p>
+            Practical ideas. Straight to the point.
+          </p>
+
+        </div>
+
+
+        <div
+          class="bookshelf-grid"
+          id="bookshelf-grid"
+        >
+
+          <!--
+            Books are generated from content.json
+          -->
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+
+    <!-- ===================================================
+         BOOK DETAILS
+         DYNAMIC DETAILS FOR SELECTED BOOK
+    ==================================================== -->
+
+    <section
+      class="section book-details-section"
+      id="book-details"
+    >
+
+      <div class="container">
+
+        <div class="book-details-grid">
+
+
+          <div class="book-details-cover">
+
+            <img
+              id="details-book-image"
+              src=""
+              alt=""
+              loading="lazy"
+            />
+
+          </div>
+
+
+          <div class="book-details-content">
+
+            <p
+              class="eyebrow"
+              id="details-eyebrow"
+            >
+              BOOK
+            </p>
+
+
+            <h2 id="details-title">
+              DANGOTE IPO DECODED™
+            </h2>
+
+
+            <p
+              class="book-hook"
+              id="details-hook"
+            ></p>
+
+
+            <p
+              id="details-description"
+            ></p>
+
+
+            <ul
+              class="book-highlights"
+              id="details-highlights"
+            ></ul>
+
+
+            <div class="details-action">
+
+              <strong id="details-price">
+                See current price
+              </strong>
+
+              <a
+                href="#"
+                class="button button-primary"
+                data-details-checkout
+              >
+                Get the Book
+              </a>
+
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+
+    <!-- ===================================================
+         PREVIEW
+    ==================================================== -->
+
+    <section
+      class="section preview-section"
+      id="preview"
+    >
+
+      <div class="container">
+
+        <div class="section-heading">
+
+          <p class="eyebrow">
+            INSIDE
+          </p>
+
+          <h2>
+            Take a look inside.
+          </h2>
+
+        </div>
+
+
+        <div class="preview-carousel">
+
+          <div
+            class="preview-track"
+            id="preview-track"
+          ></div>
+
+
+          <div
+            class="preview-dots"
+            id="preview-dots"
+            aria-label="Book preview navigation"
+          ></div>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+
+    <!-- ===================================================
+         SHORT VALUE STATEMENT
+    ==================================================== -->
+
+    <section class="section short-about">
+
+      <div class="container">
+
+        <div class="short-about-card">
+
+          <p
+            class="eyebrow"
+            id="about-eyebrow"
+          >
+            ABOUT
+          </p>
+
+
+          <h2 id="about-title">
+            Practical books. No unnecessary noise.
+          </h2>
+
+
+          <p id="about-description">
+            Digital books designed to make complicated
+            financial and business ideas easier to understand.
+          </p>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+
+    <!-- ===================================================
+         FAQ — MINIMAL
+    ==================================================== -->
+
+    <section
+      class="section faq-section"
+      id="faq"
+    >
+
+      <div class="container narrow-container">
+
+        <div class="section-heading">
+
+          <p class="eyebrow">
+            FAQ
+          </p>
+
+          <h2>
+            Before you buy.
+          </h2>
+
+        </div>
+
+
+        <div
+          class="faq-list"
+          id="faq-list"
+        ></div>
+
+      </div>
+
+    </section>
+
+
+
+    <!-- ===================================================
+         PURCHASE
+    ==================================================== -->
+
+    <section
+      class="section purchase-section"
+      id="purchase"
+    >
+
+      <div class="container">
+
+        <div class="purchase-card">
+
+
+          <div class="purchase-content">
+
+            <p class="eyebrow">
+              GET THE BOOK
+            </p>
+
+
+            <h2 id="purchase-title">
+              DANGOTE IPO DECODED™
+            </h2>
+
+
+            <p id="purchase-description">
+              Understand. Verify. Evaluate. Prepare.
+            </p>
+
+          </div>
+
+
+          <div class="purchase-action">
+
+            <a
+              href="#"
+              class="button button-primary button-large"
+              data-checkout-link
+              data-purchase-button
+            >
+              Get DANGOTE IPO DECODED™
+            </a>
+
+
+            <small>
+              Secure checkout powered by Selar.
+            </small>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+
+    <!-- ===================================================
+         DISCLAIMER
+    ==================================================== -->
+
+    <section class="disclaimer-section">
+
+      <div class="container">
+
+        <p id="disclaimer-text">
+          DANGOTE IPO DECODED™ is an educational resource and
+          is not individualized financial, investment, legal
+          or tax advice.
+        </p>
+
+      </div>
+
+    </section>
+
+  </main>
+
+
+
+  <!-- =====================================================
+       FOOTER
+  ====================================================== -->
+
+  <footer class="site-footer">
+
+    <div class="container footer-inner">
+
+
+      <div class="footer-brand">
+
+        <strong>
+          DANGOTE IPO DECODED™
+        </strong>
+
+        <span id="footer-text">
+          Understand. Verify. Evaluate. Prepare.
+        </span>
+
+      </div>
+
+
+      <div class="footer-links">
+
+        <a href="#bookshelf">
+          Books
+        </a>
+
+        <a href="#preview">
+          Preview
+        </a>
+
+        <a href="#faq">
+          FAQ
+        </a>
+
+        <a
+          href="#"
+          id="openPrivacy"
+        >
+          Privacy Policy
+        </a>
+
+      </div>
+
+
+      <div class="footer-copyright">
+
+        <span id="footer-copyright">
+          © 2026 DANGOTE IPO DECODED™. All rights reserved.
+        </span>
+
+      </div>
+
+    </div>
+
+  </footer>
+
+
+
+  <!-- =====================================================
+       PRIVACY MODAL
+  ====================================================== -->
+
+  <div
+    class="privacy-modal"
+    id="privacyModal"
+    aria-hidden="true"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="privacy-title"
+  >
+
+    <div class="privacy-modal-backdrop"></div>
+
+
+    <div class="privacy-modal-content">
+
+      <button
+        type="button"
+        class="privacy-close"
+        id="closePrivacy"
+        aria-label="Close Privacy Policy"
       >
-        Stories
-      </span>
+        ×
+      </button>
 
-      <span
-        id="exploreActiveFilter"
-      >
-        All moments
+
+      <p class="eyebrow">
+        LEGAL
+      </p>
+
+
+      <h2 id="privacy-title">
+        Privacy Policy
+      </h2>
+
+
+      <div class="privacy-copy">
+
+        <p>
+          This website respects your privacy and is designed
+          to collect only information necessary to provide its
+          services.
+        </p>
+
+
+        <h3>
+          Information
+        </h3>
+
+        <p>
+          Personal information is not intentionally collected
+          through this storefront unless you voluntarily
+          provide it through an available service or checkout
+          provider.
+        </p>
+
+
+        <h3>
+          Third-Party Services
+        </h3>
+
+        <p>
+          Purchases may be processed through third-party
+          services such as Selar. Those services operate under
+          their own privacy policies and terms.
+        </p>
+
+
+        <h3>
+          External Links
+        </h3>
+
+        <p>
+          Links to external websites are provided for their
+          intended purpose. Their privacy practices are
+          governed by their respective policies.
+        </p>
+
+
+        <h3>
+          Updates
+        </h3>
+
+        <p>
+          This policy may be updated when the website,
+          services or data practices change.
+        </p>
+
+      </div>
+
+    </div>
+
+  </div>
+
+
+
+  <!-- =====================================================
+       MOBILE STICKY PURCHASE
+  ====================================================== -->
+
+  <div
+    class="mobile-sticky-purchase"
+    aria-label="Purchase book"
+  >
+
+    <div class="mobile-sticky-info">
+
+      <strong>
+        DANGOTE IPO DECODED™
+      </strong>
+
+      <span>
+        Digital Edition
       </span>
 
     </div>
 
 
-    <!-- =====================================================
-         EXPLORE GRID
-         ===================================================== -->
-
-    <section
-      class="explore-story-grid"
-      id="exploreStoryGrid"
-      aria-live="polite"
-    >
-
-      <div class="explore-loading">
-        Loading stories…
-      </div>
-
-    </section>
-
-
-    <!-- =====================================================
-         CREATE CTA
-         ===================================================== -->
-
-    <section class="explore-create-cta">
-
-      <div class="explore-create-cta-inner">
-
-        <p class="eyebrow">
-          Your turn
-        </p>
-
-        <h2>
-          Your moment<br>
-          could be next.
-        </h2>
-
-        <p>
-          Tell us what's happening.
-          We'll turn the feeling into a visual story.
-        </p>
-
-        <a
-          href="create.html"
-          class="explore-create-button"
-        >
-          Make it yours
-          <span aria-hidden="true">→</span>
-        </a>
-
-      </div>
-
-    </section>
-
-
-    <!-- =====================================================
-         FOOTER
-         ===================================================== -->
-
-    <footer class="site-footer">
-
-      <div class="site-footer-brand">
-        FeelFrame™
-      </div>
-
-      <p>
-        Visual stories for human moments.
-      </p>
-
-      <small>
-        © 2026 FeelFrame™
-      </small>
-
-    </footer>
-
-  </main>
-
-
-  <!-- =======================================================
-       STICKY NAVIGATION
-       ======================================================= -->
-
-  <nav
-    class="bottom-nav"
-    aria-label="Primary navigation"
-  >
-
-    <a href="index.html">
-      Home
-    </a>
-
     <a
-      href="explore.html"
-      class="active"
-      aria-current="page"
+      href="#"
+      class="button button-primary"
+      data-checkout-link
     >
-      Explore
+      Get the Book
     </a>
 
-    <a href="create.html">
-      Create
-    </a>
-
-  </nav>
+  </div>
 
 
-  <script src="script.js"></script>
+
+  <!-- =====================================================
+       APP
+  ====================================================== -->
+
+  <script
+    src="app.js"
+    defer
+  ></script>
+
 
 </body>
+
 </html>
