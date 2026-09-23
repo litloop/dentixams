@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html lang="en-NG">
+
 <head>
+
   <meta charset="UTF-8">
 
   <meta
@@ -13,7 +15,10 @@
     content="Explore visual stories built around real emotions, milestones and human moments."
   >
 
-  <meta name="theme-color" content="#f4f2ed">
+  <meta
+    name="theme-color"
+    content="#f4f2ed"
+  >
 
   <meta
     property="og:title"
@@ -22,34 +27,69 @@
 
   <meta
     property="og:description"
-    content="Explore visual stories built around real emotions, milestones and human moments."
+    content="Visual stories built around real emotions, milestones and human moments."
   >
 
-  <meta property="og:type" content="website">
+  <meta
+    property="og:type"
+    content="website"
+  >
 
   <title>Explore — FeelFrame™</title>
 
-  <!-- Fonts -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+  <!-- =====================================================
+       FONTS
+  ====================================================== -->
 
   <link
-    href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@500;600;700&display=swap"
+    rel="preconnect"
+    href="https://fonts.googleapis.com"
+  >
+
+  <link
+    rel="preconnect"
+    href="https://fonts.gstatic.com"
+    crossorigin
+  >
+
+  <link
+    href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,500;0,600;1,500;1,600&display=swap"
     rel="stylesheet"
   >
 
-  <!-- Global styles -->
-  <link rel="stylesheet" href="style.css">
-
-  <!-- Explore-only styles -->
-  <link rel="stylesheet" href="explore.css">
-</head>
-
-<body class="explore-page" id="top">
 
   <!-- =====================================================
-       PAGE HEADER
-       ===================================================== -->
+       GLOBAL FEELFRAME STYLES
+  ====================================================== -->
+
+  <link
+    rel="stylesheet"
+    href="style.css"
+  >
+
+
+  <!-- =====================================================
+       EXPLORE-ONLY STYLES
+  ====================================================== -->
+
+  <link
+    rel="stylesheet"
+    href="explore.css"
+  >
+
+</head>
+
+
+<body
+  class="explore-page"
+  id="top"
+>
+
+
+  <!-- =====================================================
+       MINIMAL PAGE HEADER
+  ====================================================== -->
 
   <header class="page-header">
 
@@ -61,6 +101,7 @@
       ← Back
     </a>
 
+
     <a
       href="index.html"
       class="page-header-logo"
@@ -69,9 +110,11 @@
       FeelFrame™
     </a>
 
+
     <a
       href="create.html"
       class="page-header-action"
+      data-header-cta
     >
       Create ↗
     </a>
@@ -79,25 +122,29 @@
   </header>
 
 
+
   <!-- =====================================================
        MAIN
-       ===================================================== -->
+  ====================================================== -->
 
   <main>
 
+
     <!-- ===================================================
-         EXPLORE HERO
-         Content comes from explore.json
-         =================================================== -->
+         HERO
+    ==================================================== -->
 
     <section
       class="explore-hero"
-      aria-labelledby="explore-title"
+      id="exploreHero"
     >
 
       <div class="container">
 
         <div class="explore-hero-grid">
+
+
+          <!-- HERO COPY -->
 
           <div class="explore-hero-copy">
 
@@ -108,9 +155,11 @@
               THE FEELFRAME ARCHIVE
             </p>
 
+
             <h1 id="explore-title">
               Moments worth seeing.
             </h1>
+
 
             <p
               class="explore-hero-description"
@@ -119,6 +168,7 @@
               Explore visual stories built around real emotions,
               milestones and human moments.
             </p>
+
 
             <a
               href="create.html"
@@ -130,6 +180,7 @@
 
           </div>
 
+
         </div>
 
       </div>
@@ -137,19 +188,18 @@
     </section>
 
 
+
     <!-- ===================================================
          FEATURED
-         The featured story itself comes from data.json.
-         The section copy comes from explore.json.
-         =================================================== -->
+    ==================================================== -->
 
     <section
       class="explore-featured-section"
       id="featured"
-      aria-labelledby="featured-title"
     >
 
       <div class="container">
+
 
         <div class="section-heading explore-section-heading">
 
@@ -160,9 +210,11 @@
             FEATURED
           </p>
 
+
           <h2 id="featured-title">
             A moment, framed.
           </h2>
+
 
           <p id="featured-description">
             Stories that capture more than how a moment looks —
@@ -172,9 +224,7 @@
         </div>
 
 
-        <!--
-          explore.js injects the featured story here.
-        -->
+        <!-- FEATURED STORY MOUNT POINT -->
 
         <div
           class="explore-featured"
@@ -193,17 +243,20 @@
     </section>
 
 
+
     <!-- ===================================================
-         COLLECTION
-         =================================================== -->
+         COLLECTION / ARCHIVE
+    ==================================================== -->
 
     <section
       class="explore-collection-section"
       id="collection"
-      aria-labelledby="collection-title"
     >
 
       <div class="container">
+
+
+        <!-- COLLECTION HEADER -->
 
         <div class="explore-collection-heading">
 
@@ -216,9 +269,11 @@
               THE COLLECTION
             </p>
 
+
             <h2 id="collection-title">
               Explore the archive.
             </h2>
+
 
             <p id="collection-description">
               Move through different emotions, seasons and
@@ -242,10 +297,10 @@
         </div>
 
 
+
         <!-- =================================================
-             FILTERS
-             Generated from explore.json
-             ================================================= -->
+             FILTER NAVIGATION
+        ================================================== -->
 
         <div
           class="explore-filters"
@@ -254,15 +309,17 @@
           aria-label="Filter visual stories"
         >
 
-          <!-- explore.js injects filter buttons -->
+          <!--
+            Buttons are generated from explore.json.
+          -->
 
         </div>
 
 
+
         <!-- =================================================
-             STORY GRID
-             Stories generated from data.json
-             ================================================= -->
+             STORY COLLECTION
+        ================================================== -->
 
         <div
           class="explore-story-grid"
@@ -277,9 +334,8 @@
         </div>
 
 
-        <!-- =================================================
-             EMPTY STATE
-             ================================================= -->
+
+        <!-- EMPTY STATE -->
 
         <div
           class="empty-state"
@@ -290,6 +346,7 @@
           <h3>
             Nothing here yet.
           </h3>
+
 
           <p>
             This part of the FeelFrame archive is still waiting
@@ -303,19 +360,20 @@
     </section>
 
 
+
     <!-- ===================================================
          MANIFESTO
-         Content comes from explore.json
-         =================================================== -->
+    ==================================================== -->
 
     <section
       class="explore-manifesto"
-      aria-labelledby="manifesto-title"
+      id="manifesto"
     >
 
       <div class="container">
 
         <div class="explore-manifesto-card">
+
 
           <p
             class="eyebrow"
@@ -324,15 +382,17 @@
             WHY FEELFRAME
           </p>
 
+
           <h2 id="manifesto-title">
             Some moments are too personal to remain invisible.
           </h2>
 
+
           <p id="manifesto-text">
-            A photograph can show where you were.
-            A FeelFrame is built to express what that moment
-            meant to you.
+            A FeelFrame turns a personal moment into a visual
+            story built around what it actually means to you.
           </p>
+
 
         </div>
 
@@ -341,16 +401,20 @@
     </section>
 
 
-    <!-- ===================================================
-         CREATE CTA
-         Content comes from explore.json
-         =================================================== -->
 
-    <section class="explore-create-section">
+    <!-- ===================================================
+         CREATE / CONVERSION
+    ==================================================== -->
+
+    <section
+      class="explore-create-section"
+      id="create"
+    >
 
       <div class="container">
 
         <div class="explore-create-card">
+
 
           <div>
 
@@ -361,9 +425,11 @@
               YOUR TURN
             </p>
 
+
             <h2 id="explore-cta-title">
               Your moment could be next.
             </h2>
+
 
             <p id="explore-cta-description">
               Tell us what you're feeling, what you're going
@@ -372,6 +438,7 @@
 
           </div>
 
+
           <a
             href="create.html"
             class="button button-primary"
@@ -379,6 +446,7 @@
           >
             Create My FeelFrame
           </a>
+
 
         </div>
 
@@ -389,13 +457,15 @@
   </main>
 
 
+
   <!-- =====================================================
        FOOTER
-       ===================================================== -->
+  ====================================================== -->
 
   <footer class="site-footer">
 
     <div class="container">
+
 
       <div class="site-footer-main">
 
@@ -406,17 +476,20 @@
           FeelFrame™
         </a>
 
+
         <p>
           Some feelings deserve to be seen.
         </p>
 
       </div>
 
+
       <div class="site-footer-bottom">
 
         <span>
           © 2026 FeelFrame™
         </span>
+
 
         <div class="site-footer-links">
 
@@ -439,14 +512,16 @@
 
       </div>
 
+
     </div>
 
   </footer>
 
 
+
   <!-- =====================================================
-       MOBILE / STICKY NAVIGATION
-       ===================================================== -->
+       STICKY MOBILE NAVIGATION
+  ====================================================== -->
 
   <nav
     class="bottom-nav"
@@ -462,6 +537,7 @@
       </span>
     </a>
 
+
     <a
       href="explore.html"
       class="bottom-nav-item is-active"
@@ -471,6 +547,7 @@
         Explore
       </span>
     </a>
+
 
     <a
       href="create.html"
@@ -484,21 +561,28 @@
   </nav>
 
 
-  <!-- =====================================================
-       SCRIPTS
-       ===================================================== -->
 
-  <!-- Shared FeelFrame functionality -->
+  <!-- =====================================================
+       GLOBAL FEELFRAME JAVASCRIPT
+  ====================================================== -->
+
   <script
     src="script.js"
     defer
   ></script>
 
-  <!-- Explore-only functionality -->
+
+
+  <!-- =====================================================
+       EXPLORE-ONLY JAVASCRIPT
+  ====================================================== -->
+
   <script
     src="explore.js"
     defer
   ></script>
 
+
 </body>
+
 </html>
