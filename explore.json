@@ -1,32 +1,65 @@
 {
   "site": {
     "name": "FeelFrame™",
-    "tagline": "Some feelings deserve to be seen."
+    "shortName": "FeelFrame",
+    "type": "Visual Stories",
+    "language": "en-NG",
+    "currency": "NGN",
+    "themeColor": "#f4f2ed"
   },
 
   "seo": {
     "title": "Explore — FeelFrame™",
-    "description": "Explore visual stories built around real emotions, milestones and human moments."
+    "description": "Explore visual stories built around real emotions, milestones and human moments.",
+    "keywords": [
+      "FeelFrame",
+      "AI visual storytelling",
+      "visual stories",
+      "personalized AI images",
+      "emotional storytelling",
+      "Nigeria"
+    ]
+  },
+
+  "navigation": {
+    "primaryAction": {
+      "label": "Create ↗",
+      "target": "create.html"
+    },
+
+    "exploreAction": {
+      "label": "Make It Yours",
+      "target": "create.html"
+    }
   },
 
   "hero": {
     "eyebrow": "THE FEELFRAME ARCHIVE",
+
     "title": "Moments worth seeing.",
+
     "description": "A collection of visual stories shaped around real feelings, personal chapters and the moments that stay with us.",
+
     "primaryCTA": "Make It Yours",
+
     "primaryTarget": "create.html"
   },
 
   "featured": {
     "eyebrow": "FEATURED",
+
     "title": "A moment, framed.",
+
     "description": "Stories that capture more than how a moment looks — they capture what it feels like to be there."
   },
 
   "collection": {
     "eyebrow": "THE COLLECTION",
+
     "title": "Explore the archive.",
+
     "description": "Move through different emotions, seasons and personal chapters. Every story begins with something human.",
+
     "filters": [
       "All",
       "Exam Era",
@@ -41,15 +74,21 @@
 
   "manifesto": {
     "eyebrow": "WHY FEELFRAME",
+
     "title": "Some moments are too personal to remain invisible.",
+
     "text": "A photograph can show where you were. A FeelFrame is built to express what that moment meant to you — the pressure, the progress, the uncertainty, the confidence, the hope."
   },
 
   "cta": {
     "eyebrow": "YOUR TURN",
+
     "title": "Your moment could be next.",
+
     "description": "Tell us what you're feeling, what you're going through and what you want the image to communicate. We'll turn the moment into a visual direction made around you.",
+
     "button": "Create My FeelFrame",
+
     "target": "create.html"
   }
 }
