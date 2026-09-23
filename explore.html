@@ -1,61 +1,55 @@
 <!DOCTYPE html>
 <html lang="en-NG">
-
 <head>
-  <meta charset="UTF-8" />
+  <meta charset="UTF-8">
 
   <meta
     name="viewport"
     content="width=device-width, initial-scale=1.0"
-  />
+  >
 
   <meta
     name="description"
     content="Explore visual stories built around real emotions, milestones and human moments."
-  />
+  >
 
-  <meta
-    name="theme-color"
-    content="#f4f2ed"
-  />
+  <meta name="theme-color" content="#f4f2ed">
 
   <meta
     property="og:title"
     content="Explore — FeelFrame™"
-  />
+  >
 
   <meta
     property="og:description"
-    content="Visual stories built around real emotions, milestones and human moments."
-  />
+    content="Explore visual stories built around real emotions, milestones and human moments."
+  >
 
-  <meta
-    property="og:type"
-    content="website"
-  />
+  <meta property="og:type" content="website">
 
   <title>Explore — FeelFrame™</title>
 
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
   <link
     href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@500;600;700&display=swap"
     rel="stylesheet"
-  />
+  >
 
-  <link
-    rel="stylesheet"
-    href="style.css"
-  />
+  <!-- Global styles -->
+  <link rel="stylesheet" href="style.css">
+
+  <!-- Explore-only styles -->
+  <link rel="stylesheet" href="explore.css">
 </head>
-
 
 <body class="explore-page" id="top">
 
   <!-- =====================================================
-       TOP BRAND
-  ====================================================== -->
+       PAGE HEADER
+       ===================================================== -->
 
   <header class="page-header">
 
@@ -87,16 +81,19 @@
 
   <!-- =====================================================
        MAIN
-  ====================================================== -->
+       ===================================================== -->
 
   <main>
 
-
     <!-- ===================================================
          EXPLORE HERO
-    ==================================================== -->
+         Content comes from explore.json
+         =================================================== -->
 
-    <section class="explore-hero">
+    <section
+      class="explore-hero"
+      aria-labelledby="explore-title"
+    >
 
       <div class="container">
 
@@ -104,31 +101,31 @@
 
           <div class="explore-hero-copy">
 
-            <p class="eyebrow">
+            <p
+              class="eyebrow"
+              id="explore-eyebrow"
+            >
               THE FEELFRAME ARCHIVE
             </p>
 
-            <h1>
-              Moments worth
-              <em>seeing.</em>
+            <h1 id="explore-title">
+              Moments worth seeing.
             </h1>
 
-          </div>
-
-
-          <div class="explore-hero-description">
-
-            <p>
-              Explore visual stories built around emotions,
-              transitions, milestones and moments that are
-              difficult to put into words.
+            <p
+              class="explore-hero-description"
+              id="explore-description"
+            >
+              Explore visual stories built around real emotions,
+              milestones and human moments.
             </p>
 
             <a
               href="create.html"
               class="button button-primary"
+              data-explore-primary-cta
             >
-              Make yours →
+              Make It Yours
             </a>
 
           </div>
@@ -140,46 +137,50 @@
     </section>
 
 
-
     <!-- ===================================================
-         FEATURED VISUAL
-    ==================================================== -->
+         FEATURED
+         The featured story itself comes from data.json.
+         The section copy comes from explore.json.
+         =================================================== -->
 
     <section
       class="explore-featured-section"
       id="featured"
+      aria-labelledby="featured-title"
     >
 
       <div class="container">
 
         <div class="section-heading explore-section-heading">
 
-          <div>
-            <p class="eyebrow">
-              FEATURED
-            </p>
+          <p
+            class="eyebrow"
+            id="featured-eyebrow"
+          >
+            FEATURED
+          </p>
 
-            <h2>
-              A moment,
-              <em>framed.</em>
-            </h2>
-          </div>
+          <h2 id="featured-title">
+            A moment, framed.
+          </h2>
 
-          <p class="section-heading-note">
-            Selected from the FeelFrame archive.
+          <p id="featured-description">
+            Stories that capture more than how a moment looks —
+            they capture what it feels like to be there.
           </p>
 
         </div>
 
 
+        <!--
+          explore.js injects the featured story here.
+        -->
+
         <div
           class="explore-featured"
           id="exploreFeatured"
+          aria-live="polite"
         >
-
-          <!--
-            Featured story generated by script.js
-          -->
 
           <div class="story-loading">
             Loading featured story…
@@ -192,30 +193,37 @@
     </section>
 
 
-
     <!-- ===================================================
          COLLECTION
-    ==================================================== -->
+         =================================================== -->
 
     <section
       class="explore-collection-section"
       id="collection"
+      aria-labelledby="collection-title"
     >
 
       <div class="container">
-
 
         <div class="explore-collection-heading">
 
           <div>
 
-            <p class="eyebrow">
+            <p
+              class="eyebrow"
+              id="collection-eyebrow"
+            >
               THE COLLECTION
             </p>
 
-            <h2>
+            <h2 id="collection-title">
               Explore the archive.
             </h2>
+
+            <p id="collection-description">
+              Move through different emotions, seasons and
+              personal chapters.
+            </p>
 
           </div>
 
@@ -234,80 +242,27 @@
         </div>
 
 
-
         <!-- =================================================
              FILTERS
-        ================================================== -->
+             Generated from explore.json
+             ================================================= -->
 
         <div
           class="explore-filters"
+          id="exploreFilters"
           role="group"
           aria-label="Filter visual stories"
         >
 
-          <button
-            type="button"
-            class="filter-button is-active"
-            data-filter="All"
-          >
-            All
-          </button>
-
-          <button
-            type="button"
-            class="filter-button"
-            data-filter="Exam Era"
-          >
-            Exam Era
-          </button>
-
-          <button
-            type="button"
-            class="filter-button"
-            data-filter="Graduation"
-          >
-            Graduation
-          </button>
-
-          <button
-            type="button"
-            class="filter-button"
-            data-filter="New Chapter"
-          >
-            New Chapter
-          </button>
-
-          <button
-            type="button"
-            class="filter-button"
-            data-filter="Building My Future"
-          >
-            Building My Future
-          </button>
-
-          <button
-            type="button"
-            class="filter-button"
-            data-filter="Personal Comeback"
-          >
-            Personal Comeback
-          </button>
-
-          <button
-            type="button"
-            class="filter-button"
-            data-filter="Something Else"
-          >
-            Something Else
-          </button>
+          <!-- explore.js injects filter buttons -->
 
         </div>
 
 
-
         <!-- =================================================
              STORY GRID
-        ================================================== -->
+             Stories generated from data.json
+             ================================================= -->
 
         <div
           class="explore-story-grid"
@@ -324,7 +279,7 @@
 
         <!-- =================================================
              EMPTY STATE
-        ================================================== -->
+             ================================================= -->
 
         <div
           class="empty-state"
@@ -332,25 +287,14 @@
           hidden
         >
 
-          <p class="eyebrow">
-            NOTHING HERE YET
-          </p>
-
           <h3>
-            This part of the archive is still becoming.
+            Nothing here yet.
           </h3>
 
           <p>
-            Try another collection or create a visual
-            story of your own.
+            This part of the FeelFrame archive is still waiting
+            for its next story.
           </p>
-
-          <a
-            href="create.html"
-            class="button button-secondary"
-          >
-            Create a FeelFrame →
-          </a>
 
         </div>
 
@@ -359,30 +303,35 @@
     </section>
 
 
-
     <!-- ===================================================
-         VISUAL PHILOSOPHY
-    ==================================================== -->
+         MANIFESTO
+         Content comes from explore.json
+         =================================================== -->
 
-    <section class="explore-manifesto">
+    <section
+      class="explore-manifesto"
+      aria-labelledby="manifesto-title"
+    >
 
       <div class="container">
 
         <div class="explore-manifesto-card">
 
-          <p class="eyebrow">
-            FEELFRAME™
+          <p
+            class="eyebrow"
+            id="manifesto-eyebrow"
+          >
+            WHY FEELFRAME
           </p>
 
-          <h2>
-            Some moments are too personal
-            to remain invisible.
+          <h2 id="manifesto-title">
+            Some moments are too personal to remain invisible.
           </h2>
 
-          <p>
-            FeelFrame turns feelings, transitions and
-            personal milestones into visual stories you
-            can actually see.
+          <p id="manifesto-text">
+            A photograph can show where you were.
+            A FeelFrame is built to express what that moment
+            meant to you.
           </p>
 
         </div>
@@ -392,10 +341,10 @@
     </section>
 
 
-
     <!-- ===================================================
          CREATE CTA
-    ==================================================== -->
+         Content comes from explore.json
+         =================================================== -->
 
     <section class="explore-create-section">
 
@@ -405,28 +354,30 @@
 
           <div>
 
-            <p class="eyebrow">
+            <p
+              class="eyebrow"
+              id="explore-cta-eyebrow"
+            >
               YOUR TURN
             </p>
 
-            <h2>
-              Your moment could
-              be next.
+            <h2 id="explore-cta-title">
+              Your moment could be next.
             </h2>
 
-            <p>
-              Tell us what you're feeling.
-              We'll turn it into a visual direction.
+            <p id="explore-cta-description">
+              Tell us what you're feeling, what you're going
+              through and what you want the image to communicate.
             </p>
 
           </div>
 
-
           <a
             href="create.html"
-            class="button button-primary button-large"
+            class="button button-primary"
+            id="explore-cta-button"
           >
-            Create My FeelFrame →
+            Create My FeelFrame
           </a>
 
         </div>
@@ -435,53 +386,56 @@
 
     </section>
 
-
   </main>
-
 
 
   <!-- =====================================================
        FOOTER
-       Explore keeps the regular footer.
-  ====================================================== -->
+       ===================================================== -->
 
   <footer class="site-footer">
 
-    <div class="container footer-inner">
+    <div class="container">
 
-      <div class="footer-brand">
+      <div class="site-footer-main">
 
-        <strong>
+        <a
+          href="index.html"
+          class="site-footer-brand"
+        >
           FeelFrame™
-        </strong>
+        </a>
+
+        <p>
+          Some feelings deserve to be seen.
+        </p>
+
+      </div>
+
+      <div class="site-footer-bottom">
 
         <span>
-          Visual stories for human moments.
+          © 2026 FeelFrame™
         </span>
 
-      </div>
+        <div class="site-footer-links">
 
+          <a href="index.html">
+            Home
+          </a>
 
-      <div class="footer-links">
+          <a
+            href="explore.html"
+            aria-current="page"
+          >
+            Explore
+          </a>
 
-        <a href="index.html">
-          Home
-        </a>
+          <a href="create.html">
+            Create
+          </a>
 
-        <a href="explore.html">
-          Explore
-        </a>
-
-        <a href="create.html">
-          Create
-        </a>
-
-      </div>
-
-
-      <div class="footer-copyright">
-
-        © 2026 FeelFrame™. All rights reserved.
+        </div>
 
       </div>
 
@@ -490,71 +444,61 @@
   </footer>
 
 
-
   <!-- =====================================================
-       STICKY MOBILE NAV
-  ====================================================== -->
+       MOBILE / STICKY NAVIGATION
+       ===================================================== -->
 
   <nav
     class="bottom-nav"
     aria-label="Primary navigation"
   >
 
-    <a href="index.html">
-
-      <span class="bottom-nav-icon">
-        ⌂
-      </span>
-
-      <span>
+    <a
+      href="index.html"
+      class="bottom-nav-item"
+    >
+      <span class="bottom-nav-label">
         Home
       </span>
-
     </a>
-
 
     <a
       href="explore.html"
-      class="is-active"
+      class="bottom-nav-item is-active"
       aria-current="page"
     >
-
-      <span class="bottom-nav-icon">
-        ◇
-      </span>
-
-      <span>
+      <span class="bottom-nav-label">
         Explore
       </span>
-
     </a>
 
-
-    <a href="create.html">
-
-      <span class="bottom-nav-icon">
-        +
-      </span>
-
-      <span>
+    <a
+      href="create.html"
+      class="bottom-nav-item"
+    >
+      <span class="bottom-nav-label">
         Create
       </span>
-
     </a>
 
   </nav>
 
 
-
   <!-- =====================================================
-       SCRIPT
-  ====================================================== -->
+       SCRIPTS
+       ===================================================== -->
 
+  <!-- Shared FeelFrame functionality -->
   <script
     src="script.js"
     defer
   ></script>
 
-</body>
+  <!-- Explore-only functionality -->
+  <script
+    src="explore.js"
+    defer
+  ></script>
 
+</body>
 </html>
