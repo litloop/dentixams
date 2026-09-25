@@ -297,6 +297,10 @@ main {
     calc(100% - (var(--page-gutter) * 2))
   );
 
+  /*
+    Desktop keeps the large editorial composition.
+    Mobile overrides this to content-driven height.
+  */
   min-height: min(680px, 78vh);
 
   margin: 0 auto;
@@ -608,11 +612,6 @@ main {
    COVERFLOW STATES
    ========================================================= */
 
-/*
-   CENTER
-   Strongest visual.
-*/
-
 .coverflow-card.is-center {
   z-index: 10;
 
@@ -629,11 +628,6 @@ main {
 
   box-shadow: var(--shadow-xl);
 }
-
-
-/*
-   LEFT
-*/
 
 .coverflow-card.is-left {
   z-index: 8;
@@ -652,11 +646,6 @@ main {
   filter: saturate(0.84);
 }
 
-
-/*
-   RIGHT
-*/
-
 .coverflow-card.is-right {
   z-index: 8;
 
@@ -674,11 +663,6 @@ main {
   filter: saturate(0.84);
 }
 
-
-/*
-   FAR LEFT
-*/
-
 .coverflow-card.is-far-left {
   z-index: 5;
 
@@ -695,11 +679,6 @@ main {
 
   filter: saturate(0.65);
 }
-
-
-/*
-   FAR RIGHT
-*/
 
 .coverflow-card.is-far-right {
   z-index: 5;
@@ -853,7 +832,7 @@ main {
 
 
 /* =========================================================
-   STORY CARDS — FIXED
+   STORY CARDS
    ========================================================= */
 
 .story-grid,
@@ -863,14 +842,6 @@ main {
 
   column-fill: balance;
 }
-
-
-/*
-   Important:
-   The card stays as a block inside the masonry columns.
-   This prevents the hover transform from behaving like an
-   inline element and reduces visual collisions.
-*/
 
 .story-card {
   position: relative;
@@ -905,13 +876,6 @@ main {
     border-color 0.45s var(--ease);
 }
 
-
-/*
-   Keep the hover lift restrained.
-   Large lifts in a masonry layout cause cards to
-   visually crash into neighboring columns.
-*/
-
 .story-card:hover {
   transform: translateY(-4px);
 
@@ -919,9 +883,6 @@ main {
 
   box-shadow: var(--shadow-md);
 }
-
-
-/* ---------- Image ---------- */
 
 .story-card-image {
   position: relative;
@@ -954,9 +915,6 @@ main {
   transform: scale(1.035);
 }
 
-
-/* ---------- Image overlay ---------- */
-
 .story-card-overlay {
   position: absolute;
   inset: 0;
@@ -979,9 +937,6 @@ main {
 .story-card:hover .story-card-overlay {
   opacity: 1;
 }
-
-
-/* ---------- Information ---------- */
 
 .story-card-info {
   position: relative;
@@ -1071,9 +1026,6 @@ main {
   line-height: 1.7;
 }
 
-
-/* ---------- Filters ---------- */
-
 .explore-filters {
   width: min(
     var(--max-width),
@@ -1135,9 +1087,6 @@ main {
 
   border-color: var(--black);
 }
-
-
-/* ---------- Explore meta ---------- */
 
 .explore-meta {
   width: min(
@@ -1502,9 +1451,6 @@ main {
   font-size: 10px;
 }
 
-
-/* ---------- Preview ---------- */
-
 .reference-preview {
   position: relative;
 
@@ -1649,9 +1595,6 @@ main {
   padding: 78px 0 120px;
 }
 
-
-/* ---------- Loading ---------- */
-
 .story-loading {
   min-height: 50vh;
 
@@ -1662,9 +1605,6 @@ main {
 
   font-size: 12px;
 }
-
-
-/* ---------- Story layout ---------- */
 
 .story-layout {
   display: grid;
@@ -1763,9 +1703,6 @@ main {
 
   background: rgba(255, 255, 255, 0.28);
 }
-
-
-/* ---------- Metadata ---------- */
 
 .story-meta {
   margin-top: 29px;
@@ -1886,9 +1823,6 @@ main {
   line-height: 1.5;
 }
 
-
-/* ---------- Pricing ---------- */
-
 .prompt-price-row {
   position: relative;
   z-index: 2;
@@ -1919,9 +1853,6 @@ main {
 
   letter-spacing: -0.04em;
 }
-
-
-/* ---------- Buy ---------- */
 
 .prompt-buy {
   position: relative;
@@ -2207,6 +2138,10 @@ main {
     --cover-far-offset: 270px;
   }
 
+  /*
+    The bottom navigation is fixed, so the page only needs
+    enough bottom space to keep content from being hidden.
+  */
   main {
     padding-bottom: 88px;
   }
@@ -2250,21 +2185,23 @@ main {
 
 
   /* =======================================================
-     HOME
+     HOME — MOBILE
+     Content-driven instead of forced-height.
+     This removes the large accidental whitespace.
      ======================================================= */
 
   .home-hero {
-    min-height: 525px;
+    min-height: auto;
 
-    padding: 50px 0 58px;
+    padding: 34px 0 30px;
 
     display: flex;
     flex-direction: column;
 
     align-items: flex-start;
-    justify-content: center;
+    justify-content: flex-start;
 
-    gap: 30px;
+    gap: 25px;
   }
 
   .home-hero-title {
@@ -2282,6 +2219,8 @@ main {
     min-width: 151px;
     min-height: 48px;
 
+    margin-top: 2px;
+
     padding: 13px 18px;
 
     font-size: 11px;
@@ -2290,14 +2229,15 @@ main {
 
   /* =======================================================
      COVERFLOW MOBILE
+     Reduced vertical canvas while preserving 3D effect.
      ======================================================= */
 
   .featured-section {
-    margin-bottom: 78px;
+    margin-bottom: 60px;
   }
 
   .featured-heading {
-    margin-bottom: 17px;
+    margin-bottom: 10px;
   }
 
   .featured-heading h2 {
@@ -2309,7 +2249,7 @@ main {
   }
 
   .coverflow {
-    height: 455px;
+    height: 390px;
 
     perspective: 1200px;
     perspective-origin: center 47%;
@@ -2393,7 +2333,7 @@ main {
   }
 
   .coverflow-controls {
-    margin-top: 16px;
+    margin-top: 13px;
   }
 
   .coverflow-button {
@@ -2409,11 +2349,11 @@ main {
      ======================================================= */
 
   .story-board-section {
-    margin-bottom: 82px;
+    margin-bottom: 70px;
   }
 
   .board-header {
-    margin-bottom: 22px;
+    margin-bottom: 20px;
   }
 
   .board-header p {
@@ -2431,9 +2371,6 @@ main {
 
     border-radius: 13px;
 
-    /*
-      Smaller mobile lift prevents masonry collisions.
-    */
     transition:
       transform 0.35s var(--ease),
       box-shadow 0.35s var(--ease);
@@ -2742,15 +2679,27 @@ main {
   }
 
   .home-hero {
-    min-height: 500px;
+    min-height: auto;
+
+    padding-top: 30px;
+    padding-bottom: 27px;
+
+    gap: 22px;
   }
 
   .home-hero-title {
     font-size: 52px;
   }
 
+  .hero-cta {
+    min-width: 145px;
+    min-height: 46px;
+
+    padding: 12px 17px;
+  }
+
   .coverflow {
-    height: 425px;
+    height: 365px;
   }
 
   .coverflow-card.is-left,
@@ -2792,10 +2741,10 @@ main {
 @media (max-width: 900px) and (orientation: landscape) {
 
   .home-hero {
-    min-height: 430px;
+    min-height: auto;
 
-    padding-top: 30px;
-    padding-bottom: 30px;
+    padding-top: 25px;
+    padding-bottom: 25px;
   }
 
   .coverflow {
