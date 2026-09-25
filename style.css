@@ -229,7 +229,7 @@ main {
     calc(100% - (var(--page-gutter) * 2))
   );
 
-  min-height: 92px;
+  min-height: 82px;
   margin: 0 auto;
 
   display: flex;
@@ -285,6 +285,12 @@ main {
 
 /* =========================================================
    HOME HERO
+   =========================================================
+   UPDATED:
+   - No artificial 500–680px hero height
+   - Sentence remains one typographic unit
+   - CTA sits naturally beneath/right
+   - Reduced vertical dead space
    ========================================================= */
 
 .home-page {
@@ -297,43 +303,78 @@ main {
     calc(100% - (var(--page-gutter) * 2))
   );
 
-  /*
-    Desktop keeps the large editorial composition.
-    Mobile overrides this to content-driven height.
-  */
-  min-height: min(680px, 78vh);
-
   margin: 0 auto;
 
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
+  padding: 36px 0 25px;
 
-  gap: 50px;
+  display: grid;
+
+  grid-template-columns:
+    minmax(0, 1fr)
+    auto;
+
+  align-items: end;
+
+  gap: 40px;
 }
 
 .home-hero-copy {
   min-width: 0;
-  max-width: 900px;
+  max-width: 1180px;
 }
 
 .home-hero-title {
+  max-width: 1180px;
+
   font-family: "Playfair Display", Georgia, serif;
 
-  font-size: clamp(60px, 9vw, 134px);
+  font-size: clamp(58px, 8.5vw, 128px);
   font-weight: 600;
-  line-height: 0.88;
 
-  letter-spacing: -0.065em;
+  line-height: 0.90;
+
+  letter-spacing: -0.067em;
+
+  text-wrap: balance;
 }
+
+/*
+   IMPORTANT:
+   The spans are now INLINE.
+
+   This means:
+   "Some feelings"
+   "deserve to be"
+   "seen."
+
+   are treated as ONE sentence rather than
+   three separate visual statements.
+
+   The spaces are restored between spans even
+   if the HTML has no literal whitespace.
+*/
 
 .home-hero-title span {
-  display: block;
+  display: inline;
+  white-space: normal;
 }
 
-.home-hero-title span:last-child {
-  margin-left: clamp(18px, 7vw, 115px);
+.home-hero-title span + span::before {
+  content: " ";
 }
+
+
+/*
+   Remove the old offset that made the final
+   word look like a separate statement.
+*/
+
+.home-hero-title span:last-child {
+  margin-left: 0;
+}
+
+
+/* ---------- Hero CTA ---------- */
 
 .hero-cta {
   flex-shrink: 0;
@@ -381,38 +422,29 @@ main {
 
 /* =========================================================
    FEATURED COVERFLOW
+   =========================================================
+   The "FEATURED MOMENTS" label is intentionally hidden.
+   The visual itself becomes the section.
    ========================================================= */
 
 .featured-section {
   width: 100%;
-  margin: 0 auto 125px;
+
+  margin: 0 auto 108px;
+
+  padding: 0;
 }
+
+
+/*
+   Hide the old heading completely.
+
+   We do not delete it from HTML so the existing
+   JavaScript/structure remains safe.
+*/
 
 .featured-heading {
-  width: min(
-    var(--max-width),
-    calc(100% - (var(--page-gutter) * 2))
-  );
-
-  margin: 0 auto 27px;
-
-  display: flex;
-  align-items: flex-end;
-  justify-content: space-between;
-
-  gap: 20px;
-}
-
-.featured-heading h2 {
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 0.15em;
-  text-transform: uppercase;
-}
-
-.featured-heading p {
-  color: var(--ink-muted);
-  font-size: 11px;
+  display: none !important;
 }
 
 
@@ -629,6 +661,7 @@ main {
   box-shadow: var(--shadow-xl);
 }
 
+
 .coverflow-card.is-left {
   z-index: 8;
 
@@ -645,6 +678,7 @@ main {
 
   filter: saturate(0.84);
 }
+
 
 .coverflow-card.is-right {
   z-index: 8;
@@ -663,6 +697,7 @@ main {
   filter: saturate(0.84);
 }
 
+
 .coverflow-card.is-far-left {
   z-index: 5;
 
@@ -679,6 +714,7 @@ main {
 
   filter: saturate(0.65);
 }
+
 
 .coverflow-card.is-far-right {
   z-index: 5;
@@ -708,7 +744,7 @@ main {
     calc(100% - (var(--page-gutter) * 2))
   );
 
-  margin: 24px auto 0;
+  margin: 18px auto 0;
 
   display: flex;
   align-items: center;
@@ -884,6 +920,9 @@ main {
   box-shadow: var(--shadow-md);
 }
 
+
+/* ---------- Image ---------- */
+
 .story-card-image {
   position: relative;
 
@@ -915,6 +954,9 @@ main {
   transform: scale(1.035);
 }
 
+
+/* ---------- Image overlay ---------- */
+
 .story-card-overlay {
   position: absolute;
   inset: 0;
@@ -937,6 +979,9 @@ main {
 .story-card:hover .story-card-overlay {
   opacity: 1;
 }
+
+
+/* ---------- Information ---------- */
 
 .story-card-info {
   position: relative;
@@ -1026,6 +1071,9 @@ main {
   line-height: 1.7;
 }
 
+
+/* ---------- Filters ---------- */
+
 .explore-filters {
   width: min(
     var(--max-width),
@@ -1087,6 +1135,9 @@ main {
 
   border-color: var(--black);
 }
+
+
+/* ---------- Explore meta ---------- */
 
 .explore-meta {
   width: min(
@@ -1451,6 +1502,9 @@ main {
   font-size: 10px;
 }
 
+
+/* ---------- Preview ---------- */
+
 .reference-preview {
   position: relative;
 
@@ -1595,6 +1649,9 @@ main {
   padding: 78px 0 120px;
 }
 
+
+/* ---------- Loading ---------- */
+
 .story-loading {
   min-height: 50vh;
 
@@ -1605,6 +1662,9 @@ main {
 
   font-size: 12px;
 }
+
+
+/* ---------- Story layout ---------- */
 
 .story-layout {
   display: grid;
@@ -1703,6 +1763,9 @@ main {
 
   background: rgba(255, 255, 255, 0.28);
 }
+
+
+/* ---------- Metadata ---------- */
 
 .story-meta {
   margin-top: 29px;
@@ -1823,6 +1886,9 @@ main {
   line-height: 1.5;
 }
 
+
+/* ---------- Pricing ---------- */
+
 .prompt-price-row {
   position: relative;
   z-index: 2;
@@ -1853,6 +1919,9 @@ main {
 
   letter-spacing: -0.04em;
 }
+
+
+/* ---------- Buy ---------- */
 
 .prompt-buy {
   position: relative;
@@ -2068,6 +2137,10 @@ main {
     --cover-far-offset: 440px;
   }
 
+  .home-hero-title {
+    font-size: clamp(55px, 8vw, 104px);
+  }
+
   .story-grid,
   .explore-grid {
     column-count: 3;
@@ -2093,6 +2166,17 @@ main {
     --cover-card-width: 300px;
     --cover-side-offset: 225px;
     --cover-far-offset: 395px;
+  }
+
+  .home-hero {
+    padding-top: 30px;
+    padding-bottom: 22px;
+
+    gap: 25px;
+  }
+
+  .home-hero-title {
+    font-size: clamp(52px, 8.5vw, 82px);
   }
 
   .coverflow {
@@ -2138,10 +2222,6 @@ main {
     --cover-far-offset: 270px;
   }
 
-  /*
-    The bottom navigation is fixed, so the page only needs
-    enough bottom space to keep content from being hidden.
-  */
   main {
     padding-bottom: 88px;
   }
@@ -2168,7 +2248,7 @@ main {
      ======================================================= */
 
   .site-header {
-    min-height: 75px;
+    min-height: 68px;
   }
 
   .site-logo {
@@ -2185,43 +2265,79 @@ main {
 
 
   /* =======================================================
-     HOME — MOBILE
-     Content-driven instead of forced-height.
-     This removes the large accidental whitespace.
+     HOME — TIGHT EDITORIAL COMPOSITION
      ======================================================= */
 
   .home-hero {
-    min-height: auto;
+    width: calc(100% - 28px);
 
-    padding: 34px 0 30px;
+    margin: 0 auto;
+
+    padding: 28px 0 18px;
 
     display: flex;
     flex-direction: column;
 
-    align-items: flex-start;
+    align-items: stretch;
     justify-content: flex-start;
 
-    gap: 25px;
+    gap: 21px;
+
+    /*
+      Important:
+      No fixed min-height.
+      The hero now occupies only the space
+      its actual content needs.
+    */
+    min-height: auto;
+  }
+
+  .home-hero-copy {
+    max-width: none;
   }
 
   .home-hero-title {
-    font-size: clamp(56px, 17vw, 89px);
-    line-height: 0.88;
+    max-width: none;
+
+    font-size: clamp(43px, 12.7vw, 70px);
+
+    line-height: 0.91;
+
+    letter-spacing: -0.065em;
+
+    /*
+      Keep the sentence together as much as
+      the viewport permits, while allowing
+      natural wrapping.
+    */
+    text-wrap: balance;
+  }
+
+  /*
+    The spans remain inline on mobile too.
+    Therefore this is still ONE sentence.
+  */
+
+  .home-hero-title span {
+    display: inline;
   }
 
   .home-hero-title span:last-child {
-    margin-left: 10px;
+    margin-left: 0;
   }
+
+  /*
+    CTA sits beneath the sentence and aligns
+    to the right, matching your wireframe.
+  */
 
   .hero-cta {
     align-self: flex-end;
 
     min-width: 151px;
-    min-height: 48px;
+    min-height: 47px;
 
-    margin-top: 2px;
-
-    padding: 13px 18px;
+    padding: 12px 18px;
 
     font-size: 11px;
   }
@@ -2229,27 +2345,23 @@ main {
 
   /* =======================================================
      COVERFLOW MOBILE
-     Reduced vertical canvas while preserving 3D effect.
      ======================================================= */
 
   .featured-section {
-    margin-bottom: 60px;
+    margin-bottom: 68px;
   }
+
+  /*
+    Heading is completely gone.
+    Coverflow starts directly after hero.
+  */
 
   .featured-heading {
-    margin-bottom: 10px;
-  }
-
-  .featured-heading h2 {
-    font-size: 9px;
-  }
-
-  .featured-heading p {
-    display: none;
+    display: none !important;
   }
 
   .coverflow {
-    height: 390px;
+    height: 430px;
 
     perspective: 1200px;
     perspective-origin: center 47%;
@@ -2333,7 +2445,7 @@ main {
   }
 
   .coverflow-controls {
-    margin-top: 13px;
+    margin-top: 12px;
   }
 
   .coverflow-button {
@@ -2349,11 +2461,11 @@ main {
      ======================================================= */
 
   .story-board-section {
-    margin-bottom: 70px;
+    margin-bottom: 82px;
   }
 
   .board-header {
-    margin-bottom: 20px;
+    margin-bottom: 22px;
   }
 
   .board-header p {
@@ -2679,27 +2791,27 @@ main {
   }
 
   .home-hero {
-    min-height: auto;
+    padding-top: 24px;
+    padding-bottom: 15px;
 
-    padding-top: 30px;
-    padding-bottom: 27px;
-
-    gap: 22px;
+    gap: 18px;
   }
 
   .home-hero-title {
-    font-size: 52px;
+    font-size: 48px;
+
+    line-height: 0.91;
   }
 
   .hero-cta {
-    min-width: 145px;
-    min-height: 46px;
+    min-width: 143px;
+    min-height: 45px;
 
-    padding: 12px 17px;
+    padding: 11px 16px;
   }
 
   .coverflow {
-    height: 365px;
+    height: 405px;
   }
 
   .coverflow-card.is-left,
@@ -2743,8 +2855,8 @@ main {
   .home-hero {
     min-height: auto;
 
-    padding-top: 25px;
-    padding-bottom: 25px;
+    padding-top: 24px;
+    padding-bottom: 18px;
   }
 
   .coverflow {
