@@ -26,6 +26,995 @@
   />
 
   <link rel="stylesheet" href="style.css" />
+
+  <style>
+    /* =========================================================
+       FEELFRAME™ HOME
+       CLEAN HOMEPAGE STRUCTURE
+       ========================================================= */
+
+    :root {
+      --ff-bg: #f5f3ee;
+      --ff-paper: #fbfaf7;
+      --ff-ink: #151515;
+      --ff-muted: #77736b;
+      --ff-line: rgba(21, 21, 21, 0.1);
+      --ff-accent: #b98a3a;
+      --ff-radius: 24px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body.home-page {
+      min-height: 100vh;
+      margin: 0;
+      background: var(--ff-bg);
+      color: var(--ff-ink);
+      padding-bottom: 100px;
+    }
+
+    /* =========================================================
+       HOME CONTAINER
+       ========================================================= */
+
+    .home-container {
+      width: min(1380px, calc(100% - 40px));
+      margin: 0 auto;
+    }
+
+    /* =========================================================
+       HEADER
+       ========================================================= */
+
+    .home-header {
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+
+      padding: 28px 0 10px;
+    }
+
+    .home-logo {
+      display: inline-block;
+
+      color: var(--ff-ink);
+      text-decoration: none;
+
+      font-family: "DM Sans", sans-serif;
+      font-size: 1rem;
+      font-weight: 700;
+      letter-spacing: -0.035em;
+    }
+
+    /* =========================================================
+       HERO
+       ========================================================= */
+
+    .home-hero {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      align-items: end;
+      gap: 40px;
+
+      padding: 88px 0 58px;
+    }
+
+    /*
+     * IMPORTANT:
+     * This is intentionally ONE text node.
+     *
+     * No spans.
+     * No forced line break.
+     * No artificial indentation.
+     */
+
+    .home-hero-title {
+      max-width: 920px;
+      margin: 0;
+
+      font-family: "Playfair Display", Georgia, serif;
+      font-size: clamp(3.6rem, 8.3vw, 8.6rem);
+      line-height: 0.94;
+      font-weight: 500;
+      letter-spacing: -0.065em;
+
+      text-wrap: balance;
+    }
+
+    .home-hero-cta {
+      display: inline-flex;
+      align-items: center;
+      gap: 11px;
+
+      align-self: end;
+
+      padding: 14px 19px;
+
+      border: 1px solid var(--ff-line);
+      border-radius: 999px;
+
+      background: rgba(255, 255, 255, 0.42);
+      color: var(--ff-ink);
+
+      text-decoration: none;
+
+      font-size: 0.84rem;
+      font-weight: 600;
+
+      white-space: nowrap;
+
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+
+      transition:
+        transform 0.3s ease,
+        background 0.3s ease,
+        border-color 0.3s ease;
+    }
+
+    .home-hero-cta:hover {
+      transform: translateY(-3px);
+      background: rgba(255, 255, 255, 0.8);
+      border-color: rgba(21, 21, 21, 0.16);
+    }
+
+    .home-hero-cta-arrow {
+      display: inline-block;
+
+      font-size: 1rem;
+
+      transition: transform 0.3s ease;
+    }
+
+    .home-hero-cta:hover .home-hero-cta-arrow {
+      transform: translateX(4px);
+    }
+
+    /* =========================================================
+       COVERFLOW
+       ========================================================= */
+
+    .featured-section {
+      position: relative;
+
+      width: 100vw;
+      margin-left: calc(50% - 50vw);
+
+      overflow: hidden;
+
+      padding: 4px 0 24px;
+    }
+
+    /*
+     * There is deliberately NO "Featured moments" label here.
+     * The visual itself begins immediately.
+     */
+
+    .coverflow-viewport {
+      position: relative;
+
+      width: 100%;
+      height: 570px;
+
+      perspective: 1500px;
+      perspective-origin: center center;
+
+      touch-action: pan-y;
+      user-select: none;
+
+      cursor: grab;
+    }
+
+    .coverflow-viewport.is-dragging {
+      cursor: grabbing;
+    }
+
+    .coverflow-track {
+      position: absolute;
+      inset: 0;
+
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      transform-style: preserve-3d;
+    }
+
+    .coverflow-card {
+      position: absolute;
+
+      width: min(390px, 29vw);
+      height: 500px;
+
+      overflow: hidden;
+
+      border-radius: 26px;
+
+      background: #ddd;
+
+      box-shadow:
+        0 25px 70px rgba(0, 0, 0, 0.16),
+        0 4px 14px rgba(0, 0, 0, 0.08);
+
+      transform-style: preserve-3d;
+
+      transition:
+        transform 0.65s cubic-bezier(0.2, 0.8, 0.2, 1),
+        opacity 0.45s ease,
+        filter 0.45s ease,
+        box-shadow 0.45s ease;
+
+      will-change: transform;
+      cursor: pointer;
+    }
+
+    .coverflow-card-image {
+      display: block;
+
+      width: 100%;
+      height: 100%;
+
+      object-fit: cover;
+
+      pointer-events: none;
+    }
+
+    .coverflow-card::after {
+      content: "";
+
+      position: absolute;
+      inset: 0;
+
+      background:
+        linear-gradient(
+          to top,
+          rgba(0, 0, 0, 0.64) 0%,
+          rgba(0, 0, 0, 0.18) 35%,
+          rgba(0, 0, 0, 0) 65%
+        );
+
+      pointer-events: none;
+    }
+
+    .coverflow-card-content {
+      position: absolute;
+      z-index: 2;
+
+      left: 24px;
+      right: 24px;
+      bottom: 24px;
+
+      color: white;
+
+      pointer-events: none;
+    }
+
+    .coverflow-card-campaign {
+      margin-bottom: 7px;
+
+      font-size: 0.63rem;
+      font-weight: 700;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+
+      opacity: 0.76;
+    }
+
+    .coverflow-card-title {
+      margin: 0;
+
+      font-family: "Playfair Display", Georgia, serif;
+      font-size: clamp(1.5rem, 2.4vw, 2.2rem);
+      line-height: 1;
+      font-weight: 500;
+      letter-spacing: -0.035em;
+    }
+
+    .coverflow-card-emotion {
+      margin-top: 9px;
+
+      font-size: 0.76rem;
+      opacity: 0.82;
+    }
+
+    /* =========================================================
+       COVERFLOW STATES
+       ========================================================= */
+
+    .coverflow-card.is-center {
+      z-index: 5;
+
+      opacity: 1;
+      filter: none;
+
+      transform:
+        translate3d(0, 0, 160px)
+        rotateY(0deg)
+        scale(1);
+    }
+
+    .coverflow-card.is-left {
+      z-index: 4;
+
+      opacity: 0.88;
+      filter: saturate(0.88);
+
+      transform:
+        translate3d(-31vw, 0, -60px)
+        rotateY(34deg)
+        scale(0.86);
+    }
+
+    .coverflow-card.is-right {
+      z-index: 4;
+
+      opacity: 0.88;
+      filter: saturate(0.88);
+
+      transform:
+        translate3d(31vw, 0, -60px)
+        rotateY(-34deg)
+        scale(0.86);
+    }
+
+    .coverflow-card.is-far-left {
+      z-index: 2;
+
+      opacity: 0.3;
+      filter: saturate(0.65);
+
+      transform:
+        translate3d(-57vw, 0, -180px)
+        rotateY(48deg)
+        scale(0.72);
+    }
+
+    .coverflow-card.is-far-right {
+      z-index: 2;
+
+      opacity: 0.3;
+      filter: saturate(0.65);
+
+      transform:
+        translate3d(57vw, 0, -180px)
+        rotateY(-48deg)
+        scale(0.72);
+    }
+
+    .coverflow-card.is-hidden {
+      z-index: 0;
+
+      opacity: 0;
+      pointer-events: none;
+
+      transform:
+        translate3d(0, 0, -300px)
+        scale(0.55);
+    }
+
+    /* =========================================================
+       COVERFLOW CONTROLS
+       ========================================================= */
+
+    .coverflow-controls {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 16px;
+
+      margin-top: 2px;
+    }
+
+    .coverflow-arrow {
+      width: 40px;
+      height: 40px;
+
+      display: grid;
+      place-items: center;
+
+      padding: 0;
+
+      border: 1px solid var(--ff-line);
+      border-radius: 50%;
+
+      background: rgba(255, 255, 255, 0.55);
+      color: var(--ff-ink);
+
+      font-size: 0.9rem;
+
+      cursor: pointer;
+
+      transition:
+        transform 0.25s ease,
+        background 0.25s ease;
+    }
+
+    .coverflow-arrow:hover {
+      transform: translateY(-2px);
+      background: white;
+    }
+
+    .coverflow-dots {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .coverflow-dot {
+      width: 5px;
+      height: 5px;
+
+      padding: 0;
+
+      border: 0;
+      border-radius: 50%;
+
+      background: rgba(21, 21, 21, 0.2);
+
+      cursor: pointer;
+
+      transition:
+        width 0.3s ease,
+        border-radius 0.3s ease,
+        background 0.3s ease;
+    }
+
+    .coverflow-dot.is-active {
+      width: 25px;
+
+      border-radius: 999px;
+
+      background: var(--ff-ink);
+    }
+
+    /* =========================================================
+       STORY BOARD
+       ========================================================= */
+
+    .stories-section {
+      padding: 78px 0 40px;
+    }
+
+    /*
+     * No heading row.
+     * No "More FeelFrame stories".
+     * No "Explore all".
+     *
+     * The Pinterest-style visual board now starts directly.
+     */
+
+    .home-story-grid {
+      column-count: 4;
+      column-gap: 18px;
+    }
+
+    .home-story-card {
+      position: relative;
+
+      display: block;
+
+      width: 100%;
+      margin: 0 0 18px;
+
+      break-inside: avoid;
+
+      overflow: hidden;
+
+      border-radius: var(--ff-radius);
+
+      background: var(--ff-paper);
+
+      color: inherit;
+      text-decoration: none;
+
+      transform: translateZ(0);
+
+      transition:
+        transform 0.35s ease,
+        box-shadow 0.35s ease;
+    }
+
+    .home-story-card:hover {
+      transform: translateY(-5px);
+
+      box-shadow:
+        0 18px 45px rgba(0, 0, 0, 0.09);
+    }
+
+    .home-story-card-image-wrap {
+      position: relative;
+
+      overflow: hidden;
+
+      background: #e8e5de;
+    }
+
+    .home-story-card-image {
+      display: block;
+
+      width: 100%;
+      height: auto;
+
+      object-fit: cover;
+
+      transition:
+        transform 0.6s cubic-bezier(0.2, 0.8, 0.2, 1);
+    }
+
+    .home-story-card:hover .home-story-card-image {
+      transform: scale(1.035);
+    }
+
+    .home-story-card-body {
+      padding: 18px 18px 20px;
+    }
+
+    .home-story-card-meta {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+
+      margin-bottom: 10px;
+
+      font-size: 0.62rem;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+
+      color: var(--ff-muted);
+    }
+
+    .home-story-card-title {
+      margin: 0;
+
+      font-family: "Playfair Display", Georgia, serif;
+      font-size: clamp(1.35rem, 2vw, 1.8rem);
+      line-height: 1.02;
+      font-weight: 500;
+      letter-spacing: -0.035em;
+    }
+
+    .home-story-card-description {
+      margin: 12px 0 0;
+
+      font-size: 0.78rem;
+      line-height: 1.55;
+
+      color: var(--ff-muted);
+    }
+
+    /* =========================================================
+       PROMPT PRODUCT
+       ========================================================= */
+
+    .prompt-product {
+      margin-top: 16px;
+      padding: 16px;
+
+      border: 1px solid rgba(21, 21, 21, 0.09);
+      border-radius: 18px;
+
+      background: rgba(255, 255, 255, 0.48);
+
+      transition:
+        background 0.25s ease,
+        transform 0.25s ease;
+    }
+
+    .home-story-card:hover .prompt-product {
+      background: rgba(255, 255, 255, 0.76);
+    }
+
+    .prompt-product-title {
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+
+      margin: 0;
+
+      font-size: 0.72rem;
+      line-height: 1.35;
+      font-weight: 700;
+      letter-spacing: 0.02em;
+    }
+
+    .prompt-lock {
+      flex: 0 0 auto;
+    }
+
+    .prompt-product-description {
+      margin: 7px 0 13px;
+
+      font-size: 0.68rem;
+      line-height: 1.45;
+
+      color: var(--ff-muted);
+    }
+
+    .prompt-product-bottom {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 15px;
+    }
+
+    .prompt-price {
+      display: flex;
+      align-items: baseline;
+      flex-wrap: wrap;
+      gap: 7px;
+    }
+
+    .prompt-old-price {
+      font-size: 0.69rem;
+
+      color: #99958d;
+
+      text-decoration: line-through;
+      text-decoration-thickness: 1px;
+    }
+
+    .prompt-current-price {
+      font-size: 0.95rem;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+    }
+
+    .prompt-get-button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 5px;
+
+      padding: 9px 12px;
+
+      border: 0;
+      border-radius: 999px;
+
+      background: var(--ff-ink);
+      color: white;
+
+      font-size: 0.67rem;
+      font-weight: 700;
+
+      text-decoration: none;
+      white-space: nowrap;
+
+      cursor: pointer;
+
+      transition:
+        transform 0.25s ease,
+        opacity 0.25s ease;
+    }
+
+    .prompt-get-button:hover {
+      transform: translateY(-2px);
+      opacity: 0.82;
+    }
+
+    /* =========================================================
+       EMPTY STATE
+       ========================================================= */
+
+    .home-empty {
+      padding: 60px 20px;
+
+      text-align: center;
+
+      color: var(--ff-muted);
+
+      font-size: 0.9rem;
+    }
+
+    /* =========================================================
+       STICKY BOTTOM NAV
+       ========================================================= */
+
+    .home-bottom-nav {
+      position: fixed;
+      z-index: 100;
+
+      left: 50%;
+      bottom: max(16px, env(safe-area-inset-bottom));
+
+      transform: translateX(-50%);
+
+      display: flex;
+      align-items: center;
+      gap: 5px;
+
+      padding: 6px;
+
+      border: 1px solid rgba(21, 21, 21, 0.08);
+      border-radius: 999px;
+
+      background: rgba(250, 249, 246, 0.82);
+
+      box-shadow:
+        0 15px 45px rgba(0, 0, 0, 0.12),
+        0 2px 8px rgba(0, 0, 0, 0.05);
+
+      backdrop-filter: blur(22px);
+      -webkit-backdrop-filter: blur(22px);
+    }
+
+    .home-bottom-nav a {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+
+      min-width: 74px;
+      height: 38px;
+
+      padding: 0 14px;
+
+      border-radius: 999px;
+
+      color: var(--ff-muted);
+
+      text-decoration: none;
+
+      font-size: 0.7rem;
+      font-weight: 600;
+
+      transition:
+        background 0.25s ease,
+        color 0.25s ease;
+    }
+
+    .home-bottom-nav a.active {
+      background: var(--ff-ink);
+      color: white;
+    }
+
+    /* =========================================================
+       RESPONSIVE
+       ========================================================= */
+
+    @media (max-width: 1050px) {
+
+      .home-story-grid {
+        column-count: 3;
+      }
+
+      .coverflow-card {
+        width: min(370px, 36vw);
+      }
+
+      .coverflow-card.is-left {
+        transform:
+          translate3d(-36vw, 0, -60px)
+          rotateY(32deg)
+          scale(0.84);
+      }
+
+      .coverflow-card.is-right {
+        transform:
+          translate3d(36vw, 0, -60px)
+          rotateY(-32deg)
+          scale(0.84);
+      }
+
+      .coverflow-card.is-far-left {
+        transform:
+          translate3d(-65vw, 0, -180px)
+          rotateY(46deg)
+          scale(0.68);
+      }
+
+      .coverflow-card.is-far-right {
+        transform:
+          translate3d(65vw, 0, -180px)
+          rotateY(-46deg)
+          scale(0.68);
+      }
+    }
+
+    @media (max-width: 760px) {
+
+      .home-container {
+        width: min(100% - 28px, 680px);
+      }
+
+      .home-header {
+        padding-top: 21px;
+      }
+
+      .home-hero {
+        grid-template-columns: 1fr;
+        gap: 27px;
+
+        padding: 70px 0 42px;
+      }
+
+      .home-hero-title {
+        max-width: 100%;
+
+        font-size: clamp(3.35rem, 15vw, 6rem);
+        line-height: 0.95;
+      }
+
+      .home-hero-cta {
+        justify-self: end;
+      }
+
+      .coverflow-viewport {
+        height: 490px;
+      }
+
+      .coverflow-card {
+        width: min(300px, 70vw);
+        height: 415px;
+
+        border-radius: 22px;
+      }
+
+      .coverflow-card.is-center {
+        transform:
+          translate3d(0, 0, 120px)
+          rotateY(0deg)
+          scale(1);
+      }
+
+      .coverflow-card.is-left {
+        transform:
+          translate3d(-54vw, 0, -70px)
+          rotateY(36deg)
+          scale(0.78);
+      }
+
+      .coverflow-card.is-right {
+        transform:
+          translate3d(54vw, 0, -70px)
+          rotateY(-36deg)
+          scale(0.78);
+      }
+
+      .coverflow-card.is-far-left {
+        transform:
+          translate3d(-88vw, 0, -180px)
+          rotateY(48deg)
+          scale(0.6);
+      }
+
+      .coverflow-card.is-far-right {
+        transform:
+          translate3d(88vw, 0, -180px)
+          rotateY(-48deg)
+          scale(0.6);
+      }
+
+      .coverflow-card-content {
+        left: 19px;
+        right: 19px;
+        bottom: 19px;
+      }
+
+      .stories-section {
+        padding-top: 65px;
+      }
+
+      .home-story-grid {
+        column-count: 2;
+        column-gap: 12px;
+      }
+
+      .home-story-card {
+        margin-bottom: 12px;
+        border-radius: 18px;
+      }
+
+      .home-story-card-body {
+        padding: 14px 13px 15px;
+      }
+
+      .home-story-card-description {
+        font-size: 0.7rem;
+      }
+
+      .prompt-product {
+        padding: 13px;
+        border-radius: 15px;
+      }
+
+      .prompt-product-bottom {
+        align-items: flex-end;
+        flex-direction: column;
+      }
+
+      .prompt-price {
+        width: 100%;
+      }
+
+      .prompt-get-button {
+        width: 100%;
+      }
+    }
+
+    @media (max-width: 430px) {
+
+      .home-hero-title {
+        font-size: 3.25rem;
+      }
+
+      .coverflow-viewport {
+        height: 455px;
+      }
+
+      .coverflow-card {
+        width: 265px;
+        height: 390px;
+      }
+
+      .coverflow-card.is-left {
+        transform:
+          translate3d(-61vw, 0, -75px)
+          rotateY(38deg)
+          scale(0.73);
+      }
+
+      .coverflow-card.is-right {
+        transform:
+          translate3d(61vw, 0, -75px)
+          rotateY(-38deg)
+          scale(0.73);
+      }
+
+      .coverflow-card.is-far-left,
+      .coverflow-card.is-far-right {
+        opacity: 0;
+      }
+
+      .home-story-grid {
+        column-count: 2;
+        column-gap: 9px;
+      }
+
+      .home-story-card {
+        margin-bottom: 9px;
+        border-radius: 15px;
+      }
+
+      .home-story-card-meta {
+        font-size: 0.55rem;
+      }
+
+      .home-story-card-title {
+        font-size: 1.2rem;
+      }
+
+      .prompt-product-description {
+        font-size: 0.63rem;
+      }
+
+      .home-bottom-nav a {
+        min-width: 66px;
+        padding: 0 11px;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+
+      .coverflow-card,
+      .home-story-card,
+      .home-story-card-image,
+      .home-hero-cta,
+      .coverflow-arrow {
+        transition: none !important;
+      }
+
+      html {
+        scroll-behavior: auto;
+      }
+    }
+  </style>
 </head>
 
 <body class="home-page">
@@ -33,7 +1022,7 @@
   <main>
 
     <!-- =======================================================
-         HOME HEADER
+         HEADER
          ======================================================= -->
 
     <div class="home-container">
@@ -55,9 +1044,21 @@
            HERO
            ===================================================== -->
 
-      <section class="home-hero">
+      <section
+        class="home-hero"
+        aria-labelledby="homeHeroTitle"
+      >
 
-        <h1 class="home-hero-title">
+        <!--
+          ONE sentence.
+          No spans.
+          No artificial line break.
+        -->
+
+        <h1
+          class="home-hero-title"
+          id="homeHeroTitle"
+        >
           Some feelings deserve to be seen.
         </h1>
 
@@ -81,21 +1082,18 @@
 
 
     <!-- =======================================================
-         FEATURED COVERFLOW
-         
-         No section heading.
-         The visual experience begins immediately.
+         3D COVERFLOW
          ======================================================= -->
 
     <section
       class="featured-section"
-      aria-label="Featured FeelFrame moments"
+      aria-label="FeelFrame visual moments"
     >
 
       <div
         class="coverflow-viewport"
         id="coverflowViewport"
-        aria-label="Featured visual stories carousel"
+        aria-label="FeelFrame visual story carousel"
       >
 
         <div
@@ -108,17 +1106,13 @@
       </div>
 
 
-      <!-- =====================================================
-           COVERFLOW CONTROLS
-           ===================================================== -->
-
       <div class="coverflow-controls">
 
         <button
           class="coverflow-arrow"
           id="coverflowPrev"
           type="button"
-          aria-label="Previous featured story"
+          aria-label="Previous visual story"
         >
           ←
         </button>
@@ -126,14 +1120,14 @@
         <div
           class="coverflow-dots"
           id="coverflowDots"
-          aria-label="Featured story positions"
+          aria-label="Visual story positions"
         ></div>
 
         <button
           class="coverflow-arrow"
           id="coverflowNext"
           type="button"
-          aria-label="Next featured story"
+          aria-label="Next visual story"
         >
           →
         </button>
@@ -144,18 +1138,14 @@
 
 
     <!-- =======================================================
-         PINTEREST-STYLE STORY BOARD
-         
-         No "More FeelFrame Stories" heading.
-         No extra section label.
-         The visual board follows naturally.
+         PINTEREST-STYLE MOMENTS
          ======================================================= -->
 
     <div class="home-container">
 
       <section
         class="stories-section"
-        aria-label="FeelFrame visual stories"
+        aria-label="FeelFrame moments"
       >
 
         <div
@@ -174,7 +1164,7 @@
 
 
   <!-- =========================================================
-       STICKY MOBILE / GLOBAL NAV
+       STICKY BOTTOM NAVIGATION
        ========================================================= -->
 
   <nav
@@ -218,8 +1208,8 @@
 
     let coverflowIndex = 0;
 
-    let touchStartX = 0;
-    let touchCurrentX = 0;
+    let pointerStartX = null;
+    let pointerCurrentX = null;
     let isDragging = false;
 
 
@@ -252,7 +1242,10 @@
 
     function escapeHTML(value) {
 
-      if (value === null || value === undefined) {
+      if (
+        value === null ||
+        value === undefined
+      ) {
         return "";
       }
 
@@ -307,31 +1300,32 @@
         compareAt && currentPrice;
 
 
-      const priceHTML = hasComparePrice
+      const priceHTML =
+        hasComparePrice
 
-        ? `
-          <div class="prompt-price">
+          ? `
+            <div class="prompt-price">
 
-            <span class="prompt-old-price">
-              ${escapeHTML(compareAt)}
-            </span>
+              <span class="prompt-old-price">
+                ${escapeHTML(compareAt)}
+              </span>
 
-            <span class="prompt-current-price">
-              ${escapeHTML(currentPrice)}
-            </span>
+              <span class="prompt-current-price">
+                ${escapeHTML(currentPrice)}
+              </span>
 
-          </div>
-        `
+            </div>
+          `
 
-        : `
-          <div class="prompt-price">
+          : `
+            <div class="prompt-price">
 
-            <span class="prompt-current-price">
-              ${escapeHTML(currentPrice)}
-            </span>
+              <span class="prompt-current-price">
+                ${escapeHTML(currentPrice)}
+              </span>
 
-          </div>
-        `;
+            </div>
+          `;
 
 
       const buttonHTML =
@@ -361,6 +1355,7 @@
 
 
       return `
+
         <div class="prompt-product">
 
           <p class="prompt-product-title">
@@ -393,40 +1388,58 @@
           </div>
 
         </div>
+
       `;
 
     }
 
 
     /* =========================================================
-       CREATE COVERFLOW CARD
+       COVERFLOW CARD
        ========================================================= */
 
-    function createCoverflowCard(story, index) {
+    function createCoverflowCard(
+      story,
+      index
+    ) {
 
       const card =
         document.createElement("article");
 
-      card.className = "coverflow-card";
+      card.className =
+        "coverflow-card";
 
-      card.dataset.index = index;
-      card.dataset.id = story.id || "";
+      card.dataset.index =
+        index;
+
+      card.dataset.id =
+        story.id || "";
 
 
       card.innerHTML = `
 
         <img
           class="coverflow-card-image"
-          src="${escapeHTML(story.image)}"
+
+          src="${escapeHTML(
+            story.image
+          )}"
+
           alt="${escapeHTML(
             story.title ||
             story.quote ||
             story.emotion ||
             "FeelFrame visual story"
           )}"
-          loading="${index === 0 ? "eager" : "lazy"}"
+
+          loading="${
+            index === 0
+              ? "eager"
+              : "lazy"
+          }"
+
           draggable="false"
-        >
+        />
 
 
         <div class="coverflow-card-content">
@@ -435,7 +1448,9 @@
             story.campaign
               ? `
                 <div class="coverflow-card-campaign">
-                  ${escapeHTML(story.campaign)}
+                  ${escapeHTML(
+                    story.campaign
+                  )}
                 </div>
               `
               : ""
@@ -458,7 +1473,9 @@
             story.emotion
               ? `
                 <div class="coverflow-card-emotion">
-                  ${escapeHTML(story.emotion)}
+                  ${escapeHTML(
+                    story.emotion
+                  )}
                 </div>
               `
               : ""
@@ -469,42 +1486,44 @@
       `;
 
 
-      card.addEventListener("click", () => {
+      card.addEventListener(
+        "click",
+        () => {
 
-        if (isDragging) {
-          return;
+          if (isDragging) {
+            return;
+          }
+
+          const clickedIndex =
+            Number(card.dataset.index);
+
+
+          if (
+            Number.isFinite(clickedIndex) &&
+            clickedIndex !== coverflowIndex
+          ) {
+
+            coverflowIndex =
+              clickedIndex;
+
+            updateCoverflow();
+
+            return;
+
+          }
+
+
+          if (story.id) {
+
+            window.location.href =
+              `story.html?id=${encodeURIComponent(
+                story.id
+              )}`;
+
+          }
+
         }
-
-
-        const clickedIndex =
-          Number(card.dataset.index);
-
-
-        if (
-          Number.isFinite(clickedIndex) &&
-          clickedIndex !== coverflowIndex
-        ) {
-
-          coverflowIndex =
-            clickedIndex;
-
-          updateCoverflow();
-
-          return;
-
-        }
-
-
-        if (story.id) {
-
-          window.location.href =
-            `story.html?id=${encodeURIComponent(
-              story.id
-            )}`;
-
-        }
-
-      });
+      );
 
 
       return card;
@@ -513,7 +1532,7 @@
 
 
     /* =========================================================
-       CREATE STORY CARD
+       STORY CARD
        ========================================================= */
 
     function createStoryCard(story) {
@@ -540,15 +1559,20 @@
 
           <img
             class="home-story-card-image"
-            src="${escapeHTML(image)}"
+
+            src="${escapeHTML(
+              image
+            )}"
+
             alt="${escapeHTML(
               story.title ||
               story.quote ||
               story.moment ||
               "FeelFrame visual story"
             )}"
+
             loading="lazy"
-          >
+          />
 
         </div>
 
@@ -595,6 +1619,7 @@
 
           ${
             story.description
+
               ? `
                 <p class="home-story-card-description">
                   ${escapeHTML(
@@ -602,7 +1627,9 @@
                   )}
                 </p>
               `
+
               : story.context
+
                 ? `
                   <p class="home-story-card-description">
                     ${escapeHTML(
@@ -610,6 +1637,7 @@
                     )}
                   </p>
                 `
+
                 : ""
           }
 
@@ -620,11 +1648,6 @@
 
       `;
 
-
-      /*
-       * Prevent prompt interaction from
-       * navigating to the story page.
-       */
 
       const prompt =
         link.querySelector(
@@ -666,9 +1689,11 @@
       if (!stories.length) {
 
         homeStoryGrid.innerHTML = `
+
           <div class="home-empty">
             No stories available yet.
           </div>
+
         `;
 
         return;
@@ -676,13 +1701,15 @@
       }
 
 
-      stories.forEach((story) => {
+      stories.forEach(
+        (story) => {
 
-        homeStoryGrid.appendChild(
-          createStoryCard(story)
-        );
+          homeStoryGrid.appendChild(
+            createStoryCard(story)
+          );
 
-      });
+        }
+      );
 
     }
 
@@ -693,22 +1720,29 @@
 
     function buildCoverflow() {
 
-      if (!coverflowTrack) {
+      if (
+        !coverflowTrack ||
+        !coverflowDots
+      ) {
         return;
       }
 
 
-      coverflowTrack.innerHTML = "";
+      coverflowTrack.innerHTML =
+        "";
 
-      coverflowDots.innerHTML = "";
+      coverflowDots.innerHTML =
+        "";
 
 
       if (!featuredStories.length) {
 
         coverflowTrack.innerHTML = `
+
           <div class="home-empty">
             Featured moments will appear here.
           </div>
+
         `;
 
         return;
@@ -737,7 +1771,8 @@
             );
 
 
-          dot.type = "button";
+          dot.type =
+            "button";
 
           dot.className =
             "coverflow-dot";
@@ -745,7 +1780,9 @@
 
           dot.setAttribute(
             "aria-label",
-            `Go to featured story ${index + 1}`
+            `Go to visual story ${
+              index + 1
+            }`
           );
 
 
@@ -770,7 +1807,8 @@
       );
 
 
-      coverflowIndex = 0;
+      coverflowIndex =
+        0;
 
       updateCoverflow();
 
@@ -778,7 +1816,7 @@
 
 
     /* =========================================================
-       COVERFLOW POSITION ENGINE
+       RELATIVE COVERFLOW POSITION
        ========================================================= */
 
     function getRelativePosition(
@@ -788,24 +1826,28 @@
     ) {
 
       let difference =
-        cardIndex - activeIndex;
+        cardIndex -
+        activeIndex;
 
 
-      /*
-       * Circular positioning allows
-       * continuous carousel movement.
-       */
+      if (
+        difference >
+        total / 2
+      ) {
 
-      if (difference > total / 2) {
-
-        difference -= total;
+        difference -=
+          total;
 
       }
 
 
-      if (difference < -total / 2) {
+      if (
+        difference <
+        -total / 2
+      ) {
 
-        difference += total;
+        difference +=
+          total;
 
       }
 
@@ -814,6 +1856,10 @@
 
     }
 
+
+    /* =========================================================
+       UPDATE COVERFLOW
+       ========================================================= */
 
     function updateCoverflow() {
 
@@ -855,37 +1901,57 @@
           );
 
 
-          if (position === 0) {
+          if (
+            position === 0
+          ) {
 
             card.classList.add(
               "is-center"
             );
 
-          } else if (position === -1) {
+          }
+
+          else if (
+            position === -1
+          ) {
 
             card.classList.add(
               "is-left"
             );
 
-          } else if (position === 1) {
+          }
+
+          else if (
+            position === 1
+          ) {
 
             card.classList.add(
               "is-right"
             );
 
-          } else if (position === -2) {
+          }
+
+          else if (
+            position === -2
+          ) {
 
             card.classList.add(
               "is-far-left"
             );
 
-          } else if (position === 2) {
+          }
+
+          else if (
+            position === 2
+          ) {
 
             card.classList.add(
               "is-far-right"
             );
 
-          } else {
+          }
+
+          else {
 
             card.classList.add(
               "is-hidden"
@@ -925,7 +1991,9 @@
 
     function goNext() {
 
-      if (!featuredStories.length) {
+      if (
+        !featuredStories.length
+      ) {
         return;
       }
 
@@ -944,7 +2012,9 @@
 
     function goPrevious() {
 
-      if (!featuredStories.length) {
+      if (
+        !featuredStories.length
+      ) {
         return;
       }
 
@@ -963,81 +2033,119 @@
     }
 
 
-    coverflowNext.addEventListener(
-      "click",
-      goNext
-    );
+    if (coverflowNext) {
+
+      coverflowNext.addEventListener(
+        "click",
+        goNext
+      );
+
+    }
 
 
-    coverflowPrev.addEventListener(
-      "click",
-      goPrevious
-    );
+    if (coverflowPrev) {
+
+      coverflowPrev.addEventListener(
+        "click",
+        goPrevious
+      );
+
+    }
 
 
     /* =========================================================
-       TOUCH / SWIPE
+       POINTER / SWIPE
        ========================================================= */
 
-    coverflowViewport.addEventListener(
-      "pointerdown",
-      (event) => {
+    if (coverflowViewport) {
 
-        isDragging = false;
+      coverflowViewport.addEventListener(
+        "pointerdown",
+        (event) => {
 
-        touchStartX =
-          event.clientX;
+          pointerStartX =
+            event.clientX;
 
-        touchCurrentX =
-          event.clientX;
+          pointerCurrentX =
+            event.clientX;
 
-
-        coverflowViewport.classList.add(
-          "is-dragging"
-        );
-
-      }
-    );
+          isDragging =
+            false;
 
 
-    coverflowViewport.addEventListener(
-      "pointermove",
-      (event) => {
+          coverflowViewport.classList.add(
+            "is-dragging"
+          );
+
+
+          /*
+           * Keeps pointer events attached to
+           * the carousel while dragging.
+           */
+
+          if (
+            coverflowViewport.setPointerCapture
+          ) {
+
+            try {
+
+              coverflowViewport.setPointerCapture(
+                event.pointerId
+              );
+
+            } catch (_) {}
+
+          }
+
+        }
+      );
+
+
+      coverflowViewport.addEventListener(
+        "pointermove",
+        (event) => {
+
+          if (
+            pointerStartX === null
+          ) {
+            return;
+          }
+
+
+          pointerCurrentX =
+            event.clientX;
+
+
+          if (
+            Math.abs(
+              pointerCurrentX -
+              pointerStartX
+            ) > 8
+          ) {
+
+            isDragging =
+              true;
+
+          }
+
+        }
+      );
+
+
+      function finishPointer(
+        event
+      ) {
 
         if (
-          !touchStartX &&
-          touchStartX !== 0
+          pointerStartX === null
         ) {
           return;
         }
 
 
-        touchCurrentX =
-          event.clientX;
-
-
-        if (
-          Math.abs(
-            touchCurrentX -
-            touchStartX
-          ) > 8
-        ) {
-
-          isDragging = true;
-
-        }
-
-      }
-    );
-
-
-    coverflowViewport.addEventListener(
-      "pointerup",
-      () => {
-
         const difference =
-          touchCurrentX -
-          touchStartX;
+          pointerCurrentX -
+          pointerStartX;
 
 
         coverflowViewport.classList.remove(
@@ -1046,10 +2154,13 @@
 
 
         if (
-          Math.abs(difference) > 55
+          Math.abs(difference) >
+          55
         ) {
 
-          if (difference < 0) {
+          if (
+            difference < 0
+          ) {
 
             goNext();
 
@@ -1063,41 +2174,76 @@
 
 
         /*
-         * Small delay prevents a swipe
-         * from triggering a card click.
+         * Give the card click handler
+         * enough time to recognize a swipe.
          */
 
-        setTimeout(() => {
+        setTimeout(
+          () => {
 
-          touchStartX = 0;
-          touchCurrentX = 0;
-          isDragging = false;
+            pointerStartX =
+              null;
 
-        }, 50);
+            pointerCurrentX =
+              null;
 
-      }
-    );
+            isDragging =
+              false;
 
-
-    coverflowViewport.addEventListener(
-      "pointercancel",
-      () => {
-
-        coverflowViewport.classList.remove(
-          "is-dragging"
+          },
+          60
         );
 
 
-        touchStartX = 0;
-        touchCurrentX = 0;
-        isDragging = false;
+        if (
+          event &&
+          coverflowViewport.releasePointerCapture
+        ) {
+
+          try {
+
+            coverflowViewport.releasePointerCapture(
+              event.pointerId
+            );
+
+          } catch (_) {}
+
+        }
 
       }
-    );
+
+
+      coverflowViewport.addEventListener(
+        "pointerup",
+        finishPointer
+      );
+
+
+      coverflowViewport.addEventListener(
+        "pointercancel",
+        () => {
+
+          coverflowViewport.classList.remove(
+            "is-dragging"
+          );
+
+          pointerStartX =
+            null;
+
+          pointerCurrentX =
+            null;
+
+          isDragging =
+            false;
+
+        }
+      );
+
+    }
 
 
     /* =========================================================
-       KEYBOARD SUPPORT
+       KEYBOARD
        ========================================================= */
 
     document.addEventListener(
@@ -1105,7 +2251,8 @@
       (event) => {
 
         if (
-          event.key === "ArrowRight"
+          event.key ===
+          "ArrowRight"
         ) {
 
           goNext();
@@ -1114,7 +2261,8 @@
 
 
         if (
-          event.key === "ArrowLeft"
+          event.key ===
+          "ArrowLeft"
         ) {
 
           goPrevious();
@@ -1135,7 +2283,10 @@
 
         const response =
           await fetch(
-            DATA_URL
+            DATA_URL,
+            {
+              cache: "no-store"
+            }
           );
 
 
@@ -1156,11 +2307,10 @@
          * Supports:
          *
          * [
-         *   {...},
          *   {...}
          * ]
          *
-         * or:
+         * OR:
          *
          * {
          *   stories: [...]
@@ -1182,8 +2332,8 @@
 
 
         /*
-         * Featured stories are controlled
-         * entirely through data.json.
+         * Featured stories remain
+         * controlled by data.json.
          */
 
         featuredStories =
@@ -1197,7 +2347,10 @@
 
         buildCoverflow();
 
-      } catch (error) {
+      }
+
+
+      catch (error) {
 
         console.error(
           "FeelFrame Home:",
@@ -1205,12 +2358,16 @@
         );
 
 
-        if (homeStoryGrid) {
+        if (
+          homeStoryGrid
+        ) {
 
           homeStoryGrid.innerHTML = `
+
             <div class="home-empty">
               FeelFrame stories could not be loaded.
             </div>
+
           `;
 
         }
