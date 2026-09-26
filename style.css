@@ -312,20 +312,15 @@ main {
   align-items: end;
 
   gap: 30px;
+
+  /*
+     Surgical Coverflow adjustment:
+     keep the horizontal column gap while removing
+     unnecessary vertical separation between the
+     hero message and the visual continuation.
+  */
+  row-gap: 0;
 }
-
-/*
-   When the Featured/Coverflow section is moved
-   inside the hero section, it becomes the full-width
-   visual continuation of the hero.
-
-   This is the key structural upgrade:
-   headline + CTA
-   ↓
-   Coverflow
-   ↓
-   controls
-*/
 
 .home-hero > .featured-section {
   grid-column: 1 / -1;
@@ -336,13 +331,6 @@ main {
 
   padding: 0;
 }
-
-/*
-   Optional intro wrapper.
-
-   This allows the HTML to group the headline and CTA
-   without changing the existing visual hierarchy.
-*/
 
 .home-hero-intro {
   grid-column: 1 / -1;
@@ -380,22 +368,6 @@ main {
   text-wrap: balance;
 }
 
-/*
-   IMPORTANT:
-   The spans are now INLINE.
-
-   This means:
-   "Some feelings"
-   "deserve to be"
-   "seen."
-
-   are treated as ONE sentence rather than
-   three separate visual statements.
-
-   The spaces are restored between spans even
-   if the HTML has no literal whitespace.
-*/
-
 .home-hero-title span {
   display: inline;
   white-space: normal;
@@ -404,11 +376,6 @@ main {
 .home-hero-title span + span::before {
   content: " ";
 }
-
-/*
-   Remove the old offset that made the final
-   word look like a separate statement.
-*/
 
 .home-hero-title span:last-child {
   margin-left: 0;
@@ -459,23 +426,10 @@ main {
   transform: translateX(5px);
 }
 
-/*
-   Compatibility:
-   If the existing HTML keeps the CTA directly
-   inside .home-hero instead of .home-hero-intro,
-   preserve the original two-column composition.
-*/
-
 .home-hero > .hero-cta {
   grid-column: 2;
   grid-row: 1;
 }
-
-/*
-   If the intro wrapper exists, the CTA belongs
-   inside that wrapper and therefore needs no
-   special positioning.
-*/
 
 .home-hero-intro .hero-cta {
   align-self: end;
@@ -500,26 +454,10 @@ main {
   padding: 0;
 }
 
-/*
-   When Coverflow is inside the hero, eliminate the
-   old section spacing completely.
-
-   This prevents a hidden margin from creating
-   artificial white/empty space between the hero
-   message and the visual.
-*/
-
 .home-hero .featured-section {
   margin-top: 0;
   margin-bottom: 0;
 }
-
-/*
-   Hide the old heading completely.
-
-   We do not delete it from HTML so the existing
-   JavaScript/structure remains safe.
-*/
 
 .featured-heading {
   display: none !important;
@@ -2189,6 +2127,8 @@ main {
   .home-hero {
     padding-top: 28px;
     padding-bottom: 10px;
+
+    row-gap: 0;
   }
 
   .home-hero-title {
@@ -2230,6 +2170,8 @@ main {
     padding-bottom: 8px;
 
     gap: 22px;
+
+    row-gap: 0;
   }
 
   .home-hero-intro {
@@ -2339,7 +2281,7 @@ main {
     align-items: stretch;
     justify-content: flex-start;
 
-    gap: 17px;
+    gap: 0;
 
     min-height: auto;
   }
@@ -2372,11 +2314,6 @@ main {
     text-wrap: balance;
   }
 
-  /*
-    The spans remain inline on mobile too.
-    Therefore this is still ONE sentence.
-  */
-
   .home-hero-title span {
     display: inline;
   }
@@ -2384,11 +2321,6 @@ main {
   .home-hero-title span:last-child {
     margin-left: 0;
   }
-
-  /*
-    CTA sits beneath the sentence and aligns
-    to the right, matching your wireframe.
-  */
 
   .hero-cta {
     align-self: flex-end;
@@ -2417,11 +2349,6 @@ main {
   .home-hero .featured-section {
     margin-bottom: 0;
   }
-
-  /*
-    Heading is completely gone.
-    Coverflow starts directly after hero.
-  */
 
   .featured-heading {
     display: none !important;
@@ -2857,7 +2784,7 @@ main {
     padding-top: 20px;
     padding-bottom: 8px;
 
-    gap: 15px;
+    gap: 0;
   }
 
   .home-hero-intro {
@@ -2923,6 +2850,8 @@ main {
 
     padding-top: 20px;
     padding-bottom: 8px;
+
+    row-gap: 0;
   }
 
   .coverflow {
