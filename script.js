@@ -3,7 +3,7 @@
 /* =========================================================
    FEELFRAME™
    Global JavaScript Engine
-   Version 2.0
+   Production Version 3.0
    ========================================================= */
 
 const FEELFRAME = {
@@ -21,34 +21,28 @@ const FEELFRAME = {
     stories: [],
     current: 0,
     startX: 0,
+    startY: 0,
     dragging: false,
+    moved: false,
+    suppressClick: false,
+    pointerId: null,
     initialized: false
   }
 };
 
-
-/* =========================================================
-   INITIALIZATION
-   ========================================================= */
-
+/* INITIALIZATION */
 document.addEventListener("DOMContentLoaded", async () => {
   try {
     await loadFeelFrameData();
-
     initializeNavigation();
     initializePage();
-
   } catch (error) {
     console.error("FeelFrame initialization failed:", error);
     showGlobalError();
   }
 });
 
-
-/* =========================================================
-   DATA
-   ========================================================= */
-
+/* DATA */
 async function loadFeelFrameData() {
   const response = await fetch("data.json", {
     cache: "no-store"
@@ -79,29 +73,19 @@ async function loadFeelFrameData() {
       : [];
 }
 
-
-/* =========================================================
-   STORY VALIDATION
-   ========================================================= */
-
+/* STORY VALIDATION */
 function isValidStory(story) {
   return (
     story &&
     typeof story === "object" &&
     story.id &&
-    (
-      story.title ||
+    (story.title ||
       story.image ||
-      story.promptTitle
-    )
+      story.promptTitle)
   );
 }
 
-
-/* =========================================================
-   PAGE DETECTION
-   ========================================================= */
-
+/* PAGE DETECTION */
 function initializePage() {
   const body = document.body;
 
@@ -122,18 +106,13 @@ function initializePage() {
   }
 }
 
-
-/* =========================================================
-   NAVIGATION
-   ========================================================= */
-
+/* NAVIGATION */
 function initializeNavigation() {
   const currentPage = getCurrentPage();
 
   document
     .querySelectorAll(".bottom-nav a")
     .forEach(link => {
-
       const href =
         link.getAttribute("href") || "";
 
@@ -153,12 +132,15 @@ function initializeNavigation() {
         currentPage === "create" &&
         href.includes("create");
 
-      if (isHome || isExplore || isCreate) {
+      if (
+        isHome ||
+        isExplore ||
+        isCreate
+      ) {
         link.classList.add("active");
       }
     });
 }
-
 
 function getCurrentPage() {
   const path =
@@ -179,16 +161,11 @@ function getCurrentPage() {
   return "home";
 }
 
-
-/* =========================================================
-   HOME
-   ========================================================= */
-
+/* HOME */
 function initializeHome() {
   renderFeaturedCoverflow();
   renderHomeBoard();
 }
-
 
 /* =========================================================
    FEATURED COVERFLOW
@@ -206,9 +183,9 @@ function renderFeaturedCoverflow() {
     );
 
   FEELFRAME.coverflow.stories = featured;
-  FEELFRAME.coverflow.current = 0;
 
   if (!featured.length) {
+    FEELFRAME.coverflow.current = 0;
 
     track.innerHTML = `
       <div class="empty-state">
@@ -220,21 +197,32 @@ function renderFeaturedCoverflow() {
     return;
   }
 
+  if (
+    FEELFRAME.coverflow.current >=
+    featured.length
+  ) {
+    FEELFRAME.coverflow.current = 0;
+  }
+
   track.innerHTML =
     featured
-      .map(
-        (story, index) =>
-          createCoverflowCard(story, index)
+      .map((story, index) =>
+        createCoverflowCard(story, index)
       )
       .join("");
 
   renderCoverflowDots();
+
   updateCoverflow();
+
   initializeCoverflowControls();
 }
 
-
-function createCoverflowCard(story, index) {
+/* COVERFLOW CARD */
+function createCoverflowCard(
+  story,
+  index
+) {
   return `
     <article
       class="coverflow-card"
@@ -242,24 +230,22 @@ function createCoverflowCard(story, index) {
       data-story-id="${escapeHTML(story.id)}"
       tabindex="0"
       role="button"
+      aria-current="${index === 0 ? "true" : "false"}"
       aria-label="Open ${escapeHTML(
         story.title || "visual story"
       )}"
     >
-
       <img
-        src="${escapeHTML(
-          story.image || ""
-        )}"
+        src="${escapeHTML(story.image || "")}"
         alt="${escapeHTML(
           story.title || "FeelFrame visual"
         )}"
         loading="${index === 0 ? "eager" : "lazy"}"
+        draggable="false"
         onerror="handleImageError(this)"
       >
 
       <div class="coverflow-card-content">
-
         <small>
           ${escapeHTML(
             story.campaign ||
@@ -269,17 +255,12 @@ function createCoverflowCard(story, index) {
         </small>
 
         <h3>
-          ${escapeHTML(
-            story.title || ""
-          )}
+          ${escapeHTML(story.title || "")}
         </h3>
-
       </div>
-
     </article>
   `;
 }
-
 
 /* =========================================================
    COVERFLOW STATE
@@ -299,8 +280,9 @@ function updateCoverflow() {
   const current =
     FEELFRAME.coverflow.current;
 
-  cards.forEach(card => {
+  if (!total) return;
 
+  cards.forEach(card => {
     card.classList.remove(
       "is-center",
       "is-left",
@@ -315,6 +297,11 @@ function updateCoverflow() {
     let offset =
       index - current;
 
+    /*
+      Circular positioning keeps the Cover Flow
+      continuous even when moving from the last
+      card back to the first card.
+    */
     if (offset > total / 2) {
       offset -= total;
     }
@@ -325,6 +312,15 @@ function updateCoverflow() {
 
     if (offset === 0) {
       card.classList.add("is-center");
+      card.setAttribute(
+        "aria-current",
+        "true"
+      );
+    } else {
+      card.setAttribute(
+        "aria-current",
+        "false"
+      );
     }
 
     if (offset === -1) {
@@ -347,7 +343,6 @@ function updateCoverflow() {
   updateCoverflowDots();
 }
 
-
 /* =========================================================
    COVERFLOW NAVIGATION
    ========================================================= */
@@ -366,7 +361,6 @@ function nextCoverflow() {
   updateCoverflow();
 }
 
-
 function previousCoverflow() {
   const total =
     FEELFRAME.coverflow.stories.length;
@@ -375,14 +369,11 @@ function previousCoverflow() {
 
   FEELFRAME.coverflow.current =
     (
-      FEELFRAME.coverflow.current -
-      1 +
-      total
+      FEELFRAME.coverflow.current - 1 + total
     ) % total;
 
   updateCoverflow();
 }
-
 
 function goToCoverflow(index) {
   const total =
@@ -390,21 +381,26 @@ function goToCoverflow(index) {
 
   if (!total) return;
 
+  const numericIndex =
+    Number(index);
+
+  if (!Number.isFinite(numericIndex)) {
+    return;
+  }
+
   FEELFRAME.coverflow.current =
     (
-      Number(index) % total + total
+      numericIndex % total + total
     ) % total;
 
   updateCoverflow();
 }
-
 
 /* =========================================================
    COVERFLOW CONTROLS
    ========================================================= */
 
 function initializeCoverflowControls() {
-
   const previous =
     document.querySelector(
       "#coverflowPrevious"
@@ -421,18 +417,30 @@ function initializeCoverflowControls() {
     );
 
   if (previous) {
-    previous.onclick = previousCoverflow;
+    previous.onclick =
+      previousCoverflow;
   }
 
   if (next) {
-    next.onclick = nextCoverflow;
+    next.onclick =
+      nextCoverflow;
   }
 
   document
     .querySelectorAll(".coverflow-card")
     .forEach(card => {
+      card.onclick = event => {
+        if (
+          FEELFRAME.coverflow.suppressClick
+        ) {
+          FEELFRAME.coverflow.suppressClick =
+            false;
 
-      card.onclick = () => {
+          event.preventDefault();
+          event.stopPropagation();
+
+          return;
+        }
 
         const index =
           Number(card.dataset.index);
@@ -451,7 +459,6 @@ function initializeCoverflowControls() {
       };
 
       card.onkeydown = event => {
-
         if (
           event.key !== "Enter" &&
           event.key !== " "
@@ -478,41 +485,318 @@ function initializeCoverflowControls() {
       };
     });
 
-
-  if (!FEELFRAME.coverflow.initialized) {
-
+  if (
+    !FEELFRAME.coverflow.initialized
+  ) {
     document.addEventListener(
       "keydown",
       handleGlobalCoverflowKeyboard
     );
 
-    FEELFRAME.coverflow.initialized = true;
+    FEELFRAME.coverflow.initialized =
+      true;
   }
 
-
-  if (track) {
-
-    track.addEventListener(
-      "touchstart",
-      handleCoverflowTouchStart,
-      {
-        passive: true
-      }
+  if (
+    track &&
+    track.dataset.coverflowBound !== "true"
+  ) {
+    initializeCoverflowPointerEvents(
+      track
     );
 
-    track.addEventListener(
-      "touchend",
-      handleCoverflowTouchEnd,
-      {
-        passive: true
-      }
-    );
+    track.dataset.coverflowBound =
+      "true";
   }
 }
 
+/* =========================================================
+   COVERFLOW POINTER ENGINE
+   ========================================================= */
 
-function handleGlobalCoverflowKeyboard(event) {
+function initializeCoverflowPointerEvents(
+  track
+) {
+  if (!track) return;
 
+  track.addEventListener(
+    "pointerdown",
+    handleCoverflowPointerDown
+  );
+
+  track.addEventListener(
+    "pointermove",
+    handleCoverflowPointerMove
+  );
+
+  track.addEventListener(
+    "pointerup",
+    handleCoverflowPointerUp
+  );
+
+  track.addEventListener(
+    "pointercancel",
+    handleCoverflowPointerCancel
+  );
+
+  track.addEventListener(
+    "pointerleave",
+    handleCoverflowPointerLeave
+  );
+}
+
+function handleCoverflowPointerDown(
+  event
+) {
+  /*
+    Ignore secondary mouse buttons.
+    Touch, pen and primary mouse input remain supported.
+  */
+  if (
+    event.pointerType === "mouse" &&
+    event.button !== 0
+  ) {
+    return;
+  }
+
+  const coverflow =
+    FEELFRAME.coverflow;
+
+  coverflow.startX =
+    event.clientX;
+
+  coverflow.startY =
+    event.clientY;
+
+  coverflow.pointerId =
+    event.pointerId;
+
+  coverflow.dragging = true;
+  coverflow.moved = false;
+  coverflow.suppressClick = false;
+
+  const track = event.currentTarget;
+
+  if (
+    track &&
+    typeof track.setPointerCapture ===
+      "function"
+  ) {
+    try {
+      track.setPointerCapture(
+        event.pointerId
+      );
+    } catch (error) {
+      /*
+        Pointer capture is an enhancement.
+        Navigation still works without it.
+      */
+    }
+  }
+}
+
+function handleCoverflowPointerMove(
+  event
+) {
+  const coverflow =
+    FEELFRAME.coverflow;
+
+  if (!coverflow.dragging) {
+    return;
+  }
+
+  if (
+    coverflow.pointerId !==
+    event.pointerId
+  ) {
+    return;
+  }
+
+  const differenceX =
+    event.clientX -
+    coverflow.startX;
+
+  const differenceY =
+    event.clientY -
+    coverflow.startY;
+
+  /*
+    A small movement is ignored so normal taps
+    do not become accidental swipes.
+  */
+  const movement =
+    Math.sqrt(
+      differenceX * differenceX +
+      differenceY * differenceY
+    );
+
+  if (movement > 8) {
+    coverflow.moved = true;
+  }
+}
+
+function handleCoverflowPointerUp(
+  event
+) {
+  const coverflow =
+    FEELFRAME.coverflow;
+
+  if (!coverflow.dragging) {
+    return;
+  }
+
+  if (
+    coverflow.pointerId !==
+    event.pointerId
+  ) {
+    return;
+  }
+
+  const differenceX =
+    event.clientX -
+    coverflow.startX;
+
+  const differenceY =
+    event.clientY -
+    coverflow.startY;
+
+  const horizontalMovement =
+    Math.abs(differenceX);
+
+  const verticalMovement =
+    Math.abs(differenceY);
+
+  const wasDrag =
+    coverflow.moved ||
+    horizontalMovement > 8 ||
+    verticalMovement > 8;
+
+  coverflow.dragging = false;
+  coverflow.pointerId = null;
+
+  const track = event.currentTarget;
+
+  if (
+    track &&
+    typeof track.releasePointerCapture ===
+      "function"
+  ) {
+    try {
+      if (
+        track.hasPointerCapture &&
+        track.hasPointerCapture(
+          event.pointerId
+        )
+      ) {
+        track.releasePointerCapture(
+          event.pointerId
+        );
+      }
+    } catch (error) {
+      /*
+        Safe fallback if pointer capture
+        is unavailable or already released.
+      */
+    }
+  }
+
+  if (!wasDrag) {
+    return;
+  }
+
+  /*
+    Once a drag has happened, suppress the
+    synthetic click generated by the browser.
+  */
+  coverflow.suppressClick = true;
+
+  const swipeThreshold = 45;
+
+  /*
+    Only horizontal movement navigates the
+    Cover Flow. Vertical movement is allowed
+    without changing stories.
+  */
+  if (
+    horizontalMovement >=
+      swipeThreshold &&
+    horizontalMovement >
+      verticalMovement
+  ) {
+    if (differenceX < 0) {
+      nextCoverflow();
+    } else {
+      previousCoverflow();
+    }
+  }
+
+  /*
+    Clear the click guard after the browser has
+    had a chance to dispatch the synthetic click.
+  */
+  window.requestAnimationFrame(() => {
+    coverflow.suppressClick = false;
+  });
+}
+
+function handleCoverflowPointerCancel(
+  event
+) {
+  resetCoverflowPointerState(
+    event
+  );
+}
+
+function handleCoverflowPointerLeave(
+  event
+) {
+  const coverflow =
+    FEELFRAME.coverflow;
+
+  /*
+    Do not cancel an active pointer interaction
+    because pointer capture may still be active.
+  */
+  if (
+    coverflow.dragging &&
+    coverflow.pointerId ===
+      event.pointerId
+  ) {
+    return;
+  }
+}
+
+function resetCoverflowPointerState(
+  event
+) {
+  const coverflow =
+    FEELFRAME.coverflow;
+
+  if (
+    coverflow.pointerId !== null &&
+    event &&
+    coverflow.pointerId !==
+      event.pointerId
+  ) {
+    return;
+  }
+
+  coverflow.dragging = false;
+  coverflow.moved = false;
+  coverflow.pointerId = null;
+
+  window.requestAnimationFrame(() => {
+    coverflow.suppressClick = false;
+  });
+}
+
+/* =========================================================
+   COVERFLOW KEYBOARD
+   ========================================================= */
+
+function handleGlobalCoverflowKeyboard(
+  event
+) {
   const coverflow =
     document.querySelector(
       "#coverflowTrack"
@@ -521,43 +805,115 @@ function handleGlobalCoverflowKeyboard(event) {
   if (!coverflow) return;
 
   if (
+    event.defaultPrevented
+  ) {
+    return;
+  }
+
+  if (
     event.target &&
     (
       event.target.tagName === "INPUT" ||
       event.target.tagName === "TEXTAREA" ||
-      event.target.tagName === "SELECT"
+      event.target.tagName === "SELECT" ||
+      event.target.isContentEditable
     )
   ) {
     return;
   }
 
+  /*
+    Do not hijack browser/application shortcuts.
+  */
+  if (
+    event.ctrlKey ||
+    event.metaKey ||
+    event.altKey
+  ) {
+    return;
+  }
+
   if (event.key === "ArrowRight") {
+    event.preventDefault();
     nextCoverflow();
   }
 
   if (event.key === "ArrowLeft") {
+    event.preventDefault();
     previousCoverflow();
+  }
+
+  if (event.key === "Home") {
+    event.preventDefault();
+    goToCoverflow(0);
+  }
+
+  if (event.key === "End") {
+    event.preventDefault();
+
+    const lastIndex =
+      FEELFRAME.coverflow.stories.length -
+      1;
+
+    if (lastIndex >= 0) {
+      goToCoverflow(lastIndex);
+    }
   }
 }
 
-
 /* =========================================================
-   COVERFLOW TOUCH
+   COVERFLOW TOUCH FALLBACK
    ========================================================= */
 
-function handleCoverflowTouchStart(event) {
+/*
+  Kept as a compatibility fallback for browsers
+  where Pointer Events are unavailable.
+*/
+function handleCoverflowTouchStart(
+  event
+) {
+  if (
+    "PointerEvent" in window
+  ) {
+    return;
+  }
+
+  if (
+    !event.changedTouches ||
+    !event.changedTouches.length
+  ) {
+    return;
+  }
 
   FEELFRAME.coverflow.startX =
     event.changedTouches[0].clientX;
 
-  FEELFRAME.coverflow.dragging = true;
+  FEELFRAME.coverflow.startY =
+    event.changedTouches[0].clientY;
+
+  FEELFRAME.coverflow.dragging =
+    true;
+
+  FEELFRAME.coverflow.moved =
+    false;
 }
 
+function handleCoverflowTouchEnd(
+  event
+) {
+  if (
+    "PointerEvent" in window
+  ) {
+    return;
+  }
 
-function handleCoverflowTouchEnd(event) {
+  const coverflow =
+    FEELFRAME.coverflow;
 
   if (
-    !FEELFRAME.coverflow.dragging
+    !coverflow.dragging ||
+    !event.changedTouches ||
+    !event.changedTouches.length
   ) {
     return;
   }
@@ -565,30 +921,50 @@ function handleCoverflowTouchEnd(event) {
   const endX =
     event.changedTouches[0].clientX;
 
-  const difference =
-    endX -
-    FEELFRAME.coverflow.startX;
+  const endY =
+    event.changedTouches[0].clientY;
 
-  FEELFRAME.coverflow.dragging = false;
+  const differenceX =
+    endX - coverflow.startX;
 
-  if (Math.abs(difference) < 45) {
+  const differenceY =
+    endY - coverflow.startY;
+
+  const horizontalMovement =
+    Math.abs(differenceX);
+
+  const verticalMovement =
+    Math.abs(differenceY);
+
+  coverflow.dragging = false;
+
+  if (
+    horizontalMovement < 45 ||
+    horizontalMovement <=
+      verticalMovement
+  ) {
     return;
   }
 
-  if (difference < 0) {
+  coverflow.suppressClick =
+    true;
+
+  if (differenceX < 0) {
     nextCoverflow();
   } else {
     previousCoverflow();
   }
-}
 
+  window.requestAnimationFrame(() => {
+    coverflow.suppressClick = false;
+  });
+}
 
 /* =========================================================
    COVERFLOW DOTS
    ========================================================= */
 
 function renderCoverflowDots() {
-
   const container =
     document.querySelector(
       "#coverflowDots"
@@ -608,6 +984,12 @@ function renderCoverflowDots() {
             type="button"
             data-coverflow-index="${index}"
             aria-label="Show featured story ${index + 1}"
+            aria-current="${
+              index ===
+              FEELFRAME.coverflow.current
+                ? "true"
+                : "false"
+            }"
           ></button>
         `
       )
@@ -618,46 +1000,49 @@ function renderCoverflowDots() {
       "[data-coverflow-index]"
     )
     .forEach(button => {
-
       button.onclick = () => {
-
         goToCoverflow(
           Number(
-            button.dataset.coverflowIndex
+            button.dataset
+              .coverflowIndex
           )
         );
-
       };
-
     });
 }
 
-
 function updateCoverflowDots() {
-
   const dots =
     document.querySelectorAll(
       ".coverflow-dot"
     );
 
-  dots.forEach((dot, index) => {
+  dots.forEach(
+    (dot, index) => {
+      const active =
+        index ===
+        FEELFRAME.coverflow.current;
 
-    dot.classList.toggle(
-      "active",
-      index ===
-      FEELFRAME.coverflow.current
-    );
+      dot.classList.toggle(
+        "active",
+        active
+      );
 
-  });
+      dot.setAttribute(
+        "aria-current",
+        active
+          ? "true"
+          : "false"
+      );
+    }
+  );
 }
-
 
 /* =========================================================
    HOME STORY BOARD
    ========================================================= */
 
 function renderHomeBoard() {
-
   const grid =
     document.querySelector(
       "#homeStoryGrid"
@@ -666,7 +1051,6 @@ function renderHomeBoard() {
   if (!grid) return;
 
   if (!FEELFRAME.stories.length) {
-
     renderEmptyState(
       grid,
       "No visual stories yet.",
@@ -681,16 +1065,13 @@ function renderHomeBoard() {
       .map(createStoryCard)
       .join("");
 
-  initializeStoryCardLinks(grid);
+  initializeStoryCardLinks(
+    grid
+  );
 }
 
-
-/* =========================================================
-   STORY CARD
-   ========================================================= */
-
+/* STORY CARD */
 function createStoryCard(story) {
-
   return `
     <article
       class="story-card"
@@ -700,12 +1081,11 @@ function createStoryCard(story) {
       tabindex="0"
       role="button"
       aria-label="Open ${escapeHTML(
-        story.title || "visual story"
+        story.title ||
+        "visual story"
       )}"
     >
-
       <div class="story-card-image">
-
         <img
           src="${escapeHTML(
             story.image || ""
@@ -715,15 +1095,14 @@ function createStoryCard(story) {
             "FeelFrame visual"
           )}"
           loading="lazy"
+          draggable="false"
           onerror="handleImageError(this)"
         >
 
         <div class="story-card-overlay"></div>
-
       </div>
 
       <div class="story-card-info">
-
         <div class="story-card-campaign">
           ${escapeHTML(
             story.campaign ||
@@ -749,31 +1128,26 @@ function createStoryCard(story) {
             `
             : ""
         }
-
       </div>
-
     </article>
   `;
 }
 
-
-function initializeStoryCardLinks(container) {
-
+function initializeStoryCardLinks(
+  container
+) {
   container
     .querySelectorAll(".story-card")
     .forEach(card => {
-
-      const open =
-        () => {
-          openStory(
-            card.dataset.storyId
-          );
-        };
+      const open = () => {
+        openStory(
+          card.dataset.storyId
+        );
+      };
 
       card.onclick = open;
 
       card.onkeydown = event => {
-
         if (
           event.key === "Enter" ||
           event.key === " "
@@ -781,19 +1155,12 @@ function initializeStoryCardLinks(container) {
           event.preventDefault();
           open();
         }
-
       };
-
     });
 }
 
-
-/* =========================================================
-   STORY ROUTING
-   ========================================================= */
-
+/* STORY ROUTING */
 function openStory(storyId) {
-
   if (!storyId) return;
 
   window.location.href =
@@ -802,13 +1169,11 @@ function openStory(storyId) {
     )}`;
 }
 
-
 /* =========================================================
    EXPLORE
    ========================================================= */
 
 function initializeExplore() {
-
   const grid =
     document.querySelector(
       "#exploreStoryGrid"
@@ -824,33 +1189,24 @@ function initializeExplore() {
   );
 }
 
-
-/* =========================================================
-   DYNAMIC EXPLORE FILTERS
-   ========================================================= */
-
+/* DYNAMIC EXPLORE FILTERS */
 function initializeExploreFilters() {
-
   const filterButtons =
     document.querySelectorAll(
       ".filter-button"
     );
 
-  /*
-    Existing HTML buttons are still supported.
-    If buttons exist, their data-filter values
-    continue to work exactly as before.
-  */
-
   filterButtons.forEach(button => {
-
     button.onclick = () => {
-
       filterButtons.forEach(item => {
-        item.classList.remove("active");
+        item.classList.remove(
+          "active"
+        );
       });
 
-      button.classList.add("active");
+      button.classList.add(
+        "active"
+      );
 
       FEELFRAME.filters.campaign =
         button.dataset.filter ||
@@ -860,20 +1216,7 @@ function initializeExploreFilters() {
         getFilteredStories()
       );
     };
-
   });
-
-
-  /*
-    Optional dynamic campaign container.
-
-    Add:
-
-    <div id="campaignFilters"></div>
-
-    and the engine will automatically
-    generate buttons from data.json.
-  */
 
   const campaignContainer =
     document.querySelector(
@@ -885,18 +1228,6 @@ function initializeExploreFilters() {
       campaignContainer
     );
   }
-
-
-  /*
-    Optional emotion container.
-
-    Add:
-
-    <div id="emotionFilters"></div>
-
-    and the engine automatically
-    creates emotion filters.
-  */
 
   const emotionContainer =
     document.querySelector(
@@ -910,11 +1241,9 @@ function initializeExploreFilters() {
   }
 }
 
-
 function renderDynamicCampaignFilters(
   container
 ) {
-
   const campaigns =
     getUniqueValues(
       FEELFRAME.stories,
@@ -940,7 +1269,9 @@ function renderDynamicCampaignFilters(
               campaign
             )}"
           >
-            ${escapeHTML(campaign)}
+            ${escapeHTML(
+              campaign
+            )}
           </button>
         `
       )
@@ -952,9 +1283,7 @@ function renderDynamicCampaignFilters(
       ".filter-button"
     )
     .forEach(button => {
-
       button.onclick = () => {
-
         container
           .querySelectorAll(
             ".filter-button"
@@ -965,7 +1294,9 @@ function renderDynamicCampaignFilters(
             );
           });
 
-        button.classList.add("active");
+        button.classList.add(
+          "active"
+        );
 
         FEELFRAME.filters.campaign =
           button.dataset.filter ||
@@ -975,15 +1306,12 @@ function renderDynamicCampaignFilters(
           getFilteredStories()
         );
       };
-
     });
 }
-
 
 function renderDynamicEmotionFilters(
   container
 ) {
-
   const emotions =
     getUniqueValues(
       FEELFRAME.stories,
@@ -1009,7 +1337,9 @@ function renderDynamicEmotionFilters(
               emotion
             )}"
           >
-            ${escapeHTML(emotion)}
+            ${escapeHTML(
+              emotion
+            )}
           </button>
         `
       )
@@ -1021,9 +1351,7 @@ function renderDynamicEmotionFilters(
       "[data-emotion-filter]"
     )
     .forEach(button => {
-
       button.onclick = () => {
-
         container
           .querySelectorAll(
             "[data-emotion-filter]"
@@ -1034,27 +1362,24 @@ function renderDynamicEmotionFilters(
             );
           });
 
-        button.classList.add("active");
+        button.classList.add(
+          "active"
+        );
 
         FEELFRAME.filters.emotion =
-          button.dataset.emotionFilter ||
+          button.dataset
+            .emotionFilter ||
           "all";
 
         renderExploreStories(
           getFilteredStories()
         );
       };
-
     });
 }
 
-
-/* =========================================================
-   EXPLORE SEARCH
-   ========================================================= */
-
+/* EXPLORE SEARCH */
 function initializeExploreSearch() {
-
   const search =
     document.querySelector(
       "#exploreSearch"
@@ -1065,25 +1390,18 @@ function initializeExploreSearch() {
   search.addEventListener(
     "input",
     () => {
-
       FEELFRAME.filters.search =
         search.value.trim();
 
       renderExploreStories(
         getFilteredStories()
       );
-
     }
   );
 }
 
-
-/* =========================================================
-   FILTER ENGINE
-   ========================================================= */
-
+/* FILTER ENGINE */
 function getFilteredStories() {
-
   const campaign =
     normalize(
       FEELFRAME.filters.campaign
@@ -1099,37 +1417,38 @@ function getFilteredStories() {
       FEELFRAME.filters.search
     );
 
-
   return FEELFRAME.stories.filter(
     story => {
-
       const storyCampaign =
-        normalize(story.campaign);
+        normalize(
+          story.campaign
+        );
 
       const storyEmotion =
-        normalize(story.emotion);
-
+        normalize(
+          story.emotion
+        );
 
       const campaignMatch =
         campaign === "all" ||
-        storyCampaign === campaign;
-
+        storyCampaign ===
+          campaign;
 
       const emotionMatch =
         emotion === "all" ||
-        storyEmotion === emotion;
+        storyEmotion ===
+          emotion;
 
-
-      if (!campaignMatch ||
-          !emotionMatch) {
+      if (
+        !campaignMatch ||
+        !emotionMatch
+      ) {
         return false;
       }
-
 
       if (!search) {
         return true;
       }
-
 
       const searchable = [
         story.title,
@@ -1145,7 +1464,6 @@ function getFilteredStories() {
         .filter(Boolean)
         .join(" ");
 
-
       return normalize(
         searchable
       ).includes(search);
@@ -1153,15 +1471,10 @@ function getFilteredStories() {
   );
 }
 
-
-/* =========================================================
-   EXPLORE RENDERING
-   ========================================================= */
-
+/* EXPLORE RENDERING */
 function renderExploreStories(
   stories
 ) {
-
   const grid =
     document.querySelector(
       "#exploreStoryGrid"
@@ -1179,28 +1492,24 @@ function renderExploreStories(
       "#exploreActiveFilter"
     );
 
-
   if (!stories.length) {
-
     renderEmptyState(
       grid,
       "No stories found.",
       "Try another campaign, emotion or search."
     );
-
   } else {
-
     grid.innerHTML =
       stories
         .map(createStoryCard)
         .join("");
 
-    initializeStoryCardLinks(grid);
+    initializeStoryCardLinks(
+      grid
+    );
   }
 
-
   if (count) {
-
     count.textContent =
       `${stories.length} ${
         stories.length === 1
@@ -1209,9 +1518,7 @@ function renderExploreStories(
       }`;
   }
 
-
   if (activeFilter) {
-
     const activeButton =
       document.querySelector(
         ".filter-button.active"
@@ -1224,13 +1531,11 @@ function renderExploreStories(
   }
 }
 
-
 /* =========================================================
    STORY PAGE
    ========================================================= */
 
 function initializeStory() {
-
   const container =
     document.querySelector(
       "#storyContent"
@@ -1246,7 +1551,6 @@ function initializeStory() {
   const storyId =
     params.get("id");
 
-
   const story =
     FEELFRAME.stories.find(
       item =>
@@ -1254,9 +1558,7 @@ function initializeStory() {
         String(storyId)
     );
 
-
   if (!story) {
-
     renderStoryNotFound(
       container
     );
@@ -1264,23 +1566,17 @@ function initializeStory() {
     return;
   }
 
-
   renderStory(
     container,
     story
   );
 }
 
-
-/* =========================================================
-   STORY RENDERING
-   ========================================================= */
-
+/* STORY RENDERING */
 function renderStory(
   container,
   story
 ) {
-
   const oldPrice =
     Number(
       story.compareAt || 0
@@ -1291,19 +1587,14 @@ function renderStory(
       story.price || 0
     );
 
-
   const hasSelar =
     isValidPurchaseURL(
       story.selarUrl
     );
 
-
   container.innerHTML = `
-
     <div class="story-layout">
-
       <div class="story-visual">
-
         <img
           src="${escapeHTML(
             story.image || ""
@@ -1312,14 +1603,12 @@ function renderStory(
             story.title ||
             "FeelFrame visual"
           )}"
+          draggable="false"
           onerror="handleImageError(this)"
         >
-
       </div>
 
-
       <article class="story-copy">
-
         ${
           story.campaign
             ? `
@@ -1332,13 +1621,11 @@ function renderStory(
             : ""
         }
 
-
         <h1 class="story-title">
           ${escapeHTML(
             story.title || ""
           )}
         </h1>
-
 
         ${
           story.quote
@@ -1352,7 +1639,6 @@ function renderStory(
             : ""
         }
 
-
         ${
           story.description
             ? `
@@ -1364,7 +1650,6 @@ function renderStory(
             `
             : ""
         }
-
 
         ${
           story.context
@@ -1378,15 +1663,15 @@ function renderStory(
             : ""
         }
 
-
         ${
           story.moment ||
           story.emotion ||
           story.style
-            ? createStoryMeta(story)
+            ? createStoryMeta(
+                story
+              )
             : ""
         }
-
 
         ${
           story.promptTitle
@@ -1398,77 +1683,58 @@ function renderStory(
               )
             : ""
         }
-
       </article>
-
     </div>
   `;
 }
 
-
-/* =========================================================
-   STORY META
-   ========================================================= */
-
-function createStoryMeta(story) {
-
+/* STORY META */
+function createStoryMeta(
+  story
+) {
   const values = [
     story.emotion,
     story.moment,
     story.style
   ].filter(Boolean);
 
-
   if (!values.length) {
     return "";
   }
 
-
   return `
     <div class="story-meta">
-
       ${values
         .map(
-          value => `
-            <span class="story-tag">
-              ${escapeHTML(value)}
-            </span>
-          `
+          value =>
+            `<span class="story-tag">${escapeHTML(
+              value
+            )}</span>`
         )
         .join("")}
-
     </div>
   `;
 }
 
-
-/* =========================================================
-   PROMPT PRODUCT
-   ========================================================= */
-
+/* PROMPT PRODUCT */
 function createPromptProduct(
   story,
   oldPrice,
   currentPrice,
   hasSelar
 ) {
-
   const currency =
     FEELFRAME.site.currency ||
     "NGN";
 
-
   return `
-
     <section
       class="prompt-product"
       aria-label="FeelFrame product"
     >
-
       <div class="prompt-product-label">
         🔐 Paid creative prompt
       </div>
-
 
       <h3>
         ${escapeHTML(
@@ -1476,14 +1742,11 @@ function createPromptProduct(
         )}
       </h3>
 
-
       <p class="prompt-product-description">
         The creative prompt behind this visual.
       </p>
 
-
       <div class="prompt-price-row">
-
         ${
           oldPrice > currentPrice
             ? `
@@ -1500,7 +1763,6 @@ function createPromptProduct(
             : ""
         }
 
-
         ${
           currentPrice
             ? `
@@ -1516,9 +1778,7 @@ function createPromptProduct(
             `
             : ""
         }
-
       </div>
-
 
       ${
         hasSelar
@@ -1550,27 +1810,17 @@ function createPromptProduct(
             </button>
           `
       }
-
     </section>
   `;
 }
 
-
-/* =========================================================
-   STORY NOT FOUND
-   ========================================================= */
-
+/* STORY NOT FOUND */
 function renderStoryNotFound(
   container
 ) {
-
   container.innerHTML = `
-
     <div class="empty-state">
-
-      <h2>
-        Story not found.
-      </h2>
+      <h2>Story not found.</h2>
 
       <p>
         This visual story may have moved
@@ -1584,58 +1834,53 @@ function renderStoryNotFound(
       >
         Explore stories →
       </a>
-
     </div>
   `;
 }
-
 
 /* =========================================================
    CREATE PAGE
    ========================================================= */
 
 function initializeCreate() {
-
   initializeChoiceCards();
   initializeReferenceUpload();
-
 
   const form =
     document.querySelector(
       "#feelFrameForm"
     );
 
-
   if (!form) return;
 
+  if (
+    form.dataset.initialized ===
+    "true"
+  ) {
+    return;
+  }
 
   form.addEventListener(
     "submit",
     event => {
-
       event.preventDefault();
-
       handleCreateSubmission(
         form
       );
-
     }
   );
+
+  form.dataset.initialized =
+    "true";
 }
 
-
-/* =========================================================
-   CHOICE CARDS
-   ========================================================= */
-
+/* CHOICE CARDS */
 function initializeChoiceCards() {
-
   document
     .querySelectorAll(
       ".choice-card"
     )
     .forEach(card => {
-
       const input =
         card.querySelector(
           "input"
@@ -1643,13 +1888,12 @@ function initializeChoiceCards() {
 
       if (!input) return;
 
-
       card.addEventListener(
         "click",
         event => {
-
           if (
-            event.target !== input
+            event.target !==
+            input
           ) {
             input.checked = true;
           }
@@ -1657,10 +1901,8 @@ function initializeChoiceCards() {
           updateChoiceGroup(
             input
           );
-
         }
       );
-
 
       input.addEventListener(
         "change",
@@ -1671,21 +1913,17 @@ function initializeChoiceCards() {
         }
       );
 
-
       if (input.checked) {
         updateChoiceGroup(
           input
         );
       }
-
     });
 }
-
 
 function updateChoiceGroup(
   input
 ) {
-
   const name =
     input.name;
 
@@ -1696,7 +1934,6 @@ function updateChoiceGroup(
       )}"]`
     )
     .forEach(item => {
-
       const card =
         item.closest(
           ".choice-card"
@@ -1708,17 +1945,14 @@ function updateChoiceGroup(
         "selected",
         item.checked
       );
-
     });
 }
-
 
 /* =========================================================
    REFERENCE IMAGE
    ========================================================= */
 
 function initializeReferenceUpload() {
-
   const input =
     document.querySelector(
       "#referenceImage"
@@ -1734,7 +1968,6 @@ function initializeReferenceUpload() {
       "#referencePreview img"
     );
 
-
   if (
     !input ||
     !preview ||
@@ -1743,17 +1976,13 @@ function initializeReferenceUpload() {
     return;
   }
 
-
   input.addEventListener(
     "change",
     () => {
-
       const file =
         input.files?.[0];
 
-
       if (!file) {
-
         preview.classList.remove(
           "active"
         );
@@ -1765,13 +1994,11 @@ function initializeReferenceUpload() {
         return;
       }
 
-
       if (
         !file.type.startsWith(
           "image/"
         )
       ) {
-
         input.value = "";
 
         preview.classList.remove(
@@ -1781,14 +2008,11 @@ function initializeReferenceUpload() {
         return;
       }
 
-
       const reader =
         new FileReader();
 
-
       reader.onload =
         event => {
-
           previewImage.src =
             event.target.result;
 
@@ -1797,15 +2021,24 @@ function initializeReferenceUpload() {
           );
         };
 
+      reader.onerror = () => {
+        input.value = "";
+
+        preview.classList.remove(
+          "active"
+        );
+
+        previewImage.removeAttribute(
+          "src"
+        );
+      };
 
       reader.readAsDataURL(
         file
       );
-
     }
   );
 }
-
 
 /* =========================================================
    CREATE SUBMISSION
@@ -1814,10 +2047,8 @@ function initializeReferenceUpload() {
 function handleCreateSubmission(
   form
 ) {
-
   const formData =
     new FormData(form);
-
 
   const name =
     getFormValue(
@@ -1867,12 +2098,12 @@ function handleCreateSubmission(
       "visualLanguage"
     );
 
-
   const missingFields = [];
 
-
   if (!name) {
-    missingFields.push("Name");
+    missingFields.push(
+      "Name"
+    );
   }
 
   if (!school) {
@@ -1917,9 +2148,7 @@ function handleCreateSubmission(
     );
   }
 
-
   if (missingFields.length) {
-
     alert(
       `Please complete:\n\n${missingFields.join(
         "\n"
@@ -1929,7 +2158,6 @@ function handleCreateSubmission(
     return;
   }
 
-
   const direction =
     generateCreativeDirection({
       feeling,
@@ -1937,29 +2165,24 @@ function handleCreateSubmission(
       visualLanguage
     });
 
-
   const commands =
     generateVisualCommands({
       feeling,
       visualLanguage
     });
 
-
   const referenceInput =
     document.querySelector(
       "#referenceImage"
     );
 
-
   const referenceFile =
     referenceInput?.files?.[0];
-
 
   const referenceText =
     referenceFile
       ? `User will attach reference image: ${referenceFile.name}`
       : "No reference image supplied.";
-
 
   const whatsappMessage =
     buildWhatsAppMessage({
@@ -1976,19 +2199,17 @@ function handleCreateSubmission(
       referenceText
     });
 
-
   const whatsappNumber =
     String(
-      FEELFRAME.site.whatsappNumber ||
-      ""
+      FEELFRAME.site
+        .whatsappNumber ||
+        ""
     ).replace(
       /\D/g,
       ""
     );
 
-
   if (!whatsappNumber) {
-
     alert(
       "FeelFrame WhatsApp contact is not configured yet."
     );
@@ -1996,12 +2217,10 @@ function handleCreateSubmission(
     return;
   }
 
-
   const whatsappURL =
     `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(
       whatsappMessage
     )}`;
-
 
   window.open(
     whatsappURL,
@@ -2009,7 +2228,6 @@ function handleCreateSubmission(
     "noopener,noreferrer"
   );
 }
-
 
 /* =========================================================
    CREATIVE DIRECTION ENGINE
@@ -2020,9 +2238,7 @@ function generateCreativeDirection({
   context,
   visualLanguage
 }) {
-
   return {
-
     emotion:
       emotionTranslator(
         feeling
@@ -2038,21 +2254,14 @@ function generateCreativeDirection({
       styleTranslator(
         visualLanguage
       )
-
   };
 }
 
-
-/* =========================================================
-   EMOTION TRANSLATOR
-   ========================================================= */
-
+/* EMOTION TRANSLATOR */
 function emotionTranslator(
   feeling
 ) {
-
   const map = {
-
     "Determined":
       "quiet determination and forward movement",
 
@@ -2085,9 +2294,7 @@ function emotionTranslator(
 
     "Inspired":
       "creative energy and possibility"
-
   };
-
 
   return (
     map[feeling] ||
@@ -2095,18 +2302,12 @@ function emotionTranslator(
   );
 }
 
-
-/* =========================================================
-   CONDITION TRANSLATOR
-   ========================================================= */
-
+/* CONDITION TRANSLATOR */
 function conditionTranslator(
   feeling,
   context
 ) {
-
   const base = {
-
     "Determined":
       "focused, persistent and composed",
 
@@ -2139,14 +2340,11 @@ function conditionTranslator(
 
     "Inspired":
       "creative, energetic and possibility-focused"
-
   };
-
 
   const emotionalCondition =
     base[feeling] ||
     "present and emotionally authentic";
-
 
   return `${emotionalCondition}. Context: ${truncate(
     context,
@@ -2154,17 +2352,11 @@ function conditionTranslator(
   )}`;
 }
 
-
-/* =========================================================
-   STYLE TRANSLATOR
-   ========================================================= */
-
+/* STYLE TRANSLATOR */
 function styleTranslator(
   style
 ) {
-
   const map = {
-
     "Cinematic":
       "cinematic realism, controlled lighting, natural depth and filmic composition",
 
@@ -2203,16 +2395,13 @@ function styleTranslator(
 
     "Fashion":
       "high-fashion editorial direction, considered styling, sophisticated lighting and magazine composition"
-
   };
-
 
   return (
     map[style] ||
     "cinematic visual storytelling"
   );
 }
-
 
 /* =========================================================
    INTERNAL VISUAL COMMAND ENGINE
@@ -2222,14 +2411,11 @@ function generateVisualCommands({
   feeling,
   visualLanguage
 }) {
-
   const commands = [
     "/hdreal"
   ];
 
-
   const styleCommands = {
-
     "Cinematic": [
       "/cinematic",
       "/35mmfilm",
@@ -2308,27 +2494,21 @@ function generateVisualCommands({
       "/editorial",
       "/magazinecover"
     ]
-
   };
-
 
   if (
     styleCommands[
       visualLanguage
     ]
   ) {
-
     commands.push(
       ...styleCommands[
         visualLanguage
       ]
     );
-
   }
 
-
   const feelingCommands = {
-
     "Determined":
       "/lowangle",
 
@@ -2361,26 +2541,24 @@ function generateVisualCommands({
 
     "Inspired":
       "/backlight"
-
   };
 
-
   if (
-    feelingCommands[feeling]
+    feelingCommands[
+      feeling
+    ]
   ) {
-
     commands.push(
-      feelingCommands[feeling]
+      feelingCommands[
+        feeling
+      ]
     );
-
   }
-
 
   return [
     ...new Set(commands)
   ];
 }
-
 
 /* =========================================================
    WHATSAPP MESSAGE
@@ -2399,7 +2577,6 @@ function buildWhatsAppMessage({
   commands,
   referenceText
 }) {
-
   return `FEELFRAME™ — NEW VISUAL REQUEST
 
 PERSONAL DETAILS
@@ -2444,19 +2621,13 @@ ${commands.join("\n")}
 Please create my FeelFrame visual.`;
 }
 
-
-/* =========================================================
-   FORM HELPERS
-   ========================================================= */
-
+/* FORM HELPERS */
 function getFormValue(
   formData,
   name
 ) {
-
   const value =
     formData.get(name);
-
 
   if (
     value === null ||
@@ -2465,41 +2636,36 @@ function getFormValue(
     return "";
   }
 
-
-  return String(
-    value
-  ).trim();
+  return String(value).trim();
 }
-
 
 /* =========================================================
    CURRENCY
    ========================================================= */
 
-function formatNaira(amount) {
+function formatNaira(
+  amount
+) {
   return formatCurrency(
     amount,
     "NGN"
   );
 }
 
-
 function formatCurrency(
   amount,
   currency = "NGN"
 ) {
-
   const number =
     Number(amount);
 
-
-  if (!Number.isFinite(number)) {
+  if (
+    !Number.isFinite(number)
+  ) {
     return "₦0";
   }
 
-
   try {
-
     return new Intl.NumberFormat(
       "en-NG",
       {
@@ -2508,28 +2674,24 @@ function formatCurrency(
         maximumFractionDigits: 0
       }
     ).format(number);
-
   } catch (error) {
-
     return `${currency} ${number.toLocaleString()}`;
-
   }
 }
-
 
 /* =========================================================
    NORMALIZATION
    ========================================================= */
 
-function normalize(value) {
-
+function normalize(
+  value
+) {
   return String(
     value || ""
   )
     .trim()
     .toLowerCase();
 }
-
 
 /* =========================================================
    UNIQUE VALUES
@@ -2539,26 +2701,23 @@ function getUniqueValues(
   stories,
   property
 ) {
-
   return [
     ...new Set(
       stories
         .map(
           story =>
             String(
-              story[property] || ""
+              story[property] ||
+                ""
             ).trim()
         )
         .filter(Boolean)
     )
   ].sort(
     (a, b) =>
-      a.localeCompare(
-        b
-      )
+      a.localeCompare(b)
   );
 }
-
 
 /* =========================================================
    TRUNCATION
@@ -2568,12 +2727,8 @@ function truncate(
   value,
   length
 ) {
-
   const text =
-    String(
-      value || ""
-    );
-
+    String(value || "");
 
   if (
     text.length <= length
@@ -2581,18 +2736,12 @@ function truncate(
     return text;
   }
 
-
   return (
     text
-      .slice(
-        0,
-        length
-      )
-      .trim() +
-    "…"
+      .slice(0, length)
+      .trim() + "…"
   );
 }
-
 
 /* =========================================================
    PURCHASE URL VALIDATION
@@ -2601,36 +2750,30 @@ function truncate(
 function isValidPurchaseURL(
   url
 ) {
-
-  if (!url) {
-    return false;
-  }
-
+  if (!url) return false;
 
   if (
-    url === "REAL-SELAR-LINK"
+    url ===
+    "REAL-SELAR-LINK"
   ) {
     return false;
   }
 
-
   try {
-
     const parsed =
       new URL(url);
-
 
     return (
       parsed.protocol ===
         "https:" &&
-      parsed.hostname
+      Boolean(
+        parsed.hostname
+      )
     );
-
   } catch {
     return false;
   }
 }
-
 
 /* =========================================================
    IMAGE ERROR HANDLING
@@ -2639,7 +2782,6 @@ function isValidPurchaseURL(
 function handleImageError(
   image
 ) {
-
   if (!image) return;
 
   image.onerror = null;
@@ -2648,22 +2790,9 @@ function handleImageError(
     "image-error"
   );
 
-
-  /*
-    We intentionally don't replace
-    the image with a fake external
-    placeholder.
-
-    This keeps broken product
-    references visible during
-    development instead of hiding
-    a data problem.
-  */
-
   image.alt =
     "FeelFrame visual unavailable";
 }
-
 
 /* =========================================================
    EMPTY STATES
@@ -2674,26 +2803,20 @@ function renderEmptyState(
   title,
   message
 ) {
-
   if (!container) return;
 
   container.innerHTML = `
-
     <div class="empty-state">
+      <h2>${escapeHTML(
+        title
+      )}</h2>
 
-      <h2>
-        ${escapeHTML(title)}
-      </h2>
-
-      <p>
-        ${escapeHTML(message)}
-      </p>
-
+      <p>${escapeHTML(
+        message
+      )}</p>
     </div>
-
   `;
 }
-
 
 /* =========================================================
    SECURITY
@@ -2702,7 +2825,6 @@ function renderEmptyState(
 function escapeHTML(
   value
 ) {
-
   return String(
     value ?? ""
   )
@@ -2728,13 +2850,11 @@ function escapeHTML(
     );
 }
 
-
 /* =========================================================
    GLOBAL ERROR
    ========================================================= */
 
 function showGlobalError() {
-
   const targets = [
     "#homeStoryGrid",
     "#exploreStoryGrid",
@@ -2742,10 +2862,8 @@ function showGlobalError() {
     "#coverflowTrack"
   ];
 
-
   targets.forEach(
     selector => {
-
       const element =
         document.querySelector(
           selector
@@ -2753,13 +2871,11 @@ function showGlobalError() {
 
       if (!element) return;
 
-
       renderEmptyState(
         element,
         "Something went wrong.",
         "FeelFrame could not load its visual stories. Please refresh the page."
       );
-
     }
   );
 }
