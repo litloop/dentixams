@@ -287,10 +287,11 @@ main {
    HOME HERO
    =========================================================
    UPDATED:
-   - No artificial 500–680px hero height
+   - Hero has no artificial fixed height
    - Sentence remains one typographic unit
    - CTA sits naturally beneath/right
-   - Reduced vertical dead space
+   - Vertical spacing is intentionally compact
+   - Coverflow can enter the first viewport immediately
    ========================================================= */
 
 .home-page {
@@ -305,7 +306,7 @@ main {
 
   margin: 0 auto;
 
-  padding: 36px 0 25px;
+  padding: 36px 0 18px;
 
   display: grid;
 
@@ -315,7 +316,7 @@ main {
 
   align-items: end;
 
-  gap: 40px;
+  gap: 28px;
 }
 
 .home-hero-copy {
@@ -338,9 +339,10 @@ main {
   text-wrap: balance;
 }
 
+
 /*
    IMPORTANT:
-   The spans are now INLINE.
+   The spans are INLINE.
 
    This means:
    "Some feelings"
@@ -425,6 +427,10 @@ main {
    =========================================================
    The "FEATURED MOMENTS" label is intentionally hidden.
    The visual itself becomes the section.
+
+   The Coverflow now follows the hero closely so the
+   visitor reaches the visual product demonstration
+   without encountering unnecessary empty space.
    ========================================================= */
 
 .featured-section {
@@ -2169,10 +2175,10 @@ main {
   }
 
   .home-hero {
-    padding-top: 30px;
-    padding-bottom: 22px;
+    padding-top: 27px;
+    padding-bottom: 14px;
 
-    gap: 25px;
+    gap: 20px;
   }
 
   .home-hero-title {
@@ -2180,7 +2186,7 @@ main {
   }
 
   .coverflow {
-    height: 535px;
+    height: 515px;
   }
 
   .coverflow-card.is-left,
@@ -2265,7 +2271,7 @@ main {
 
 
   /* =======================================================
-     HOME — TIGHT EDITORIAL COMPOSITION
+     HOME — IMMEDIATE FIRST-VIEW COMPOSITION
      ======================================================= */
 
   .home-hero {
@@ -2273,7 +2279,15 @@ main {
 
     margin: 0 auto;
 
-    padding: 28px 0 18px;
+    /*
+      Reduced top and bottom spacing.
+
+      The goal is for the Coverflow to begin
+      immediately after the emotional headline
+      and CTA rather than leaving a large visual
+      gap before the product demonstration.
+    */
+    padding: 22px 0 6px;
 
     display: flex;
     flex-direction: column;
@@ -2281,14 +2295,8 @@ main {
     align-items: stretch;
     justify-content: flex-start;
 
-    gap: 21px;
+    gap: 14px;
 
-    /*
-      Important:
-      No fixed min-height.
-      The hero now occupies only the space
-      its actual content needs.
-    */
     min-height: auto;
   }
 
@@ -2327,8 +2335,8 @@ main {
   }
 
   /*
-    CTA sits beneath the sentence and aligns
-    to the right, matching your wireframe.
+    CTA sits directly beneath the headline and
+    remains aligned to the right.
   */
 
   .hero-cta {
@@ -2344,16 +2352,22 @@ main {
 
 
   /* =======================================================
-     COVERFLOW MOBILE
+     COVERFLOW — IMMEDIATE VISUAL EXPOSURE
      ======================================================= */
 
   .featured-section {
-    margin-bottom: 68px;
+    margin: 0 0 55px;
+
+    padding: 0;
   }
 
   /*
-    Heading is completely gone.
-    Coverflow starts directly after hero.
+    No heading.
+    No artificial spacer.
+    No additional section padding.
+
+    The Coverflow begins immediately after
+    the hero composition.
   */
 
   .featured-heading {
@@ -2361,14 +2375,16 @@ main {
   }
 
   .coverflow {
-    height: 430px;
+    height: 390px;
+
+    margin-top: 0;
 
     perspective: 1200px;
-    perspective-origin: center 47%;
+    perspective-origin: center 43%;
   }
 
   .coverflow::before {
-    bottom: 8%;
+    bottom: 7%;
 
     width: 48%;
     height: 16px;
@@ -2445,7 +2461,7 @@ main {
   }
 
   .coverflow-controls {
-    margin-top: 12px;
+    margin-top: 8px;
   }
 
   .coverflow-button {
@@ -2791,10 +2807,10 @@ main {
   }
 
   .home-hero {
-    padding-top: 24px;
-    padding-bottom: 15px;
+    padding-top: 20px;
+    padding-bottom: 4px;
 
-    gap: 18px;
+    gap: 12px;
   }
 
   .home-hero-title {
@@ -2810,8 +2826,14 @@ main {
     padding: 11px 16px;
   }
 
+  /*
+    Slightly shorter Coverflow viewport on
+    smaller phones so the first visual remains
+    within the initial browsing experience.
+  */
+
   .coverflow {
-    height: 405px;
+    height: 375px;
   }
 
   .coverflow-card.is-left,
@@ -2855,8 +2877,10 @@ main {
   .home-hero {
     min-height: auto;
 
-    padding-top: 24px;
-    padding-bottom: 18px;
+    padding-top: 18px;
+    padding-bottom: 12px;
+
+    gap: 14px;
   }
 
   .coverflow {
