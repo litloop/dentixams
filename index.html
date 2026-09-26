@@ -5,18 +5,22 @@
 
   <meta
     name="viewport"
-    content="width=device-width, initial-scale=1.0, viewport-fit=cover"
+    content="width=device-width, initial-scale=1.0"
   />
 
   <meta
     name="description"
-    content="FeelFrame™ — visual stories for human moments. Some feelings deserve to be seen."
+    content="FeelFrame™ — Some feelings deserve to be seen."
   />
 
-  <meta name="theme-color" content="#f5f3ee" />
+  <meta
+    name="theme-color"
+    content="#f5f3ee"
+  />
 
   <title>FeelFrame™ — Some feelings deserve to be seen.</title>
 
+  <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 
@@ -25,1035 +29,49 @@
     rel="stylesheet"
   />
 
+  <!-- Main stylesheet -->
   <link rel="stylesheet" href="style.css" />
-
-  <style>
-    /* =========================================================
-       FEELFRAME™ HOME
-       CLEAN HOMEPAGE STRUCTURE
-       ========================================================= */
-
-    :root {
-      --ff-bg: #f5f3ee;
-      --ff-paper: #fbfaf7;
-      --ff-ink: #151515;
-      --ff-muted: #77736b;
-      --ff-line: rgba(21, 21, 21, 0.1);
-      --ff-accent: #b98a3a;
-      --ff-radius: 24px;
-    }
-
-    * {
-      box-sizing: border-box;
-    }
-
-    html {
-      scroll-behavior: smooth;
-    }
-
-    body.home-page {
-      min-height: 100vh;
-      margin: 0;
-      background: var(--ff-bg);
-      color: var(--ff-ink);
-      padding-bottom: 100px;
-    }
-
-    /* =========================================================
-       HOME CONTAINER
-       ========================================================= */
-
-    .home-container {
-      width: min(1380px, calc(100% - 40px));
-      margin: 0 auto;
-    }
-
-    /* =========================================================
-       HEADER
-       ========================================================= */
-
-    .home-header {
-      display: flex;
-      align-items: center;
-      justify-content: flex-start;
-
-      padding: 28px 0 10px;
-    }
-
-    .home-logo {
-      display: inline-block;
-
-      color: var(--ff-ink);
-      text-decoration: none;
-
-      font-family: "DM Sans", sans-serif;
-      font-size: 1rem;
-      font-weight: 700;
-      letter-spacing: -0.035em;
-    }
-
-    /* =========================================================
-       HERO
-       ========================================================= */
-
-    .home-hero {
-      display: grid;
-      grid-template-columns: minmax(0, 1fr) auto;
-      align-items: end;
-      gap: 40px;
-
-      padding: 88px 0 58px;
-    }
-
-    /*
-     * IMPORTANT:
-     * This is intentionally ONE text node.
-     *
-     * No spans.
-     * No forced line break.
-     * No artificial indentation.
-     */
-
-    .home-hero-title {
-      max-width: 920px;
-      margin: 0;
-
-      font-family: "Playfair Display", Georgia, serif;
-      font-size: clamp(3.6rem, 8.3vw, 8.6rem);
-      line-height: 0.94;
-      font-weight: 500;
-      letter-spacing: -0.065em;
-
-      text-wrap: balance;
-    }
-
-    .home-hero-cta {
-      display: inline-flex;
-      align-items: center;
-      gap: 11px;
-
-      align-self: end;
-
-      padding: 14px 19px;
-
-      border: 1px solid var(--ff-line);
-      border-radius: 999px;
-
-      background: rgba(255, 255, 255, 0.42);
-      color: var(--ff-ink);
-
-      text-decoration: none;
-
-      font-size: 0.84rem;
-      font-weight: 600;
-
-      white-space: nowrap;
-
-      backdrop-filter: blur(14px);
-      -webkit-backdrop-filter: blur(14px);
-
-      transition:
-        transform 0.3s ease,
-        background 0.3s ease,
-        border-color 0.3s ease;
-    }
-
-    .home-hero-cta:hover {
-      transform: translateY(-3px);
-      background: rgba(255, 255, 255, 0.8);
-      border-color: rgba(21, 21, 21, 0.16);
-    }
-
-    .home-hero-cta-arrow {
-      display: inline-block;
-
-      font-size: 1rem;
-
-      transition: transform 0.3s ease;
-    }
-
-    .home-hero-cta:hover .home-hero-cta-arrow {
-      transform: translateX(4px);
-    }
-
-    /* =========================================================
-       COVERFLOW
-       ========================================================= */
-
-    .featured-section {
-      position: relative;
-
-      width: 100vw;
-      margin-left: calc(50% - 50vw);
-
-      overflow: hidden;
-
-      padding: 4px 0 24px;
-    }
-
-    /*
-     * There is deliberately NO "Featured moments" label here.
-     * The visual itself begins immediately.
-     */
-
-    .coverflow-viewport {
-      position: relative;
-
-      width: 100%;
-      height: 570px;
-
-      perspective: 1500px;
-      perspective-origin: center center;
-
-      touch-action: pan-y;
-      user-select: none;
-
-      cursor: grab;
-    }
-
-    .coverflow-viewport.is-dragging {
-      cursor: grabbing;
-    }
-
-    .coverflow-track {
-      position: absolute;
-      inset: 0;
-
-      display: flex;
-      align-items: center;
-      justify-content: center;
-
-      transform-style: preserve-3d;
-    }
-
-    .coverflow-card {
-      position: absolute;
-
-      width: min(390px, 29vw);
-      height: 500px;
-
-      overflow: hidden;
-
-      border-radius: 26px;
-
-      background: #ddd;
-
-      box-shadow:
-        0 25px 70px rgba(0, 0, 0, 0.16),
-        0 4px 14px rgba(0, 0, 0, 0.08);
-
-      transform-style: preserve-3d;
-
-      transition:
-        transform 0.65s cubic-bezier(0.2, 0.8, 0.2, 1),
-        opacity 0.45s ease,
-        filter 0.45s ease,
-        box-shadow 0.45s ease;
-
-      will-change: transform;
-      cursor: pointer;
-    }
-
-    .coverflow-card-image {
-      display: block;
-
-      width: 100%;
-      height: 100%;
-
-      object-fit: cover;
-
-      pointer-events: none;
-    }
-
-    .coverflow-card::after {
-      content: "";
-
-      position: absolute;
-      inset: 0;
-
-      background:
-        linear-gradient(
-          to top,
-          rgba(0, 0, 0, 0.64) 0%,
-          rgba(0, 0, 0, 0.18) 35%,
-          rgba(0, 0, 0, 0) 65%
-        );
-
-      pointer-events: none;
-    }
-
-    .coverflow-card-content {
-      position: absolute;
-      z-index: 2;
-
-      left: 24px;
-      right: 24px;
-      bottom: 24px;
-
-      color: white;
-
-      pointer-events: none;
-    }
-
-    .coverflow-card-campaign {
-      margin-bottom: 7px;
-
-      font-size: 0.63rem;
-      font-weight: 700;
-      letter-spacing: 0.15em;
-      text-transform: uppercase;
-
-      opacity: 0.76;
-    }
-
-    .coverflow-card-title {
-      margin: 0;
-
-      font-family: "Playfair Display", Georgia, serif;
-      font-size: clamp(1.5rem, 2.4vw, 2.2rem);
-      line-height: 1;
-      font-weight: 500;
-      letter-spacing: -0.035em;
-    }
-
-    .coverflow-card-emotion {
-      margin-top: 9px;
-
-      font-size: 0.76rem;
-      opacity: 0.82;
-    }
-
-    /* =========================================================
-       COVERFLOW STATES
-       ========================================================= */
-
-    .coverflow-card.is-center {
-      z-index: 5;
-
-      opacity: 1;
-      filter: none;
-
-      transform:
-        translate3d(0, 0, 160px)
-        rotateY(0deg)
-        scale(1);
-    }
-
-    .coverflow-card.is-left {
-      z-index: 4;
-
-      opacity: 0.88;
-      filter: saturate(0.88);
-
-      transform:
-        translate3d(-31vw, 0, -60px)
-        rotateY(34deg)
-        scale(0.86);
-    }
-
-    .coverflow-card.is-right {
-      z-index: 4;
-
-      opacity: 0.88;
-      filter: saturate(0.88);
-
-      transform:
-        translate3d(31vw, 0, -60px)
-        rotateY(-34deg)
-        scale(0.86);
-    }
-
-    .coverflow-card.is-far-left {
-      z-index: 2;
-
-      opacity: 0.3;
-      filter: saturate(0.65);
-
-      transform:
-        translate3d(-57vw, 0, -180px)
-        rotateY(48deg)
-        scale(0.72);
-    }
-
-    .coverflow-card.is-far-right {
-      z-index: 2;
-
-      opacity: 0.3;
-      filter: saturate(0.65);
-
-      transform:
-        translate3d(57vw, 0, -180px)
-        rotateY(-48deg)
-        scale(0.72);
-    }
-
-    .coverflow-card.is-hidden {
-      z-index: 0;
-
-      opacity: 0;
-      pointer-events: none;
-
-      transform:
-        translate3d(0, 0, -300px)
-        scale(0.55);
-    }
-
-    /* =========================================================
-       COVERFLOW CONTROLS
-       ========================================================= */
-
-    .coverflow-controls {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 16px;
-
-      margin-top: 2px;
-    }
-
-    .coverflow-arrow {
-      width: 40px;
-      height: 40px;
-
-      display: grid;
-      place-items: center;
-
-      padding: 0;
-
-      border: 1px solid var(--ff-line);
-      border-radius: 50%;
-
-      background: rgba(255, 255, 255, 0.55);
-      color: var(--ff-ink);
-
-      font-size: 0.9rem;
-
-      cursor: pointer;
-
-      transition:
-        transform 0.25s ease,
-        background 0.25s ease;
-    }
-
-    .coverflow-arrow:hover {
-      transform: translateY(-2px);
-      background: white;
-    }
-
-    .coverflow-dots {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-    }
-
-    .coverflow-dot {
-      width: 5px;
-      height: 5px;
-
-      padding: 0;
-
-      border: 0;
-      border-radius: 50%;
-
-      background: rgba(21, 21, 21, 0.2);
-
-      cursor: pointer;
-
-      transition:
-        width 0.3s ease,
-        border-radius 0.3s ease,
-        background 0.3s ease;
-    }
-
-    .coverflow-dot.is-active {
-      width: 25px;
-
-      border-radius: 999px;
-
-      background: var(--ff-ink);
-    }
-
-    /* =========================================================
-       STORY BOARD
-       ========================================================= */
-
-    .stories-section {
-      padding: 78px 0 40px;
-    }
-
-    /*
-     * No heading row.
-     * No "More FeelFrame stories".
-     * No "Explore all".
-     *
-     * The Pinterest-style visual board now starts directly.
-     */
-
-    .home-story-grid {
-      column-count: 4;
-      column-gap: 18px;
-    }
-
-    .home-story-card {
-      position: relative;
-
-      display: block;
-
-      width: 100%;
-      margin: 0 0 18px;
-
-      break-inside: avoid;
-
-      overflow: hidden;
-
-      border-radius: var(--ff-radius);
-
-      background: var(--ff-paper);
-
-      color: inherit;
-      text-decoration: none;
-
-      transform: translateZ(0);
-
-      transition:
-        transform 0.35s ease,
-        box-shadow 0.35s ease;
-    }
-
-    .home-story-card:hover {
-      transform: translateY(-5px);
-
-      box-shadow:
-        0 18px 45px rgba(0, 0, 0, 0.09);
-    }
-
-    .home-story-card-image-wrap {
-      position: relative;
-
-      overflow: hidden;
-
-      background: #e8e5de;
-    }
-
-    .home-story-card-image {
-      display: block;
-
-      width: 100%;
-      height: auto;
-
-      object-fit: cover;
-
-      transition:
-        transform 0.6s cubic-bezier(0.2, 0.8, 0.2, 1);
-    }
-
-    .home-story-card:hover .home-story-card-image {
-      transform: scale(1.035);
-    }
-
-    .home-story-card-body {
-      padding: 18px 18px 20px;
-    }
-
-    .home-story-card-meta {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 12px;
-
-      margin-bottom: 10px;
-
-      font-size: 0.62rem;
-      font-weight: 700;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-
-      color: var(--ff-muted);
-    }
-
-    .home-story-card-title {
-      margin: 0;
-
-      font-family: "Playfair Display", Georgia, serif;
-      font-size: clamp(1.35rem, 2vw, 1.8rem);
-      line-height: 1.02;
-      font-weight: 500;
-      letter-spacing: -0.035em;
-    }
-
-    .home-story-card-description {
-      margin: 12px 0 0;
-
-      font-size: 0.78rem;
-      line-height: 1.55;
-
-      color: var(--ff-muted);
-    }
-
-    /* =========================================================
-       PROMPT PRODUCT
-       ========================================================= */
-
-    .prompt-product {
-      margin-top: 16px;
-      padding: 16px;
-
-      border: 1px solid rgba(21, 21, 21, 0.09);
-      border-radius: 18px;
-
-      background: rgba(255, 255, 255, 0.48);
-
-      transition:
-        background 0.25s ease,
-        transform 0.25s ease;
-    }
-
-    .home-story-card:hover .prompt-product {
-      background: rgba(255, 255, 255, 0.76);
-    }
-
-    .prompt-product-title {
-      display: flex;
-      align-items: flex-start;
-      gap: 8px;
-
-      margin: 0;
-
-      font-size: 0.72rem;
-      line-height: 1.35;
-      font-weight: 700;
-      letter-spacing: 0.02em;
-    }
-
-    .prompt-lock {
-      flex: 0 0 auto;
-    }
-
-    .prompt-product-description {
-      margin: 7px 0 13px;
-
-      font-size: 0.68rem;
-      line-height: 1.45;
-
-      color: var(--ff-muted);
-    }
-
-    .prompt-product-bottom {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 15px;
-    }
-
-    .prompt-price {
-      display: flex;
-      align-items: baseline;
-      flex-wrap: wrap;
-      gap: 7px;
-    }
-
-    .prompt-old-price {
-      font-size: 0.69rem;
-
-      color: #99958d;
-
-      text-decoration: line-through;
-      text-decoration-thickness: 1px;
-    }
-
-    .prompt-current-price {
-      font-size: 0.95rem;
-      font-weight: 800;
-      letter-spacing: -0.02em;
-    }
-
-    .prompt-get-button {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 5px;
-
-      padding: 9px 12px;
-
-      border: 0;
-      border-radius: 999px;
-
-      background: var(--ff-ink);
-      color: white;
-
-      font-size: 0.67rem;
-      font-weight: 700;
-
-      text-decoration: none;
-      white-space: nowrap;
-
-      cursor: pointer;
-
-      transition:
-        transform 0.25s ease,
-        opacity 0.25s ease;
-    }
-
-    .prompt-get-button:hover {
-      transform: translateY(-2px);
-      opacity: 0.82;
-    }
-
-    /* =========================================================
-       EMPTY STATE
-       ========================================================= */
-
-    .home-empty {
-      padding: 60px 20px;
-
-      text-align: center;
-
-      color: var(--ff-muted);
-
-      font-size: 0.9rem;
-    }
-
-    /* =========================================================
-       STICKY BOTTOM NAV
-       ========================================================= */
-
-    .home-bottom-nav {
-      position: fixed;
-      z-index: 100;
-
-      left: 50%;
-      bottom: max(16px, env(safe-area-inset-bottom));
-
-      transform: translateX(-50%);
-
-      display: flex;
-      align-items: center;
-      gap: 5px;
-
-      padding: 6px;
-
-      border: 1px solid rgba(21, 21, 21, 0.08);
-      border-radius: 999px;
-
-      background: rgba(250, 249, 246, 0.82);
-
-      box-shadow:
-        0 15px 45px rgba(0, 0, 0, 0.12),
-        0 2px 8px rgba(0, 0, 0, 0.05);
-
-      backdrop-filter: blur(22px);
-      -webkit-backdrop-filter: blur(22px);
-    }
-
-    .home-bottom-nav a {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-
-      min-width: 74px;
-      height: 38px;
-
-      padding: 0 14px;
-
-      border-radius: 999px;
-
-      color: var(--ff-muted);
-
-      text-decoration: none;
-
-      font-size: 0.7rem;
-      font-weight: 600;
-
-      transition:
-        background 0.25s ease,
-        color 0.25s ease;
-    }
-
-    .home-bottom-nav a.active {
-      background: var(--ff-ink);
-      color: white;
-    }
-
-    /* =========================================================
-       RESPONSIVE
-       ========================================================= */
-
-    @media (max-width: 1050px) {
-
-      .home-story-grid {
-        column-count: 3;
-      }
-
-      .coverflow-card {
-        width: min(370px, 36vw);
-      }
-
-      .coverflow-card.is-left {
-        transform:
-          translate3d(-36vw, 0, -60px)
-          rotateY(32deg)
-          scale(0.84);
-      }
-
-      .coverflow-card.is-right {
-        transform:
-          translate3d(36vw, 0, -60px)
-          rotateY(-32deg)
-          scale(0.84);
-      }
-
-      .coverflow-card.is-far-left {
-        transform:
-          translate3d(-65vw, 0, -180px)
-          rotateY(46deg)
-          scale(0.68);
-      }
-
-      .coverflow-card.is-far-right {
-        transform:
-          translate3d(65vw, 0, -180px)
-          rotateY(-46deg)
-          scale(0.68);
-      }
-    }
-
-    @media (max-width: 760px) {
-
-      .home-container {
-        width: min(100% - 28px, 680px);
-      }
-
-      .home-header {
-        padding-top: 21px;
-      }
-
-      .home-hero {
-        grid-template-columns: 1fr;
-        gap: 27px;
-
-        padding: 70px 0 42px;
-      }
-
-      .home-hero-title {
-        max-width: 100%;
-
-        font-size: clamp(3.35rem, 15vw, 6rem);
-        line-height: 0.95;
-      }
-
-      .home-hero-cta {
-        justify-self: end;
-      }
-
-      .coverflow-viewport {
-        height: 490px;
-      }
-
-      .coverflow-card {
-        width: min(300px, 70vw);
-        height: 415px;
-
-        border-radius: 22px;
-      }
-
-      .coverflow-card.is-center {
-        transform:
-          translate3d(0, 0, 120px)
-          rotateY(0deg)
-          scale(1);
-      }
-
-      .coverflow-card.is-left {
-        transform:
-          translate3d(-54vw, 0, -70px)
-          rotateY(36deg)
-          scale(0.78);
-      }
-
-      .coverflow-card.is-right {
-        transform:
-          translate3d(54vw, 0, -70px)
-          rotateY(-36deg)
-          scale(0.78);
-      }
-
-      .coverflow-card.is-far-left {
-        transform:
-          translate3d(-88vw, 0, -180px)
-          rotateY(48deg)
-          scale(0.6);
-      }
-
-      .coverflow-card.is-far-right {
-        transform:
-          translate3d(88vw, 0, -180px)
-          rotateY(-48deg)
-          scale(0.6);
-      }
-
-      .coverflow-card-content {
-        left: 19px;
-        right: 19px;
-        bottom: 19px;
-      }
-
-      .stories-section {
-        padding-top: 65px;
-      }
-
-      .home-story-grid {
-        column-count: 2;
-        column-gap: 12px;
-      }
-
-      .home-story-card {
-        margin-bottom: 12px;
-        border-radius: 18px;
-      }
-
-      .home-story-card-body {
-        padding: 14px 13px 15px;
-      }
-
-      .home-story-card-description {
-        font-size: 0.7rem;
-      }
-
-      .prompt-product {
-        padding: 13px;
-        border-radius: 15px;
-      }
-
-      .prompt-product-bottom {
-        align-items: flex-end;
-        flex-direction: column;
-      }
-
-      .prompt-price {
-        width: 100%;
-      }
-
-      .prompt-get-button {
-        width: 100%;
-      }
-    }
-
-    @media (max-width: 430px) {
-
-      .home-hero-title {
-        font-size: 3.25rem;
-      }
-
-      .coverflow-viewport {
-        height: 455px;
-      }
-
-      .coverflow-card {
-        width: 265px;
-        height: 390px;
-      }
-
-      .coverflow-card.is-left {
-        transform:
-          translate3d(-61vw, 0, -75px)
-          rotateY(38deg)
-          scale(0.73);
-      }
-
-      .coverflow-card.is-right {
-        transform:
-          translate3d(61vw, 0, -75px)
-          rotateY(-38deg)
-          scale(0.73);
-      }
-
-      .coverflow-card.is-far-left,
-      .coverflow-card.is-far-right {
-        opacity: 0;
-      }
-
-      .home-story-grid {
-        column-count: 2;
-        column-gap: 9px;
-      }
-
-      .home-story-card {
-        margin-bottom: 9px;
-        border-radius: 15px;
-      }
-
-      .home-story-card-meta {
-        font-size: 0.55rem;
-      }
-
-      .home-story-card-title {
-        font-size: 1.2rem;
-      }
-
-      .prompt-product-description {
-        font-size: 0.63rem;
-      }
-
-      .home-bottom-nav a {
-        min-width: 66px;
-        padding: 0 11px;
-      }
-    }
-
-    @media (prefers-reduced-motion: reduce) {
-
-      .coverflow-card,
-      .home-story-card,
-      .home-story-card-image,
-      .home-hero-cta,
-      .coverflow-arrow {
-        transition: none !important;
-      }
-
-      html {
-        scroll-behavior: auto;
-      }
-    }
-  </style>
 </head>
 
-<body class="home-page">
+<body>
 
-  <main>
+  <!-- =========================================================
+       HEADER
+       ========================================================= -->
+
+  <header class="site-header">
+    <div class="site-header-inner">
+
+      <a
+        href="index.html"
+        class="brand"
+        aria-label="FeelFrame home"
+      >
+        FeelFrame<span class="brand-mark">™</span>
+      </a>
+
+    </div>
+  </header>
+
+
+  <!-- =========================================================
+       MAIN
+       ========================================================= -->
+
+  <main id="main-content">
 
     <!-- =======================================================
-         HEADER
+         HOME HERO
          ======================================================= -->
 
-    <div class="home-container">
+    <section
+      class="home-hero"
+      aria-labelledby="homeHeroTitle"
+    >
 
-      <header class="home-header">
+      <!-- Hero introduction -->
 
-        <a
-          href="index.html"
-          class="home-logo"
-          aria-label="FeelFrame home"
-        >
-          FeelFrame™
-        </a>
-
-      </header>
-
-
-      <!-- =====================================================
-           HERO
-           ===================================================== -->
-
-      <section
-        class="home-hero"
-        aria-labelledby="homeHeroTitle"
-      >
-
-        <!--
-          ONE sentence.
-          No spans.
-          No artificial line break.
-        -->
+      <div class="home-hero-intro">
 
         <h1
           class="home-hero-title"
@@ -1062,9 +80,11 @@
           Some feelings deserve to be seen.
         </h1>
 
+
         <a
           href="create.html"
           class="home-hero-cta"
+          aria-label="Make your own FeelFrame"
         >
           <span>Make it yours</span>
 
@@ -1076,158 +96,282 @@
           </span>
         </a>
 
-      </section>
-
-    </div>
+      </div>
 
 
-    <!-- =======================================================
-         3D COVERFLOW
-         ======================================================= -->
+      <!-- =====================================================
+           FEATURED / 3D COVER FLOW
+           
+           This now lives INSIDE the hero.
+           ===================================================== -->
 
-    <section
-      class="featured-section"
-      aria-label="FeelFrame visual moments"
-    >
-
-      <div
-        class="coverflow-viewport"
-        id="coverflowViewport"
-        aria-label="FeelFrame visual story carousel"
+      <section
+        class="featured-section"
+        aria-label="FeelFrame visual moments"
       >
 
         <div
-          class="coverflow-track"
-          id="coverflowTrack"
+          class="coverflow-viewport"
+          id="coverflowViewport"
+          aria-label="Featured FeelFrame moments"
         >
-          <!-- Cards generated from data.json -->
+
+          <div
+            class="coverflow-track"
+            id="coverflowTrack"
+          >
+            <!--
+              Featured cards are generated here by script.js
+              from data.json.
+            -->
+          </div>
+
+        </div>
+
+
+        <!-- Cover Flow controls -->
+
+        <div
+          class="coverflow-controls"
+          aria-label="Featured story controls"
+        >
+
+          <button
+            type="button"
+            class="coverflow-arrow coverflow-prev"
+            id="coverflowPrev"
+            aria-label="Previous featured story"
+          >
+            ←
+          </button>
+
+
+          <div
+            class="coverflow-dots"
+            id="coverflowDots"
+            role="tablist"
+            aria-label="Featured stories"
+          >
+            <!-- Dots generated by JavaScript -->
+          </div>
+
+
+          <button
+            type="button"
+            class="coverflow-arrow coverflow-next"
+            id="coverflowNext"
+            aria-label="Next featured story"
+          >
+            →
+          </button>
+
+        </div>
+
+      </section>
+
+    </section>
+
+
+    <!-- =======================================================
+         STORY BOARD
+         ======================================================= -->
+
+    <section
+      class="story-board-section"
+      aria-labelledby="storyBoardTitle"
+    >
+
+      <div class="section-heading">
+
+        <div>
+          <p class="section-eyebrow">
+            Explore
+          </p>
+
+          <h2
+            class="section-title"
+            id="storyBoardTitle"
+          >
+            Moments worth seeing.
+          </h2>
         </div>
 
       </div>
 
 
-      <div class="coverflow-controls">
-
-        <button
-          class="coverflow-arrow"
-          id="coverflowPrev"
-          type="button"
-          aria-label="Previous visual story"
-        >
-          ←
-        </button>
-
-        <div
-          class="coverflow-dots"
-          id="coverflowDots"
-          aria-label="Visual story positions"
-        ></div>
-
-        <button
-          class="coverflow-arrow"
-          id="coverflowNext"
-          type="button"
-          aria-label="Next visual story"
-        >
-          →
-        </button>
-
+      <div
+        class="story-board"
+        id="storyBoard"
+        aria-live="polite"
+      >
+        <!--
+          Story cards are generated here by script.js
+          from data.json.
+        -->
       </div>
 
     </section>
 
 
     <!-- =======================================================
-         PINTEREST-STYLE MOMENTS
+         EMPTY STATE
          ======================================================= -->
 
-    <div class="home-container">
+    <section
+      class="empty-state"
+      id="emptyState"
+      hidden
+      aria-live="polite"
+    >
 
-      <section
-        class="stories-section"
-        aria-label="FeelFrame moments"
-      >
+      <div class="empty-state-inner">
 
-        <div
-          class="home-story-grid"
-          id="homeStoryGrid"
-          aria-live="polite"
-        >
-          <!-- Stories generated from data.json -->
-        </div>
+        <span class="empty-state-mark">
+          ✦
+        </span>
 
-      </section>
+        <h2>
+          Nothing here yet.
+        </h2>
 
-    </div>
+        <p>
+          New visual moments are coming soon.
+        </p>
+
+      </div>
+
+    </section>
 
   </main>
 
 
   <!-- =========================================================
-       STICKY BOTTOM NAVIGATION
+       STICKY MOBILE NAVIGATION
        ========================================================= -->
 
   <nav
-    class="home-bottom-nav"
+    class="bottom-nav"
     aria-label="Primary navigation"
   >
 
     <a
       href="index.html"
-      class="active"
+      class="bottom-nav-item is-active"
       aria-current="page"
     >
-      Home
+
+      <span
+        class="bottom-nav-icon"
+        aria-hidden="true"
+      >
+        ⌂
+      </span>
+
+      <span class="bottom-nav-label">
+        Home
+      </span>
+
     </a>
 
-    <a href="explore.html">
-      Explore
+
+    <a
+      href="explore.html"
+      class="bottom-nav-item"
+    >
+
+      <span
+        class="bottom-nav-icon"
+        aria-hidden="true"
+      >
+        ◇
+      </span>
+
+      <span class="bottom-nav-label">
+        Explore
+      </span>
+
     </a>
 
-    <a href="create.html">
-      Create
+
+    <a
+      href="create.html"
+      class="bottom-nav-item"
+    >
+
+      <span
+        class="bottom-nav-icon"
+        aria-hidden="true"
+      >
+        ＋
+      </span>
+
+      <span class="bottom-nav-label">
+        Create
+      </span>
+
     </a>
 
   </nav>
 
 
   <!-- =========================================================
-       HOME SCRIPT
+       SCRIPT
        ========================================================= -->
 
   <script>
 
-    /* =========================================================
-       CONFIG
-       ========================================================= */
+    /*
+     * ==========================================================
+     * FEELFRAME™ HOME
+     * ==========================================================
+     *
+     * Data source:
+     *      data.json
+     *
+     * Featured stories:
+     *      featured === true
+     *
+     * Main functions:
+     *      - Load JSON
+     *      - Render featured Cover Flow
+     *      - Render story board
+     *      - Previous / next controls
+     *      - Dot navigation
+     *      - Keyboard navigation
+     *      - Pointer / touch dragging
+     *      - Story click-through
+     * ==========================================================
+     */
 
-    const DATA_URL = "data.json";
 
-    let stories = [];
+    /* ==========================================================
+       GLOBAL STATE
+       ========================================================== */
+
+    let allStories = [];
+
     let featuredStories = [];
 
-    let coverflowIndex = 0;
+    let currentCoverflowIndex = 0;
 
-    let pointerStartX = null;
-    let pointerCurrentX = null;
     let isDragging = false;
 
+    let dragStartX = 0;
 
-    /* =========================================================
-       DOM
-       ========================================================= */
+    let dragCurrentX = 0;
 
-    const homeStoryGrid =
-      document.getElementById("homeStoryGrid");
+    let dragMoved = false;
 
-    const coverflowTrack =
-      document.getElementById("coverflowTrack");
 
-    const coverflowDots =
-      document.getElementById("coverflowDots");
+    /* ==========================================================
+       DOM REFERENCES
+       ========================================================== */
 
     const coverflowViewport =
       document.getElementById("coverflowViewport");
+
+    const coverflowTrack =
+      document.getElementById("coverflowTrack");
 
     const coverflowPrev =
       document.getElementById("coverflowPrev");
@@ -1235,520 +379,161 @@
     const coverflowNext =
       document.getElementById("coverflowNext");
 
+    const coverflowDots =
+      document.getElementById("coverflowDots");
 
-    /* =========================================================
-       ESCAPE HTML
-       ========================================================= */
+    const storyBoard =
+      document.getElementById("storyBoard");
 
-    function escapeHTML(value) {
+    const emptyState =
+      document.getElementById("emptyState");
 
-      if (
-        value === null ||
-        value === undefined
-      ) {
-        return "";
-      }
 
-      return String(value)
-        .replace(/&/g, "&amp;")
-        .replace(/</g, "&lt;")
-        .replace(/>/g, "&gt;")
-        .replace(/"/g, "&quot;")
-        .replace(/'/g, "&#039;");
+    /* ==========================================================
+       LOAD DATA
+       ========================================================== */
 
-    }
+    async function loadStories() {
 
+      try {
 
-    /* =========================================================
-       FORMAT PRICE
-       ========================================================= */
+        const response = await fetch("data.json", {
+          cache: "no-store"
+        });
 
-    function formatNaira(value) {
 
-      const number = Number(value);
+        if (!response.ok) {
+          throw new Error(
+            `Unable to load data.json (${response.status})`
+          );
+        }
 
-      if (!Number.isFinite(number)) {
-        return "";
-      }
 
-      return `₦${number.toLocaleString("en-NG")}`;
+        const data = await response.json();
 
-    }
 
+        /*
+         * Support either:
+         *
+         * [
+         *   {...},
+         *   {...}
+         * ]
+         *
+         * or:
+         *
+         * {
+         *   stories: [...]
+         * }
+         */
 
-    /* =========================================================
-       PROMPT PRODUCT
-       ========================================================= */
+        if (Array.isArray(data)) {
 
-    function createPromptProduct(story) {
+          allStories = data;
 
-      if (!story.promptTitle) {
-        return "";
-      }
+        } else if (
+          data &&
+          Array.isArray(data.stories)
+        ) {
 
-      const currentPrice =
-        story.price !== undefined
-          ? formatNaira(story.price)
-          : "";
+          allStories = data.stories;
 
-      const compareAt =
-        story.compareAt !== undefined
-          ? formatNaira(story.compareAt)
-          : "";
+        } else if (
+          data &&
+          Array.isArray(data.products)
+        ) {
 
-      const hasComparePrice =
-        compareAt && currentPrice;
+          allStories = data.products;
 
+        } else {
 
-      const priceHTML =
-        hasComparePrice
-
-          ? `
-            <div class="prompt-price">
-
-              <span class="prompt-old-price">
-                ${escapeHTML(compareAt)}
-              </span>
-
-              <span class="prompt-current-price">
-                ${escapeHTML(currentPrice)}
-              </span>
-
-            </div>
-          `
-
-          : `
-            <div class="prompt-price">
-
-              <span class="prompt-current-price">
-                ${escapeHTML(currentPrice)}
-              </span>
-
-            </div>
-          `;
-
-
-      const buttonHTML =
-        story.selarUrl &&
-        story.selarUrl !== "REAL-SELAR-LINK"
-
-          ? `
-            <a
-              class="prompt-get-button"
-              href="${escapeHTML(story.selarUrl)}"
-              target="_blank"
-              rel="noopener noreferrer"
-              onclick="event.stopPropagation()"
-            >
-              Get prompt →
-            </a>
-          `
-
-          : `
-            <span
-              class="prompt-get-button"
-              aria-label="Prompt product coming soon"
-            >
-              Get prompt →
-            </span>
-          `;
-
-
-      return `
-
-        <div class="prompt-product">
-
-          <p class="prompt-product-title">
-
-            <span
-              class="prompt-lock"
-              aria-hidden="true"
-            >
-              🔐
-            </span>
-
-            <span>
-              ${escapeHTML(story.promptTitle)}
-            </span>
-
-          </p>
-
-
-          <p class="prompt-product-description">
-            The creative prompt behind this visual.
-          </p>
-
-
-          <div class="prompt-product-bottom">
-
-            ${priceHTML}
-
-            ${buttonHTML}
-
-          </div>
-
-        </div>
-
-      `;
-
-    }
-
-
-    /* =========================================================
-       COVERFLOW CARD
-       ========================================================= */
-
-    function createCoverflowCard(
-      story,
-      index
-    ) {
-
-      const card =
-        document.createElement("article");
-
-      card.className =
-        "coverflow-card";
-
-      card.dataset.index =
-        index;
-
-      card.dataset.id =
-        story.id || "";
-
-
-      card.innerHTML = `
-
-        <img
-          class="coverflow-card-image"
-
-          src="${escapeHTML(
-            story.image
-          )}"
-
-          alt="${escapeHTML(
-            story.title ||
-            story.quote ||
-            story.emotion ||
-            "FeelFrame visual story"
-          )}"
-
-          loading="${
-            index === 0
-              ? "eager"
-              : "lazy"
-          }"
-
-          draggable="false"
-        />
-
-
-        <div class="coverflow-card-content">
-
-          ${
-            story.campaign
-              ? `
-                <div class="coverflow-card-campaign">
-                  ${escapeHTML(
-                    story.campaign
-                  )}
-                </div>
-              `
-              : ""
-          }
-
-
-          <h2 class="coverflow-card-title">
-
-            ${escapeHTML(
-              story.title ||
-              story.quote ||
-              story.moment ||
-              "A human moment"
-            )}
-
-          </h2>
-
-
-          ${
-            story.emotion
-              ? `
-                <div class="coverflow-card-emotion">
-                  ${escapeHTML(
-                    story.emotion
-                  )}
-                </div>
-              `
-              : ""
-          }
-
-        </div>
-
-      `;
-
-
-      card.addEventListener(
-        "click",
-        () => {
-
-          if (isDragging) {
-            return;
-          }
-
-          const clickedIndex =
-            Number(card.dataset.index);
-
-
-          if (
-            Number.isFinite(clickedIndex) &&
-            clickedIndex !== coverflowIndex
-          ) {
-
-            coverflowIndex =
-              clickedIndex;
-
-            updateCoverflow();
-
-            return;
-
-          }
-
-
-          if (story.id) {
-
-            window.location.href =
-              `story.html?id=${encodeURIComponent(
-                story.id
-              )}`;
-
-          }
+          allStories = [];
 
         }
-      );
 
 
-      return card;
+        /*
+         * Featured stories
+         */
 
-    }
-
-
-    /* =========================================================
-       STORY CARD
-       ========================================================= */
-
-    function createStoryCard(story) {
-
-      const link =
-        document.createElement("a");
-
-      link.className =
-        "home-story-card";
-
-      link.href =
-        `story.html?id=${encodeURIComponent(
-          story.id
-        )}`;
-
-
-      const image =
-        story.image || "";
-
-
-      link.innerHTML = `
-
-        <div class="home-story-card-image-wrap">
-
-          <img
-            class="home-story-card-image"
-
-            src="${escapeHTML(
-              image
-            )}"
-
-            alt="${escapeHTML(
-              story.title ||
-              story.quote ||
-              story.moment ||
-              "FeelFrame visual story"
-            )}"
-
-            loading="lazy"
-          />
-
-        </div>
-
-
-        <div class="home-story-card-body">
-
-          <div class="home-story-card-meta">
-
-            <span>
-              ${escapeHTML(
-                story.campaign ||
-                story.moment ||
-                "FeelFrame"
-              )}
-            </span>
-
-
-            ${
-              story.emotion
-                ? `
-                  <span>
-                    ${escapeHTML(
-                      story.emotion
-                    )}
-                  </span>
-                `
-                : ""
-            }
-
-          </div>
-
-
-          <h2 class="home-story-card-title">
-
-            ${escapeHTML(
-              story.title ||
-              story.quote ||
-              story.moment ||
-              "A human moment"
-            )}
-
-          </h2>
-
-
-          ${
-            story.description
-
-              ? `
-                <p class="home-story-card-description">
-                  ${escapeHTML(
-                    story.description
-                  )}
-                </p>
-              `
-
-              : story.context
-
-                ? `
-                  <p class="home-story-card-description">
-                    ${escapeHTML(
-                      story.context
-                    )}
-                  </p>
-                `
-
-                : ""
-          }
-
-
-          ${createPromptProduct(story)}
-
-        </div>
-
-      `;
-
-
-      const prompt =
-        link.querySelector(
-          ".prompt-product"
-        );
-
-
-      if (prompt) {
-
-        prompt.addEventListener(
-          "click",
-          (event) => {
-            event.stopPropagation();
-          }
-        );
-
-      }
-
-
-      return link;
-
-    }
-
-
-    /* =========================================================
-       RENDER STORY BOARD
-       ========================================================= */
-
-    function renderHomeStories() {
-
-      if (!homeStoryGrid) {
-        return;
-      }
-
-
-      homeStoryGrid.innerHTML = "";
-
-
-      if (!stories.length) {
-
-        homeStoryGrid.innerHTML = `
-
-          <div class="home-empty">
-            No stories available yet.
-          </div>
-
-        `;
-
-        return;
-
-      }
-
-
-      stories.forEach(
-        (story) => {
-
-          homeStoryGrid.appendChild(
-            createStoryCard(story)
+        featuredStories =
+          allStories.filter(
+            story => story.featured === true
           );
 
-        }
-      );
+
+        /*
+         * Render everything
+         */
+
+        renderCoverflow();
+
+        renderStoryBoard();
+
+
+      } catch (error) {
+
+        console.error(
+          "FeelFrame data loading error:",
+          error
+        );
+
+
+        featuredStories = [];
+
+        allStories = [];
+
+
+        renderEmptyState();
+
+      }
 
     }
 
 
-    /* =========================================================
-       BUILD COVERFLOW
-       ========================================================= */
+    /* ==========================================================
+       COVER FLOW
+       ========================================================== */
 
-    function buildCoverflow() {
+    function renderCoverflow() {
 
-      if (
-        !coverflowTrack ||
-        !coverflowDots
-      ) {
-        return;
-      }
+      coverflowTrack.innerHTML = "";
 
-
-      coverflowTrack.innerHTML =
-        "";
-
-      coverflowDots.innerHTML =
-        "";
+      coverflowDots.innerHTML = "";
 
 
       if (!featuredStories.length) {
 
         coverflowTrack.innerHTML = `
-
-          <div class="home-empty">
-            Featured moments will appear here.
+          <div class="coverflow-empty">
+            <span class="coverflow-empty-mark">✦</span>
+            <p>Featured moments are coming soon.</p>
           </div>
-
         `;
+
+        coverflowPrev.disabled = true;
+
+        coverflowNext.disabled = true;
 
         return;
 
       }
 
+
+      /*
+       * Enable controls
+       */
+
+      coverflowPrev.disabled =
+        featuredStories.length <= 1;
+
+      coverflowNext.disabled =
+        featuredStories.length <= 1;
+
+
+      /*
+       * Create cards
+       */
 
       featuredStories.forEach(
         (story, index) => {
@@ -1759,39 +544,42 @@
               index
             );
 
+          coverflowTrack.appendChild(card);
 
-          coverflowTrack.appendChild(
-            card
-          );
+        }
+      );
 
+
+      /*
+       * Create dots
+       */
+
+      featuredStories.forEach(
+        (story, index) => {
 
           const dot =
-            document.createElement(
-              "button"
-            );
+            document.createElement("button");
 
-
-          dot.type =
-            "button";
+          dot.type = "button";
 
           dot.className =
             "coverflow-dot";
 
-
           dot.setAttribute(
             "aria-label",
-            `Go to visual story ${
-              index + 1
-            }`
+            `Show featured story ${index + 1}`
           );
 
+          dot.setAttribute(
+            "role",
+            "tab"
+          );
 
           dot.addEventListener(
             "click",
             () => {
 
-              coverflowIndex =
-                index;
+              currentCoverflowIndex = index;
 
               updateCoverflow();
 
@@ -1799,97 +587,248 @@
           );
 
 
-          coverflowDots.appendChild(
-            dot
-          );
+          coverflowDots.appendChild(dot);
 
         }
       );
 
 
-      coverflowIndex =
-        0;
+      /*
+       * Initial position
+       */
+
+      currentCoverflowIndex = 0;
 
       updateCoverflow();
 
     }
 
 
-    /* =========================================================
-       RELATIVE COVERFLOW POSITION
-       ========================================================= */
+    /* ==========================================================
+       CREATE COVER FLOW CARD
+       ========================================================== */
 
-    function getRelativePosition(
-      cardIndex,
-      activeIndex,
-      total
+    function createCoverflowCard(
+      story,
+      index
     ) {
 
-      let difference =
-        cardIndex -
-        activeIndex;
+      const card =
+        document.createElement("article");
 
 
-      if (
-        difference >
-        total / 2
-      ) {
-
-        difference -=
-          total;
-
-      }
+      card.className =
+        "coverflow-card";
 
 
-      if (
-        difference <
-        -total / 2
-      ) {
-
-        difference +=
-          total;
-
-      }
+      card.dataset.index =
+        index;
 
 
-      return difference;
+      /*
+       * Extract content safely
+       */
+
+      const image =
+        story.image ||
+        story.cover ||
+        story.thumbnail ||
+        "";
+
+
+      const title =
+        story.title ||
+        story.name ||
+        "Untitled moment";
+
+
+      const emotion =
+        story.emotion ||
+        "";
+
+
+      const campaign =
+        story.campaign ||
+        story.moment ||
+        "";
+
+
+      const style =
+        story.style ||
+        story.visualLanguage ||
+        "";
+
+
+      const quote =
+        story.quote ||
+        "";
+
+
+      /*
+       * Card HTML
+       */
+
+      card.innerHTML = `
+
+        <div class="coverflow-card-inner">
+
+          <div class="coverflow-image-wrap">
+
+            ${
+              image
+                ? `
+                  <img
+                    class="coverflow-image"
+                    src="${escapeAttribute(image)}"
+                    alt="${escapeAttribute(title)}"
+                    loading="lazy"
+                    draggable="false"
+                  />
+                `
+                : `
+                  <div
+                    class="coverflow-image coverflow-image-placeholder"
+                    aria-hidden="true"
+                  >
+                    <span>FeelFrame™</span>
+                  </div>
+                `
+            }
+
+          </div>
+
+
+          <div class="coverflow-card-content">
+
+            ${
+              campaign
+                ? `
+                  <span class="coverflow-campaign">
+                    ${escapeHTML(campaign)}
+                  </span>
+                `
+                : ""
+            }
+
+
+            <h3 class="coverflow-card-title">
+              ${escapeHTML(title)}
+            </h3>
+
+
+            ${
+              quote
+                ? `
+                  <p class="coverflow-card-quote">
+                    ${escapeHTML(quote)}
+                  </p>
+                `
+                : ""
+            }
+
+
+            <div class="coverflow-card-meta">
+
+              ${
+                emotion
+                  ? `
+                    <span>
+                      ${escapeHTML(emotion)}
+                    </span>
+                  `
+                  : ""
+              }
+
+
+              ${
+                style
+                  ? `
+                    <span>
+                      ${escapeHTML(style)}
+                    </span>
+                  `
+                  : ""
+              }
+
+            </div>
+
+          </div>
+
+        </div>
+
+      `;
+
+
+      /*
+       * Card click
+       */
+
+      card.addEventListener(
+        "click",
+        () => {
+
+          if (dragMoved) {
+            return;
+          }
+
+
+          const storyId =
+            story.id;
+
+
+          if (!storyId) {
+            return;
+          }
+
+
+          window.location.href =
+            `story.html?id=${encodeURIComponent(storyId)}`;
+
+        }
+      );
+
+
+      return card;
 
     }
 
 
-    /* =========================================================
-       UPDATE COVERFLOW
-       ========================================================= */
+    /* ==========================================================
+       UPDATE COVER FLOW
+       ========================================================== */
 
     function updateCoverflow() {
 
       const cards =
         Array.from(
-          document.querySelectorAll(
+          coverflowTrack.querySelectorAll(
             ".coverflow-card"
           )
         );
 
 
-      const total =
-        cards.length;
-
-
-      if (!total) {
-        return;
-      }
+      const dots =
+        Array.from(
+          coverflowDots.querySelectorAll(
+            ".coverflow-dot"
+          )
+        );
 
 
       cards.forEach(
         (card, index) => {
 
-          const position =
+          const relativePosition =
             getRelativePosition(
               index,
-              coverflowIndex,
-              total
+              currentCoverflowIndex,
+              featuredStories.length
             );
 
+
+          /*
+           * Reset state classes
+           */
 
           card.classList.remove(
             "is-center",
@@ -1901,57 +840,49 @@
           );
 
 
-          if (
-            position === 0
-          ) {
+          /*
+           * Assign visual state
+           */
+
+          if (relativePosition === 0) {
 
             card.classList.add(
               "is-center"
             );
 
-          }
-
-          else if (
-            position === -1
+          } else if (
+            relativePosition === -1
           ) {
 
             card.classList.add(
               "is-left"
             );
 
-          }
-
-          else if (
-            position === 1
+          } else if (
+            relativePosition === 1
           ) {
 
             card.classList.add(
               "is-right"
             );
 
-          }
-
-          else if (
-            position === -2
+          } else if (
+            relativePosition === -2
           ) {
 
             card.classList.add(
               "is-far-left"
             );
 
-          }
-
-          else if (
-            position === 2
+          } else if (
+            relativePosition === 2
           ) {
 
             card.classList.add(
               "is-far-right"
             );
 
-          }
-
-          else {
+          } else {
 
             card.classList.add(
               "is-hidden"
@@ -1959,24 +890,54 @@
 
           }
 
+
+          /*
+           * Accessibility
+           */
+
+          const isCenter =
+            relativePosition === 0;
+
+
+          card.setAttribute(
+            "aria-hidden",
+            isCenter
+              ? "false"
+              : "true"
+          );
+
+
+          card.tabIndex =
+            isCenter
+              ? 0
+              : -1;
+
         }
       );
 
 
-      const dots =
-        Array.from(
-          document.querySelectorAll(
-            ".coverflow-dot"
-          )
-        );
-
+      /*
+       * Update dots
+       */
 
       dots.forEach(
         (dot, index) => {
 
+          const active =
+            index === currentCoverflowIndex;
+
+
           dot.classList.toggle(
             "is-active",
-            index === coverflowIndex
+            active
+          );
+
+
+          dot.setAttribute(
+            "aria-selected",
+            active
+              ? "true"
+              : "false"
           );
 
         }
@@ -1985,43 +946,72 @@
     }
 
 
-    /* =========================================================
-       NEXT / PREVIOUS
-       ========================================================= */
+    /* ==========================================================
+       RELATIVE POSITION
+       ========================================================== */
 
-    function goNext() {
+    function getRelativePosition(
+      index,
+      activeIndex,
+      total
+    ) {
 
-      if (
-        !featuredStories.length
-      ) {
-        return;
+      if (total <= 1) {
+        return index === activeIndex
+          ? 0
+          : 99;
       }
 
 
-      coverflowIndex =
-        (
-          coverflowIndex + 1
-        ) %
-        featuredStories.length;
+      let difference =
+        index - activeIndex;
 
 
-      updateCoverflow();
+      /*
+       * Circular wrapping
+       */
+
+      if (
+        difference >
+        total / 2
+      ) {
+
+        difference -= total;
+
+      }
+
+
+      if (
+        difference <
+        -total / 2
+      ) {
+
+        difference += total;
+
+      }
+
+
+      return difference;
 
     }
 
 
-    function goPrevious() {
+    /* ==========================================================
+       PREVIOUS
+       ========================================================== */
+
+    function showPrevious() {
 
       if (
-        !featuredStories.length
+        featuredStories.length <= 1
       ) {
         return;
       }
 
 
-      coverflowIndex =
+      currentCoverflowIndex =
         (
-          coverflowIndex -
+          currentCoverflowIndex -
           1 +
           featuredStories.length
         ) %
@@ -2033,119 +1023,175 @@
     }
 
 
-    if (coverflowNext) {
+    /* ==========================================================
+       NEXT
+       ========================================================== */
 
-      coverflowNext.addEventListener(
-        "click",
-        goNext
-      );
+    function showNext() {
 
-    }
-
-
-    if (coverflowPrev) {
-
-      coverflowPrev.addEventListener(
-        "click",
-        goPrevious
-      );
-
-    }
-
-
-    /* =========================================================
-       POINTER / SWIPE
-       ========================================================= */
-
-    if (coverflowViewport) {
-
-      coverflowViewport.addEventListener(
-        "pointerdown",
-        (event) => {
-
-          pointerStartX =
-            event.clientX;
-
-          pointerCurrentX =
-            event.clientX;
-
-          isDragging =
-            false;
-
-
-          coverflowViewport.classList.add(
-            "is-dragging"
-          );
-
-
-          /*
-           * Keeps pointer events attached to
-           * the carousel while dragging.
-           */
-
-          if (
-            coverflowViewport.setPointerCapture
-          ) {
-
-            try {
-
-              coverflowViewport.setPointerCapture(
-                event.pointerId
-              );
-
-            } catch (_) {}
-
-          }
-
-        }
-      );
-
-
-      coverflowViewport.addEventListener(
-        "pointermove",
-        (event) => {
-
-          if (
-            pointerStartX === null
-          ) {
-            return;
-          }
-
-
-          pointerCurrentX =
-            event.clientX;
-
-
-          if (
-            Math.abs(
-              pointerCurrentX -
-              pointerStartX
-            ) > 8
-          ) {
-
-            isDragging =
-              true;
-
-          }
-
-        }
-      );
-
-
-      function finishPointer(
-        event
+      if (
+        featuredStories.length <= 1
       ) {
+        return;
+      }
+
+
+      currentCoverflowIndex =
+        (
+          currentCoverflowIndex +
+          1
+        ) %
+        featuredStories.length;
+
+
+      updateCoverflow();
+
+    }
+
+
+    /* ==========================================================
+       BUTTON CONTROLS
+       ========================================================== */
+
+    coverflowPrev.addEventListener(
+      "click",
+      showPrevious
+    );
+
+
+    coverflowNext.addEventListener(
+      "click",
+      showNext
+    );
+
+
+    /* ==========================================================
+       KEYBOARD CONTROLS
+       ========================================================== */
+
+    document.addEventListener(
+      "keydown",
+      event => {
 
         if (
-          pointerStartX === null
+          event.key === "ArrowLeft"
+        ) {
+
+          showPrevious();
+
+        }
+
+
+        if (
+          event.key === "ArrowRight"
+        ) {
+
+          showNext();
+
+        }
+
+      }
+    );
+
+
+    /* ==========================================================
+       POINTER / TOUCH DRAG
+       ========================================================== */
+
+    coverflowViewport.addEventListener(
+      "pointerdown",
+      event => {
+
+        /*
+         * Only primary pointer
+         */
+
+        if (
+          event.pointerType === "mouse" &&
+          event.button !== 0
         ) {
           return;
         }
 
 
-        const difference =
-          pointerCurrentX -
-          pointerStartX;
+        isDragging = true;
+
+        dragMoved = false;
+
+        dragStartX =
+          event.clientX;
+
+        dragCurrentX =
+          event.clientX;
+
+
+        coverflowViewport.classList.add(
+          "is-dragging"
+        );
+
+
+        try {
+
+          coverflowViewport.setPointerCapture(
+            event.pointerId
+          );
+
+        } catch (error) {
+          /*
+           * Pointer capture is not available
+           * in every browser environment.
+           */
+        }
+
+      }
+    );
+
+
+    coverflowViewport.addEventListener(
+      "pointermove",
+      event => {
+
+        if (!isDragging) {
+          return;
+        }
+
+
+        dragCurrentX =
+          event.clientX;
+
+
+        const distance =
+          dragCurrentX -
+          dragStartX;
+
+
+        if (
+          Math.abs(distance) > 8
+        ) {
+
+          dragMoved = true;
+
+        }
+
+      }
+    );
+
+
+    coverflowViewport.addEventListener(
+      "pointerup",
+      event => {
+
+        if (!isDragging) {
+          return;
+        }
+
+
+        const distance =
+          dragCurrentX -
+          dragStartX;
+
+
+        isDragging = false;
 
 
         coverflowViewport.classList.remove(
@@ -2154,19 +1200,16 @@
 
 
         if (
-          Math.abs(difference) >
-          55
+          Math.abs(distance) > 45
         ) {
 
-          if (
-            difference < 0
-          ) {
+          if (distance < 0) {
 
-            goNext();
+            showNext();
 
           } else {
 
-            goPrevious();
+            showPrevious();
 
           }
 
@@ -2174,214 +1217,334 @@
 
 
         /*
-         * Give the card click handler
-         * enough time to recognize a swipe.
+         * Delay resetting dragMoved so that
+         * the click event generated immediately
+         * after pointerup does not open a card.
          */
 
-        setTimeout(
+        window.setTimeout(
           () => {
 
-            pointerStartX =
-              null;
-
-            pointerCurrentX =
-              null;
-
-            isDragging =
-              false;
+            dragMoved = false;
 
           },
-          60
+          80
         );
-
-
-        if (
-          event &&
-          coverflowViewport.releasePointerCapture
-        ) {
-
-          try {
-
-            coverflowViewport.releasePointerCapture(
-              event.pointerId
-            );
-
-          } catch (_) {}
-
-        }
-
-      }
-
-
-      coverflowViewport.addEventListener(
-        "pointerup",
-        finishPointer
-      );
-
-
-      coverflowViewport.addEventListener(
-        "pointercancel",
-        () => {
-
-          coverflowViewport.classList.remove(
-            "is-dragging"
-          );
-
-          pointerStartX =
-            null;
-
-          pointerCurrentX =
-            null;
-
-          isDragging =
-            false;
-
-        }
-      );
-
-    }
-
-
-    /* =========================================================
-       KEYBOARD
-       ========================================================= */
-
-    document.addEventListener(
-      "keydown",
-      (event) => {
-
-        if (
-          event.key ===
-          "ArrowRight"
-        ) {
-
-          goNext();
-
-        }
-
-
-        if (
-          event.key ===
-          "ArrowLeft"
-        ) {
-
-          goPrevious();
-
-        }
 
       }
     );
 
 
-    /* =========================================================
-       LOAD DATA
-       ========================================================= */
+    coverflowViewport.addEventListener(
+      "pointercancel",
+      () => {
 
-    async function loadHome() {
+        isDragging = false;
 
-      try {
-
-        const response =
-          await fetch(
-            DATA_URL,
-            {
-              cache: "no-store"
-            }
-          );
-
-
-        if (!response.ok) {
-
-          throw new Error(
-            `Could not load ${DATA_URL}`
-          );
-
-        }
-
-
-        const data =
-          await response.json();
-
-
-        /*
-         * Supports:
-         *
-         * [
-         *   {...}
-         * ]
-         *
-         * OR:
-         *
-         * {
-         *   stories: [...]
-         * }
-         */
-
-        stories =
-          Array.isArray(data)
-
-            ? data
-
-            : Array.isArray(
-                data.stories
-              )
-
-              ? data.stories
-
-              : [];
-
-
-        /*
-         * Featured stories remain
-         * controlled by data.json.
-         */
-
-        featuredStories =
-          stories.filter(
-            (story) =>
-              story.featured === true
-          );
-
-
-        renderHomeStories();
-
-        buildCoverflow();
-
-      }
-
-
-      catch (error) {
-
-        console.error(
-          "FeelFrame Home:",
-          error
+        coverflowViewport.classList.remove(
+          "is-dragging"
         );
 
 
-        if (
-          homeStoryGrid
-        ) {
+        window.setTimeout(
+          () => {
 
-          homeStoryGrid.innerHTML = `
+            dragMoved = false;
 
-            <div class="home-empty">
-              FeelFrame stories could not be loaded.
-            </div>
-
-          `;
-
-        }
+          },
+          80
+        );
 
       }
+    );
+
+
+    /* ==========================================================
+       STORY BOARD
+       ========================================================== */
+
+    function renderStoryBoard() {
+
+      storyBoard.innerHTML = "";
+
+
+      if (!allStories.length) {
+
+        renderEmptyState();
+
+        return;
+
+      }
+
+
+      emptyState.hidden = true;
+
+
+      allStories.forEach(
+        (story, index) => {
+
+          const card =
+            createStoryCard(
+              story,
+              index
+            );
+
+
+          storyBoard.appendChild(card);
+
+        }
+      );
 
     }
 
 
-    /* =========================================================
-       INIT
-       ========================================================= */
+    /* ==========================================================
+       STORY CARD
+       ========================================================== */
 
-    loadHome();
+    function createStoryCard(
+      story,
+      index
+    ) {
+
+      const card =
+        document.createElement("article");
+
+
+      card.className =
+        "story-card";
+
+
+      /*
+       * Preserve natural variation for
+       * Pinterest-style layout.
+       */
+
+      if (
+        index % 7 === 0
+      ) {
+
+        card.classList.add(
+          "story-card-large"
+        );
+
+      }
+
+
+      if (
+        index % 9 === 4
+      ) {
+
+        card.classList.add(
+          "story-card-tall"
+        );
+
+      }
+
+
+      const image =
+        story.image ||
+        story.cover ||
+        story.thumbnail ||
+        "";
+
+
+      const title =
+        story.title ||
+        story.name ||
+        "Untitled moment";
+
+
+      const emotion =
+        story.emotion ||
+        "";
+
+
+      const campaign =
+        story.campaign ||
+        story.moment ||
+        "";
+
+
+      const style =
+        story.style ||
+        story.visualLanguage ||
+        "";
+
+
+      const quote =
+        story.quote ||
+        "";
+
+
+      card.innerHTML = `
+
+        <a
+          href="story.html?id=${encodeURIComponent(
+            story.id || ""
+          )}"
+          class="story-card-link"
+          aria-label="${escapeAttribute(title)}"
+        >
+
+          <div class="story-card-image-wrap">
+
+            ${
+              image
+                ? `
+                  <img
+                    class="story-card-image"
+                    src="${escapeAttribute(image)}"
+                    alt="${escapeAttribute(title)}"
+                    loading="lazy"
+                    draggable="false"
+                  />
+                `
+                : `
+                  <div
+                    class="story-card-image story-card-placeholder"
+                    aria-hidden="true"
+                  >
+                    <span>FeelFrame™</span>
+                  </div>
+                `
+            }
+
+          </div>
+
+
+          <div class="story-card-overlay">
+
+            ${
+              campaign
+                ? `
+                  <span class="story-card-campaign">
+                    ${escapeHTML(campaign)}
+                  </span>
+                `
+                : ""
+            }
+
+
+            <h3 class="story-card-title">
+              ${escapeHTML(title)}
+            </h3>
+
+
+            ${
+              quote
+                ? `
+                  <p class="story-card-quote">
+                    ${escapeHTML(quote)}
+                  </p>
+                `
+                : ""
+            }
+
+
+            <div class="story-card-meta">
+
+              ${
+                emotion
+                  ? `
+                    <span>
+                      ${escapeHTML(emotion)}
+                    </span>
+                  `
+                  : ""
+              }
+
+
+              ${
+                style
+                  ? `
+                    <span>
+                      ${escapeHTML(style)}
+                    </span>
+                  `
+                  : ""
+              }
+
+            </div>
+
+          </div>
+
+        </a>
+
+      `;
+
+
+      return card;
+
+    }
+
+
+    /* ==========================================================
+       EMPTY STATE
+       ========================================================== */
+
+    function renderEmptyState() {
+
+      emptyState.hidden = false;
+
+      storyBoard.innerHTML = "";
+
+    }
+
+
+    /* ==========================================================
+       HTML ESCAPING
+       ========================================================== */
+
+    function escapeHTML(
+      value
+    ) {
+
+      return String(value)
+        .replace(
+          /&/g,
+          "&amp;"
+        )
+        .replace(
+          /</g,
+          "&lt;"
+        )
+        .replace(
+          />/g,
+          "&gt;"
+        )
+        .replace(
+          /"/g,
+          "&quot;"
+        )
+        .replace(
+          /'/g,
+          "&#039;"
+        );
+
+    }
+
+
+    /* ==========================================================
+       ATTRIBUTE ESCAPING
+       ========================================================== */
+
+    function escapeAttribute(
+      value
+    ) {
+
+      return escapeHTML(
+        value
+      );
+
+    }
+
+
+    /* ==========================================================
+       INITIALIZE
+       ========================================================== */
+
+    loadStories();
 
   </script>
 
