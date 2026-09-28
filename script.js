@@ -3,7 +3,7 @@
 /* =========================================================
    FEELFRAME™
    Global JavaScript Engine
-   Production Version 3.0
+   Production Version 3.1
    ========================================================= */
 
 const FEELFRAME = {
@@ -26,27 +26,46 @@ const FEELFRAME = {
     moved: false,
     suppressClick: false,
     pointerId: null,
-    initialized: false
+    initialized: false,
+    touchFallbackInitialized: false
   }
 };
 
-/* INITIALIZATION */
+/* =========================================================
+   INITIALIZATION
+   ========================================================= */
+
 document.addEventListener("DOMContentLoaded", async () => {
   try {
     await loadFeelFrameData();
     initializeNavigation();
     initializePage();
   } catch (error) {
-    console.error("FeelFrame initialization failed:", error);
+    console.error(
+      "FeelFrame initialization failed:",
+      error
+    );
+
     showGlobalError();
   }
 });
 
-/* DATA */
+/* =========================================================
+   DATA
+   ========================================================= */
+
 async function loadFeelFrameData() {
-  const response = await fetch("data.json", {
-    cache: "no-store"
-  });
+  let response;
+
+  try {
+    response = await fetch("data.json", {
+      cache: "no-store"
+    });
+  } catch (error) {
+    throw new Error(
+      "Unable to fetch data.json. Make sure the site is being served through a web server and not opened directly with file://."
+    );
+  }
 
   if (!response.ok) {
     throw new Error(
@@ -54,16 +73,32 @@ async function loadFeelFrameData() {
     );
   }
 
-  const data = await response.json();
+  let data;
 
-  if (!data || typeof data !== "object") {
-    throw new Error("Invalid FeelFrame data structure.");
+  try {
+    data = await response.json();
+  } catch (error) {
+    throw new Error(
+      "data.json contains invalid JSON."
+    );
+  }
+
+  if (
+    !data ||
+    typeof data !== "object" ||
+    Array.isArray(data)
+  ) {
+    throw new Error(
+      "Invalid FeelFrame data structure. Expected an object containing site and stories."
+    );
   }
 
   FEELFRAME.data = data;
 
   FEELFRAME.site =
-    data.site && typeof data.site === "object"
+    data.site &&
+    typeof data.site === "object" &&
+    !Array.isArray(data.site)
       ? data.site
       : {};
 
@@ -71,57 +106,94 @@ async function loadFeelFrameData() {
     Array.isArray(data.stories)
       ? data.stories.filter(isValidStory)
       : [];
+
+  if (
+    !Array.isArray(data.stories)
+  ) {
+    console.warn(
+      "FeelFrame: data.stories is missing or is not an array."
+    );
+  }
 }
 
-/* STORY VALIDATION */
+/* =========================================================
+   STORY VALIDATION
+   ========================================================= */
+
 function isValidStory(story) {
   return (
     story &&
     typeof story === "object" &&
-    story.id &&
-    (story.title ||
-      story.image ||
-      story.promptTitle)
+    !Array.isArray(story) &&
+    String(story.id || "").trim() !== "" &&
+    (
+      String(story.title || "").trim() !== "" ||
+      String(story.image || "").trim() !== "" ||
+      String(story.promptTitle || "").trim() !== ""
+    )
   );
 }
 
-/* PAGE DETECTION */
+/* =========================================================
+   PAGE DETECTION
+   ========================================================= */
+
 function initializePage() {
   const body = document.body;
 
-  if (body.classList.contains("home-page")) {
+  if (!body) {
+    return;
+  }
+
+  if (
+    body.classList.contains("home-page")
+  ) {
     initializeHome();
   }
 
-  if (body.classList.contains("explore-page")) {
+  if (
+    body.classList.contains("explore-page")
+  ) {
     initializeExplore();
   }
 
-  if (body.classList.contains("story-page")) {
+  if (
+    body.classList.contains("story-page")
+  ) {
     initializeStory();
   }
 
-  if (body.classList.contains("create-page")) {
+  if (
+    body.classList.contains("create-page")
+  ) {
     initializeCreate();
   }
 }
 
-/* NAVIGATION */
+/* =========================================================
+   NAVIGATION
+   ========================================================= */
+
 function initializeNavigation() {
-  const currentPage = getCurrentPage();
+  const currentPage =
+    getCurrentPage();
 
   document
     .querySelectorAll(".bottom-nav a")
     .forEach(link => {
       const href =
-        link.getAttribute("href") || "";
+        (
+          link.getAttribute("href") ||
+          ""
+        ).toLowerCase();
 
       const isHome =
         currentPage === "home" &&
         (
-          href.includes("index") ||
+          href === "index.html" ||
+          href === "./" ||
           href === "/" ||
-          href === "./"
+          href.endsWith("/index.html")
         );
 
       const isExplore =
@@ -132,12 +204,30 @@ function initializeNavigation() {
         currentPage === "create" &&
         href.includes("create");
 
-      if (
+      const active =
         isHome ||
         isExplore ||
-        isCreate
-      ) {
-        link.classList.add("active");
+        isCreate;
+
+      link.classList.toggle(
+        "active",
+        active
+      );
+
+      link.classList.toggle(
+        "is-active",
+        active
+      );
+
+      if (active) {
+        link.setAttribute(
+          "aria-current",
+          "page"
+        );
+      } else {
+        link.removeAttribute(
+          "aria-current"
+        );
       }
     });
 }
@@ -146,22 +236,31 @@ function getCurrentPage() {
   const path =
     window.location.pathname.toLowerCase();
 
-  if (path.includes("explore")) {
+  if (
+    path.includes("explore")
+  ) {
     return "explore";
   }
 
-  if (path.includes("create")) {
+  if (
+    path.includes("create")
+  ) {
     return "create";
   }
 
-  if (path.includes("story")) {
+  if (
+    path.includes("story")
+  ) {
     return "story";
   }
 
   return "home";
 }
 
-/* HOME */
+/* =========================================================
+   HOME
+   ========================================================= */
+
 function initializeHome() {
   renderFeaturedCoverflow();
   renderHomeBoard();
@@ -173,16 +272,22 @@ function initializeHome() {
 
 function renderFeaturedCoverflow() {
   const track =
-    document.querySelector("#coverflowTrack");
+    document.querySelector(
+      "#coverflowTrack"
+    );
 
-  if (!track) return;
+  if (!track) {
+    return;
+  }
 
   const featured =
     FEELFRAME.stories.filter(
-      story => story.featured === true
+      story =>
+        story.featured === true
     );
 
-  FEELFRAME.coverflow.stories = featured;
+  FEELFRAME.coverflow.stories =
+    featured;
 
   if (!featured.length) {
     FEELFRAME.coverflow.current = 0;
@@ -193,6 +298,8 @@ function renderFeaturedCoverflow() {
         <p>Mark stories as featured in data.json.</p>
       </div>
     `;
+
+    renderCoverflowDots();
 
     return;
   }
@@ -206,8 +313,12 @@ function renderFeaturedCoverflow() {
 
   track.innerHTML =
     featured
-      .map((story, index) =>
-        createCoverflowCard(story, index)
+      .map(
+        (story, index) =>
+          createCoverflowCard(
+            story,
+            index
+          )
       )
       .join("");
 
@@ -218,32 +329,68 @@ function renderFeaturedCoverflow() {
   initializeCoverflowControls();
 }
 
-/* COVERFLOW CARD */
+/* =========================================================
+   COVERFLOW CARD
+   ========================================================= */
+
 function createCoverflowCard(
   story,
   index
 ) {
+  const imageURL =
+    getSafeImageURL(
+      story.image
+    );
+
   return `
     <article
       class="coverflow-card"
       data-index="${index}"
-      data-story-id="${escapeHTML(story.id)}"
+      data-story-id="${escapeHTML(
+        story.id
+      )}"
       tabindex="0"
       role="button"
-      aria-current="${index === 0 ? "true" : "false"}"
+      aria-current="${
+        index ===
+        FEELFRAME.coverflow.current
+          ? "true"
+          : "false"
+      }"
       aria-label="Open ${escapeHTML(
-        story.title || "visual story"
+        story.title ||
+        "visual story"
       )}"
     >
-      <img
-        src="${escapeHTML(story.image || "")}"
-        alt="${escapeHTML(
-          story.title || "FeelFrame visual"
-        )}"
-        loading="${index === 0 ? "eager" : "lazy"}"
-        draggable="false"
-        onerror="handleImageError(this)"
-      >
+      ${
+        imageURL
+          ? `
+            <img
+              src="${escapeHTML(
+                imageURL
+              )}"
+              alt="${escapeHTML(
+                story.title ||
+                "FeelFrame visual"
+              )}"
+              loading="${
+                index ===
+                FEELFRAME.coverflow.current
+                  ? "eager"
+                  : "lazy"
+              }"
+              draggable="false"
+              data-feelframe-image="true"
+            >
+          `
+          : `
+            <div
+              class="image-error"
+              role="img"
+              aria-label="FeelFrame visual unavailable"
+            ></div>
+          `
+      }
 
       <div class="coverflow-card-content">
         <small>
@@ -255,7 +402,9 @@ function createCoverflowCard(
         </small>
 
         <h3>
-          ${escapeHTML(story.title || "")}
+          ${escapeHTML(
+            story.title || ""
+          )}
         </h3>
       </div>
     </article>
@@ -272,7 +421,9 @@ function updateCoverflow() {
       ".coverflow-card"
     );
 
-  if (!cards.length) return;
+  if (!cards.length) {
+    return;
+  }
 
   const total =
     FEELFRAME.coverflow.stories.length;
@@ -280,7 +431,9 @@ function updateCoverflow() {
   const current =
     FEELFRAME.coverflow.current;
 
-  if (!total) return;
+  if (!total) {
+    return;
+  }
 
   cards.forEach(card => {
     card.classList.remove(
@@ -297,46 +450,57 @@ function updateCoverflow() {
     let offset =
       index - current;
 
-    /*
-      Circular positioning keeps the Cover Flow
-      continuous even when moving from the last
-      card back to the first card.
-    */
-    if (offset > total / 2) {
+    if (
+      offset >
+      total / 2
+    ) {
       offset -= total;
     }
 
-    if (offset < -total / 2) {
+    if (
+      offset <
+      -total / 2
+    ) {
       offset += total;
     }
 
-    if (offset === 0) {
-      card.classList.add("is-center");
-      card.setAttribute(
-        "aria-current",
-        "true"
-      );
-    } else {
-      card.setAttribute(
-        "aria-current",
-        "false"
-      );
-    }
+    const isCenter =
+      offset === 0;
+
+    card.classList.toggle(
+      "is-center",
+      isCenter
+    );
+
+    card.setAttribute(
+      "aria-current",
+      isCenter
+        ? "true"
+        : "false"
+    );
 
     if (offset === -1) {
-      card.classList.add("is-left");
+      card.classList.add(
+        "is-left"
+      );
     }
 
     if (offset === 1) {
-      card.classList.add("is-right");
+      card.classList.add(
+        "is-right"
+      );
     }
 
     if (offset === -2) {
-      card.classList.add("is-far-left");
+      card.classList.add(
+        "is-far-left"
+      );
     }
 
     if (offset === 2) {
-      card.classList.add("is-far-right");
+      card.classList.add(
+        "is-far-right"
+      );
     }
   });
 
@@ -351,11 +515,14 @@ function nextCoverflow() {
   const total =
     FEELFRAME.coverflow.stories.length;
 
-  if (!total) return;
+  if (!total) {
+    return;
+  }
 
   FEELFRAME.coverflow.current =
     (
-      FEELFRAME.coverflow.current + 1
+      FEELFRAME.coverflow.current +
+      1
     ) % total;
 
   updateCoverflow();
@@ -365,11 +532,15 @@ function previousCoverflow() {
   const total =
     FEELFRAME.coverflow.stories.length;
 
-  if (!total) return;
+  if (!total) {
+    return;
+  }
 
   FEELFRAME.coverflow.current =
     (
-      FEELFRAME.coverflow.current - 1 + total
+      FEELFRAME.coverflow.current -
+      1 +
+      total
     ) % total;
 
   updateCoverflow();
@@ -379,18 +550,25 @@ function goToCoverflow(index) {
   const total =
     FEELFRAME.coverflow.stories.length;
 
-  if (!total) return;
+  if (!total) {
+    return;
+  }
 
   const numericIndex =
     Number(index);
 
-  if (!Number.isFinite(numericIndex)) {
+  if (
+    !Number.isFinite(
+      numericIndex
+    )
+  ) {
     return;
   }
 
   FEELFRAME.coverflow.current =
     (
-      numericIndex % total + total
+      numericIndex % total +
+      total
     ) % total;
 
   updateCoverflow();
@@ -427,15 +605,15 @@ function initializeCoverflowControls() {
   }
 
   document
-    .querySelectorAll(".coverflow-card")
+    .querySelectorAll(
+      ".coverflow-card"
+    )
     .forEach(card => {
       card.onclick = event => {
         if (
-          FEELFRAME.coverflow.suppressClick
+          FEELFRAME.coverflow
+            .suppressClick
         ) {
-          FEELFRAME.coverflow.suppressClick =
-            false;
-
           event.preventDefault();
           event.stopPropagation();
 
@@ -443,7 +621,9 @@ function initializeCoverflowControls() {
         }
 
         const index =
-          Number(card.dataset.index);
+          Number(
+            card.dataset.index
+          );
 
         if (
           index !==
@@ -469,7 +649,9 @@ function initializeCoverflowControls() {
         event.preventDefault();
 
         const index =
-          Number(card.dataset.index);
+          Number(
+            card.dataset.index
+          );
 
         if (
           index !==
@@ -499,7 +681,8 @@ function initializeCoverflowControls() {
 
   if (
     track &&
-    track.dataset.coverflowBound !== "true"
+    track.dataset.coverflowBound !==
+      "true"
   ) {
     initializeCoverflowPointerEvents(
       track
@@ -517,41 +700,53 @@ function initializeCoverflowControls() {
 function initializeCoverflowPointerEvents(
   track
 ) {
-  if (!track) return;
+  if (!track) {
+    return;
+  }
 
-  track.addEventListener(
-    "pointerdown",
-    handleCoverflowPointerDown
-  );
+  if (
+    "PointerEvent" in window
+  ) {
+    track.addEventListener(
+      "pointerdown",
+      handleCoverflowPointerDown
+    );
 
-  track.addEventListener(
-    "pointermove",
-    handleCoverflowPointerMove
-  );
+    track.addEventListener(
+      "pointermove",
+      handleCoverflowPointerMove
+    );
 
-  track.addEventListener(
-    "pointerup",
-    handleCoverflowPointerUp
-  );
+    track.addEventListener(
+      "pointerup",
+      handleCoverflowPointerUp
+    );
 
-  track.addEventListener(
-    "pointercancel",
-    handleCoverflowPointerCancel
-  );
+    track.addEventListener(
+      "pointercancel",
+      handleCoverflowPointerCancel
+    );
 
-  track.addEventListener(
-    "pointerleave",
-    handleCoverflowPointerLeave
+    track.addEventListener(
+      "pointerleave",
+      handleCoverflowPointerLeave
+    );
+
+    return;
+  }
+
+  initializeCoverflowTouchFallback(
+    track
   );
 }
+
+/* =========================================================
+   COVERFLOW POINTER DOWN
+   ========================================================= */
 
 function handleCoverflowPointerDown(
   event
 ) {
-  /*
-    Ignore secondary mouse buttons.
-    Touch, pen and primary mouse input remain supported.
-  */
   if (
     event.pointerType === "mouse" &&
     event.button !== 0
@@ -575,7 +770,8 @@ function handleCoverflowPointerDown(
   coverflow.moved = false;
   coverflow.suppressClick = false;
 
-  const track = event.currentTarget;
+  const track =
+    event.currentTarget;
 
   if (
     track &&
@@ -588,12 +784,15 @@ function handleCoverflowPointerDown(
       );
     } catch (error) {
       /*
-        Pointer capture is an enhancement.
-        Navigation still works without it.
+        Pointer capture is optional.
       */
     }
   }
 }
+
+/* =========================================================
+   COVERFLOW POINTER MOVE
+   ========================================================= */
 
 function handleCoverflowPointerMove(
   event
@@ -601,13 +800,10 @@ function handleCoverflowPointerMove(
   const coverflow =
     FEELFRAME.coverflow;
 
-  if (!coverflow.dragging) {
-    return;
-  }
-
   if (
+    !coverflow.dragging ||
     coverflow.pointerId !==
-    event.pointerId
+      event.pointerId
   ) {
     return;
   }
@@ -620,20 +816,24 @@ function handleCoverflowPointerMove(
     event.clientY -
     coverflow.startY;
 
-  /*
-    A small movement is ignored so normal taps
-    do not become accidental swipes.
-  */
   const movement =
     Math.sqrt(
-      differenceX * differenceX +
-      differenceY * differenceY
+      differenceX *
+        differenceX +
+        differenceY *
+        differenceY
     );
 
-  if (movement > 8) {
+  if (
+    movement > 8
+  ) {
     coverflow.moved = true;
   }
 }
+
+/* =========================================================
+   COVERFLOW POINTER UP
+   ========================================================= */
 
 function handleCoverflowPointerUp(
   event
@@ -641,13 +841,10 @@ function handleCoverflowPointerUp(
   const coverflow =
     FEELFRAME.coverflow;
 
-  if (!coverflow.dragging) {
-    return;
-  }
-
   if (
+    !coverflow.dragging ||
     coverflow.pointerId !==
-    event.pointerId
+      event.pointerId
   ) {
     return;
   }
@@ -661,10 +858,14 @@ function handleCoverflowPointerUp(
     coverflow.startY;
 
   const horizontalMovement =
-    Math.abs(differenceX);
+    Math.abs(
+      differenceX
+    );
 
   const verticalMovement =
-    Math.abs(differenceY);
+    Math.abs(
+      differenceY
+    );
 
   const wasDrag =
     coverflow.moved ||
@@ -672,9 +873,11 @@ function handleCoverflowPointerUp(
     verticalMovement > 8;
 
   coverflow.dragging = false;
+  coverflow.moved = false;
   coverflow.pointerId = null;
 
-  const track = event.currentTarget;
+  const track =
+    event.currentTarget;
 
   if (
     track &&
@@ -683,7 +886,8 @@ function handleCoverflowPointerUp(
   ) {
     try {
       if (
-        track.hasPointerCapture &&
+        typeof track.hasPointerCapture ===
+          "function" &&
         track.hasPointerCapture(
           event.pointerId
         )
@@ -694,8 +898,7 @@ function handleCoverflowPointerUp(
       }
     } catch (error) {
       /*
-        Safe fallback if pointer capture
-        is unavailable or already released.
+        Pointer capture is optional.
       */
     }
   }
@@ -704,40 +907,37 @@ function handleCoverflowPointerUp(
     return;
   }
 
-  /*
-    Once a drag has happened, suppress the
-    synthetic click generated by the browser.
-  */
-  coverflow.suppressClick = true;
+  coverflow.suppressClick =
+    true;
 
   const swipeThreshold = 45;
 
-  /*
-    Only horizontal movement navigates the
-    Cover Flow. Vertical movement is allowed
-    without changing stories.
-  */
   if (
     horizontalMovement >=
       swipeThreshold &&
     horizontalMovement >
       verticalMovement
   ) {
-    if (differenceX < 0) {
+    if (
+      differenceX < 0
+    ) {
       nextCoverflow();
     } else {
       previousCoverflow();
     }
   }
 
-  /*
-    Clear the click guard after the browser has
-    had a chance to dispatch the synthetic click.
-  */
-  window.requestAnimationFrame(() => {
-    coverflow.suppressClick = false;
-  });
+  window.requestAnimationFrame(
+    () => {
+      coverflow.suppressClick =
+        false;
+    }
+  );
 }
+
+/* =========================================================
+   COVERFLOW POINTER CANCEL
+   ========================================================= */
 
 function handleCoverflowPointerCancel(
   event
@@ -754,8 +954,8 @@ function handleCoverflowPointerLeave(
     FEELFRAME.coverflow;
 
   /*
-    Do not cancel an active pointer interaction
-    because pointer capture may still be active.
+    Pointer capture may still be active.
+    Do not cancel the interaction here.
   */
   if (
     coverflow.dragging &&
@@ -785,90 +985,58 @@ function resetCoverflowPointerState(
   coverflow.moved = false;
   coverflow.pointerId = null;
 
-  window.requestAnimationFrame(() => {
-    coverflow.suppressClick = false;
-  });
-}
-
-/* =========================================================
-   COVERFLOW KEYBOARD
-   ========================================================= */
-
-function handleGlobalCoverflowKeyboard(
-  event
-) {
-  const coverflow =
-    document.querySelector(
-      "#coverflowTrack"
-    );
-
-  if (!coverflow) return;
-
-  if (
-    event.defaultPrevented
-  ) {
-    return;
-  }
-
-  if (
-    event.target &&
-    (
-      event.target.tagName === "INPUT" ||
-      event.target.tagName === "TEXTAREA" ||
-      event.target.tagName === "SELECT" ||
-      event.target.isContentEditable
-    )
-  ) {
-    return;
-  }
-
-  /*
-    Do not hijack browser/application shortcuts.
-  */
-  if (
-    event.ctrlKey ||
-    event.metaKey ||
-    event.altKey
-  ) {
-    return;
-  }
-
-  if (event.key === "ArrowRight") {
-    event.preventDefault();
-    nextCoverflow();
-  }
-
-  if (event.key === "ArrowLeft") {
-    event.preventDefault();
-    previousCoverflow();
-  }
-
-  if (event.key === "Home") {
-    event.preventDefault();
-    goToCoverflow(0);
-  }
-
-  if (event.key === "End") {
-    event.preventDefault();
-
-    const lastIndex =
-      FEELFRAME.coverflow.stories.length -
-      1;
-
-    if (lastIndex >= 0) {
-      goToCoverflow(lastIndex);
+  window.requestAnimationFrame(
+    () => {
+      coverflow.suppressClick =
+        false;
     }
-  }
+  );
 }
 
 /* =========================================================
    COVERFLOW TOUCH FALLBACK
    ========================================================= */
 
-/*
-  Kept as a compatibility fallback for browsers
-  where Pointer Events are unavailable.
-*/
+function initializeCoverflowTouchFallback(
+  track
+) {
+  if (
+    !track ||
+    FEELFRAME.coverflow
+      .touchFallbackInitialized
+  ) {
+    return;
+  }
+
+  track.addEventListener(
+    "touchstart",
+    handleCoverflowTouchStart,
+    {
+      passive: true
+    }
+  );
+
+  track.addEventListener(
+    "touchend",
+    handleCoverflowTouchEnd,
+    {
+      passive: true
+    }
+  );
+
+  track.addEventListener(
+    "touchcancel",
+    handleCoverflowTouchCancel,
+    {
+      passive: true
+    }
+  );
+
+  FEELFRAME.coverflow
+    .touchFallbackInitialized =
+    true;
+}
+
 function handleCoverflowTouchStart(
   event
 ) {
@@ -885,17 +1053,23 @@ function handleCoverflowTouchStart(
     return;
   }
 
+  const touch =
+    event.changedTouches[0];
+
   FEELFRAME.coverflow.startX =
-    event.changedTouches[0].clientX;
+    touch.clientX;
 
   FEELFRAME.coverflow.startY =
-    event.changedTouches[0].clientY;
+    touch.clientY;
 
   FEELFRAME.coverflow.dragging =
     true;
 
   FEELFRAME.coverflow.moved =
     false;
+
+  FEELFRAME.coverflow
+    .suppressClick = false;
 }
 
 function handleCoverflowTouchEnd(
@@ -918,25 +1092,35 @@ function handleCoverflowTouchEnd(
     return;
   }
 
+  const touch =
+    event.changedTouches[0];
+
   const endX =
-    event.changedTouches[0].clientX;
+    touch.clientX;
 
   const endY =
-    event.changedTouches[0].clientY;
+    touch.clientY;
 
   const differenceX =
-    endX - coverflow.startX;
+    endX -
+    coverflow.startX;
 
   const differenceY =
-    endY - coverflow.startY;
+    endY -
+    coverflow.startY;
 
   const horizontalMovement =
-    Math.abs(differenceX);
+    Math.abs(
+      differenceX
+    );
 
   const verticalMovement =
-    Math.abs(differenceY);
+    Math.abs(
+      differenceY
+    );
 
-  coverflow.dragging = false;
+  coverflow.dragging =
+    false;
 
   if (
     horizontalMovement < 45 ||
@@ -949,15 +1133,111 @@ function handleCoverflowTouchEnd(
   coverflow.suppressClick =
     true;
 
-  if (differenceX < 0) {
+  if (
+    differenceX < 0
+  ) {
     nextCoverflow();
   } else {
     previousCoverflow();
   }
 
-  window.requestAnimationFrame(() => {
-    coverflow.suppressClick = false;
-  });
+  window.requestAnimationFrame(
+    () => {
+      coverflow.suppressClick =
+        false;
+    }
+  );
+}
+
+function handleCoverflowTouchCancel() {
+  resetCoverflowPointerState();
+}
+
+/* =========================================================
+   COVERFLOW KEYBOARD
+   ========================================================= */
+
+function handleGlobalCoverflowKeyboard(
+  event
+) {
+  const coverflow =
+    document.querySelector(
+      "#coverflowTrack"
+    );
+
+  if (!coverflow) {
+    return;
+  }
+
+  if (
+    event.defaultPrevented
+  ) {
+    return;
+  }
+
+  if (
+    event.target &&
+    (
+      event.target.tagName ===
+        "INPUT" ||
+      event.target.tagName ===
+        "TEXTAREA" ||
+      event.target.tagName ===
+        "SELECT" ||
+      event.target.isContentEditable
+    )
+  ) {
+    return;
+  }
+
+  if (
+    event.ctrlKey ||
+    event.metaKey ||
+    event.altKey
+  ) {
+    return;
+  }
+
+  if (
+    event.key ===
+    "ArrowRight"
+  ) {
+    event.preventDefault();
+    nextCoverflow();
+  }
+
+  if (
+    event.key ===
+    "ArrowLeft"
+  ) {
+    event.preventDefault();
+    previousCoverflow();
+  }
+
+  if (
+    event.key === "Home"
+  ) {
+    event.preventDefault();
+    goToCoverflow(0);
+  }
+
+  if (
+    event.key === "End"
+  ) {
+    event.preventDefault();
+
+    const lastIndex =
+      FEELFRAME.coverflow
+        .stories.length - 1;
+
+    if (
+      lastIndex >= 0
+    ) {
+      goToCoverflow(
+        lastIndex
+      );
+    }
+  }
 }
 
 /* =========================================================
@@ -970,7 +1250,9 @@ function renderCoverflowDots() {
       "#coverflowDots"
     );
 
-  if (!container) return;
+  if (!container) {
+    return;
+  }
 
   const stories =
     FEELFRAME.coverflow.stories;
@@ -1028,6 +1310,11 @@ function updateCoverflowDots() {
         active
       );
 
+      dot.classList.toggle(
+        "is-active",
+        active
+      );
+
       dot.setAttribute(
         "aria-current",
         active
@@ -1048,9 +1335,13 @@ function renderHomeBoard() {
       "#homeStoryGrid"
     );
 
-  if (!grid) return;
+  if (!grid) {
+    return;
+  }
 
-  if (!FEELFRAME.stories.length) {
+  if (
+    !FEELFRAME.stories.length
+  ) {
     renderEmptyState(
       grid,
       "No visual stories yet.",
@@ -1068,10 +1359,24 @@ function renderHomeBoard() {
   initializeStoryCardLinks(
     grid
   );
+
+  initializeImageHandlers(
+    grid
+  );
 }
 
-/* STORY CARD */
-function createStoryCard(story) {
+/* =========================================================
+   STORY CARD
+   ========================================================= */
+
+function createStoryCard(
+  story
+) {
+  const imageURL =
+    getSafeImageURL(
+      story.image
+    );
+
   return `
     <article
       class="story-card"
@@ -1086,18 +1391,30 @@ function createStoryCard(story) {
       )}"
     >
       <div class="story-card-image">
-        <img
-          src="${escapeHTML(
-            story.image || ""
-          )}"
-          alt="${escapeHTML(
-            story.title ||
-            "FeelFrame visual"
-          )}"
-          loading="lazy"
-          draggable="false"
-          onerror="handleImageError(this)"
-        >
+        ${
+          imageURL
+            ? `
+              <img
+                src="${escapeHTML(
+                  imageURL
+                )}"
+                alt="${escapeHTML(
+                  story.title ||
+                  "FeelFrame visual"
+                )}"
+                loading="lazy"
+                draggable="false"
+                data-feelframe-image="true"
+              >
+            `
+            : `
+              <div
+                class="image-error"
+                role="img"
+                aria-label="FeelFrame visual unavailable"
+              ></div>
+            `
+        }
 
         <div class="story-card-overlay"></div>
       </div>
@@ -1136,8 +1453,14 @@ function createStoryCard(story) {
 function initializeStoryCardLinks(
   container
 ) {
+  if (!container) {
+    return;
+  }
+
   container
-    .querySelectorAll(".story-card")
+    .querySelectorAll(
+      ".story-card"
+    )
     .forEach(card => {
       const open = () => {
         openStory(
@@ -1159,9 +1482,14 @@ function initializeStoryCardLinks(
     });
 }
 
-/* STORY ROUTING */
+/* =========================================================
+   STORY ROUTING
+   ========================================================= */
+
 function openStory(storyId) {
-  if (!storyId) return;
+  if (!storyId) {
+    return;
+  }
 
   window.location.href =
     `story.html?id=${encodeURIComponent(
@@ -1179,7 +1507,9 @@ function initializeExplore() {
       "#exploreStoryGrid"
     );
 
-  if (!grid) return;
+  if (!grid) {
+    return;
+  }
 
   initializeExploreFilters();
   initializeExploreSearch();
@@ -1189,41 +1519,58 @@ function initializeExplore() {
   );
 }
 
-/* DYNAMIC EXPLORE FILTERS */
+/* =========================================================
+   DYNAMIC EXPLORE FILTERS
+   ========================================================= */
+
 function initializeExploreFilters() {
   const filterButtons =
     document.querySelectorAll(
       ".filter-button"
     );
 
-  filterButtons.forEach(button => {
-    button.onclick = () => {
-      filterButtons.forEach(item => {
-        item.classList.remove(
+  filterButtons.forEach(
+    button => {
+      button.onclick = () => {
+        filterButtons.forEach(
+          item => {
+            item.classList.remove(
+              "active"
+            );
+
+            item.classList.remove(
+              "is-active"
+            );
+          }
+        );
+
+        button.classList.add(
           "active"
         );
-      });
 
-      button.classList.add(
-        "active"
-      );
+        button.classList.add(
+          "is-active"
+        );
 
-      FEELFRAME.filters.campaign =
-        button.dataset.filter ||
-        "all";
+        FEELFRAME.filters.campaign =
+          button.dataset.filter ||
+          "all";
 
-      renderExploreStories(
-        getFilteredStories()
-      );
-    };
-  });
+        renderExploreStories(
+          getFilteredStories()
+        );
+      };
+    }
+  );
 
   const campaignContainer =
     document.querySelector(
       "#campaignFilters"
     );
 
-  if (campaignContainer) {
+  if (
+    campaignContainer
+  ) {
     renderDynamicCampaignFilters(
       campaignContainer
     );
@@ -1234,7 +1581,9 @@ function initializeExploreFilters() {
       "#emotionFilters"
     );
 
-  if (emotionContainer) {
+  if (
+    emotionContainer
+  ) {
     renderDynamicEmotionFilters(
       emotionContainer
     );
@@ -1253,7 +1602,7 @@ function renderDynamicCampaignFilters(
   container.innerHTML = `
     <button
       type="button"
-      class="filter-button active"
+      class="filter-button active is-active"
       data-filter="all"
     >
       All
@@ -1292,10 +1641,18 @@ function renderDynamicCampaignFilters(
             item.classList.remove(
               "active"
             );
+
+            item.classList.remove(
+              "is-active"
+            );
           });
 
         button.classList.add(
           "active"
+        );
+
+        button.classList.add(
+          "is-active"
         );
 
         FEELFRAME.filters.campaign =
@@ -1321,7 +1678,7 @@ function renderDynamicEmotionFilters(
   container.innerHTML = `
     <button
       type="button"
-      class="filter-button active"
+      class="filter-button active is-active"
       data-emotion-filter="all"
     >
       All emotions
@@ -1360,10 +1717,18 @@ function renderDynamicEmotionFilters(
             item.classList.remove(
               "active"
             );
+
+            item.classList.remove(
+              "is-active"
+            );
           });
 
         button.classList.add(
           "active"
+        );
+
+        button.classList.add(
+          "is-active"
         );
 
         FEELFRAME.filters.emotion =
@@ -1378,14 +1743,26 @@ function renderDynamicEmotionFilters(
     });
 }
 
-/* EXPLORE SEARCH */
+/* =========================================================
+   EXPLORE SEARCH
+   ========================================================= */
+
 function initializeExploreSearch() {
   const search =
     document.querySelector(
       "#exploreSearch"
     );
 
-  if (!search) return;
+  if (!search) {
+    return;
+  }
+
+  if (
+    search.dataset.initialized ===
+    "true"
+  ) {
+    return;
+  }
 
   search.addEventListener(
     "input",
@@ -1398,9 +1775,15 @@ function initializeExploreSearch() {
       );
     }
   );
+
+  search.dataset.initialized =
+    "true";
 }
 
-/* FILTER ENGINE */
+/* =========================================================
+   FILTER ENGINE
+   ========================================================= */
+
 function getFilteredStories() {
   const campaign =
     normalize(
@@ -1471,7 +1854,10 @@ function getFilteredStories() {
   );
 }
 
-/* EXPLORE RENDERING */
+/* =========================================================
+   EXPLORE RENDERING
+   ========================================================= */
+
 function renderExploreStories(
   stories
 ) {
@@ -1480,7 +1866,9 @@ function renderExploreStories(
       "#exploreStoryGrid"
     );
 
-  if (!grid) return;
+  if (!grid) {
+    return;
+  }
 
   const count =
     document.querySelector(
@@ -1507,6 +1895,10 @@ function renderExploreStories(
     initializeStoryCardLinks(
       grid
     );
+
+    initializeImageHandlers(
+      grid
+    );
   }
 
   if (count) {
@@ -1519,15 +1911,26 @@ function renderExploreStories(
   }
 
   if (activeFilter) {
-    const activeButton =
-      document.querySelector(
-        ".filter-button.active"
-      );
+    const campaign =
+      FEELFRAME.filters.campaign;
 
-    activeFilter.textContent =
-      activeButton
-        ? activeButton.textContent.trim()
-        : "All";
+    const emotion =
+      FEELFRAME.filters.emotion;
+
+    if (
+      emotion !== "all"
+    ) {
+      activeFilter.textContent =
+        FEELFRAME.filters.emotion;
+    } else if (
+      campaign !== "all"
+    ) {
+      activeFilter.textContent =
+        FEELFRAME.filters.campaign;
+    } else {
+      activeFilter.textContent =
+        "All";
+    }
   }
 }
 
@@ -1541,7 +1944,9 @@ function initializeStory() {
       "#storyContent"
     );
 
-  if (!container) return;
+  if (!container) {
+    return;
+  }
 
   const params =
     new URLSearchParams(
@@ -1570,9 +1975,16 @@ function initializeStory() {
     container,
     story
   );
+
+  initializeImageHandlers(
+    container
+  );
 }
 
-/* STORY RENDERING */
+/* =========================================================
+   STORY RENDERING
+   ========================================================= */
+
 function renderStory(
   container,
   story
@@ -1592,20 +2004,37 @@ function renderStory(
       story.selarUrl
     );
 
+  const imageURL =
+    getSafeImageURL(
+      story.image
+    );
+
   container.innerHTML = `
     <div class="story-layout">
       <div class="story-visual">
-        <img
-          src="${escapeHTML(
-            story.image || ""
-          )}"
-          alt="${escapeHTML(
-            story.title ||
-            "FeelFrame visual"
-          )}"
-          draggable="false"
-          onerror="handleImageError(this)"
-        >
+        ${
+          imageURL
+            ? `
+              <img
+                src="${escapeHTML(
+                  imageURL
+                )}"
+                alt="${escapeHTML(
+                  story.title ||
+                  "FeelFrame visual"
+                )}"
+                draggable="false"
+                data-feelframe-image="true"
+              >
+            `
+            : `
+              <div
+                class="image-error"
+                role="img"
+                aria-label="FeelFrame visual unavailable"
+              ></div>
+            `
+        }
       </div>
 
       <article class="story-copy">
@@ -1688,7 +2117,10 @@ function renderStory(
   `;
 }
 
-/* STORY META */
+/* =========================================================
+   STORY META
+   ========================================================= */
+
 function createStoryMeta(
   story
 ) {
@@ -1716,7 +2148,10 @@ function createStoryMeta(
   `;
 }
 
-/* PROMPT PRODUCT */
+/* =========================================================
+   PROMPT PRODUCT
+   ========================================================= */
+
 function createPromptProduct(
   story,
   oldPrice,
@@ -1764,7 +2199,7 @@ function createPromptProduct(
         }
 
         ${
-          currentPrice
+          currentPrice > 0
             ? `
               <span
                 class="prompt-current-price"
@@ -1814,7 +2249,10 @@ function createPromptProduct(
   `;
 }
 
-/* STORY NOT FOUND */
+/* =========================================================
+   STORY NOT FOUND
+   ========================================================= */
+
 function renderStoryNotFound(
   container
 ) {
@@ -1851,7 +2289,9 @@ function initializeCreate() {
       "#feelFrameForm"
     );
 
-  if (!form) return;
+  if (!form) {
+    return;
+  }
 
   if (
     form.dataset.initialized ===
@@ -1864,6 +2304,7 @@ function initializeCreate() {
     "submit",
     event => {
       event.preventDefault();
+
       handleCreateSubmission(
         form
       );
@@ -1874,7 +2315,10 @@ function initializeCreate() {
     "true";
 }
 
-/* CHOICE CARDS */
+/* =========================================================
+   CHOICE CARDS
+   ========================================================= */
+
 function initializeChoiceCards() {
   document
     .querySelectorAll(
@@ -1886,7 +2330,16 @@ function initializeChoiceCards() {
           "input"
         );
 
-      if (!input) return;
+      if (!input) {
+        return;
+      }
+
+      if (
+        card.dataset.initialized ===
+        "true"
+      ) {
+        return;
+      }
 
       card.addEventListener(
         "click",
@@ -1895,7 +2348,8 @@ function initializeChoiceCards() {
             event.target !==
             input
           ) {
-            input.checked = true;
+            input.checked =
+              true;
           }
 
           updateChoiceGroup(
@@ -1918,6 +2372,9 @@ function initializeChoiceCards() {
           input
         );
       }
+
+      card.dataset.initialized =
+        "true";
     });
 }
 
@@ -1926,6 +2383,10 @@ function updateChoiceGroup(
 ) {
   const name =
     input.name;
+
+  if (!name) {
+    return;
+  }
 
   document
     .querySelectorAll(
@@ -1939,10 +2400,17 @@ function updateChoiceGroup(
           ".choice-card"
         );
 
-      if (!card) return;
+      if (!card) {
+        return;
+      }
 
       card.classList.toggle(
         "selected",
+        item.checked
+      );
+
+      card.classList.toggle(
+        "is-selected",
         item.checked
       );
     });
@@ -1976,6 +2444,13 @@ function initializeReferenceUpload() {
     return;
   }
 
+  if (
+    input.dataset.initialized ===
+    "true"
+  ) {
+    return;
+  }
+
   input.addEventListener(
     "change",
     () => {
@@ -2005,6 +2480,10 @@ function initializeReferenceUpload() {
           "active"
         );
 
+        previewImage.removeAttribute(
+          "src"
+        );
+
         return;
       }
 
@@ -2013,6 +2492,14 @@ function initializeReferenceUpload() {
 
       reader.onload =
         event => {
+          if (
+            typeof event.target
+              ?.result !==
+            "string"
+          ) {
+            return;
+          }
+
           previewImage.src =
             event.target.result;
 
@@ -2038,6 +2525,9 @@ function initializeReferenceUpload() {
       );
     }
   );
+
+  input.dataset.initialized =
+    "true";
 }
 
 /* =========================================================
@@ -2148,7 +2638,9 @@ function handleCreateSubmission(
     );
   }
 
-  if (missingFields.length) {
+  if (
+    missingFields.length
+  ) {
     alert(
       `Please complete:\n\n${missingFields.join(
         "\n"
@@ -2222,11 +2714,13 @@ function handleCreateSubmission(
       whatsappMessage
     )}`;
 
-  window.open(
-    whatsappURL,
-    "_blank",
-    "noopener,noreferrer"
-  );
+  /*
+    Direct navigation is more reliable than
+    window.open() on mobile browsers and
+    avoids popup blocking.
+  */
+  window.location.href =
+    whatsappURL;
 }
 
 /* =========================================================
@@ -2257,7 +2751,10 @@ function generateCreativeDirection({
   };
 }
 
-/* EMOTION TRANSLATOR */
+/* =========================================================
+   EMOTION TRANSLATOR
+   ========================================================= */
+
 function emotionTranslator(
   feeling
 ) {
@@ -2302,7 +2799,10 @@ function emotionTranslator(
   );
 }
 
-/* CONDITION TRANSLATOR */
+/* =========================================================
+   CONDITION TRANSLATOR
+   ========================================================= */
+
 function conditionTranslator(
   feeling,
   context
@@ -2352,7 +2852,10 @@ function conditionTranslator(
   )}`;
 }
 
-/* STYLE TRANSLATOR */
+/* =========================================================
+   STYLE TRANSLATOR
+   ========================================================= */
+
 function styleTranslator(
   style
 ) {
@@ -2621,7 +3124,10 @@ ${commands.join("\n")}
 Please create my FeelFrame visual.`;
 }
 
-/* FORM HELPERS */
+/* =========================================================
+   FORM HELPERS
+   ========================================================= */
+
 function getFormValue(
   formData,
   name
@@ -2636,7 +3142,9 @@ function getFormValue(
     return "";
   }
 
-  return String(value).trim();
+  return String(
+    value
+  ).trim();
 }
 
 /* =========================================================
@@ -2739,7 +3247,8 @@ function truncate(
   return (
     text
       .slice(0, length)
-      .trim() + "…"
+      .trim() +
+    "…"
   );
 }
 
@@ -2750,10 +3259,22 @@ function truncate(
 function isValidPurchaseURL(
   url
 ) {
-  if (!url) return false;
+  if (
+    typeof url !==
+    "string"
+  ) {
+    return false;
+  }
+
+  const cleanURL =
+    url.trim();
+
+  if (!cleanURL) {
+    return false;
+  }
 
   if (
-    url ===
+    cleanURL ===
     "REAL-SELAR-LINK"
   ) {
     return false;
@@ -2761,7 +3282,7 @@ function isValidPurchaseURL(
 
   try {
     const parsed =
-      new URL(url);
+      new URL(cleanURL);
 
     return (
       parsed.protocol ===
@@ -2776,15 +3297,108 @@ function isValidPurchaseURL(
 }
 
 /* =========================================================
+   IMAGE URL VALIDATION
+   ========================================================= */
+
+function getSafeImageURL(
+  url
+) {
+  if (
+    typeof url !==
+    "string"
+  ) {
+    return "";
+  }
+
+  const cleanURL =
+    url.trim();
+
+  if (!cleanURL) {
+    return "";
+  }
+
+  /*
+    Reject obvious placeholder values.
+  */
+  if (
+    cleanURL.includes(
+      "https://res.cloudinary.com/..."
+    ) ||
+    cleanURL ===
+      "IMAGE_URL" ||
+    cleanURL ===
+      "IMAGE-URL" ||
+    cleanURL ===
+      "YOUR_IMAGE_URL"
+  ) {
+    return "";
+  }
+
+  try {
+    const parsed =
+      new URL(cleanURL);
+
+    if (
+      parsed.protocol !==
+      "https:" &&
+      parsed.protocol !==
+      "http:"
+    ) {
+      return "";
+    }
+
+    return parsed.href;
+  } catch {
+    return "";
+  }
+}
+
+/* =========================================================
    IMAGE ERROR HANDLING
    ========================================================= */
+
+function initializeImageHandlers(
+  container = document
+) {
+  if (!container) {
+    return;
+  }
+
+  container
+    .querySelectorAll(
+      "img[data-feelframe-image='true']"
+    )
+    .forEach(image => {
+      if (
+        image.dataset.errorBound ===
+        "true"
+      ) {
+        return;
+      }
+
+      image.addEventListener(
+        "error",
+        () => {
+          handleImageError(
+            image
+          );
+        },
+        {
+          once: true
+        }
+      );
+
+      image.dataset.errorBound =
+        "true";
+    });
+}
 
 function handleImageError(
   image
 ) {
-  if (!image) return;
-
-  image.onerror = null;
+  if (!image) {
+    return;
+  }
 
   image.classList.add(
     "image-error"
@@ -2792,6 +3406,10 @@ function handleImageError(
 
   image.alt =
     "FeelFrame visual unavailable";
+
+  image.removeAttribute(
+    "src"
+  );
 }
 
 /* =========================================================
@@ -2803,7 +3421,9 @@ function renderEmptyState(
   title,
   message
 ) {
-  if (!container) return;
+  if (!container) {
+    return;
+  }
 
   container.innerHTML = `
     <div class="empty-state">
@@ -2869,7 +3489,9 @@ function showGlobalError() {
           selector
         );
 
-      if (!element) return;
+      if (!element) {
+        return;
+      }
 
       renderEmptyState(
         element,
