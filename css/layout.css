@@ -1,0 +1,1020 @@
+/* =========================================================
+   FeelFrame™ — Layout System
+   layout.css
+   Requires: variables.css + base.css
+   ========================================================= */
+
+
+/* ---------------------------------------------------------
+   01. PAGE SHELL
+   --------------------------------------------------------- */
+
+body {
+  position: relative;
+  width: 100%;
+  min-width: 320px;
+}
+
+.page {
+  position: relative;
+  width: 100%;
+  min-height: 100vh;
+}
+
+
+/* ---------------------------------------------------------
+   02. GLOBAL CONTAINER
+   --------------------------------------------------------- */
+
+.container {
+  width: min(
+    calc(100% - (var(--page-gutter) * 2)),
+    var(--max-width)
+  );
+
+  margin-inline: auto;
+}
+
+
+/* Wider container when a section needs to breathe */
+
+.container--wide {
+  width: min(
+    calc(100% - (var(--page-gutter) * 2)),
+    1600px
+  );
+
+  margin-inline: auto;
+}
+
+
+/* Narrow editorial reading container */
+
+.container--reading {
+  width: min(
+    calc(100% - (var(--page-gutter) * 2)),
+    var(--reading-width)
+  );
+
+  margin-inline: auto;
+}
+
+
+/* Small/narrow content container */
+
+.container--narrow {
+  width: min(
+    calc(100% - (var(--page-gutter) * 2)),
+    var(--narrow-width)
+  );
+
+  margin-inline: auto;
+}
+
+
+/* ---------------------------------------------------------
+   03. GLOBAL SECTION
+   --------------------------------------------------------- */
+
+.section {
+  position: relative;
+  width: 100%;
+
+  padding-block: var(--section-space);
+}
+
+.section--small {
+  padding-block: var(--section-space-small);
+}
+
+.section--top {
+  padding-top: var(--section-space);
+  padding-bottom: 0;
+}
+
+.section--bottom {
+  padding-top: 0;
+  padding-bottom: var(--section-space);
+}
+
+.section--flush {
+  padding-block: 0;
+}
+
+
+/* ---------------------------------------------------------
+   04. SECTION INNER
+   --------------------------------------------------------- */
+
+.section__inner {
+  position: relative;
+  width: 100%;
+}
+
+.section__header {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: var(--space-8);
+
+  margin-bottom: var(--space-10);
+}
+
+.section__header--stack {
+  display: block;
+}
+
+.section__heading {
+  max-width: 900px;
+}
+
+.section__description {
+  max-width: var(--reading-width);
+
+  margin-top: var(--space-4);
+
+  color: var(--color-muted);
+}
+
+.section__action {
+  flex-shrink: 0;
+}
+
+
+/* ---------------------------------------------------------
+   05. SITE HEADER
+   --------------------------------------------------------- */
+
+.site-header {
+  position: sticky;
+  top: 0;
+  z-index: var(--z-header);
+
+  width: 100%;
+  height: var(--nav-height);
+
+  background: rgba(244, 242, 237, 0.88);
+
+  border-bottom: var(--border-soft);
+
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+}
+
+.site-header__inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  width: min(
+    calc(100% - (var(--page-gutter) * 2)),
+    var(--max-width)
+  );
+
+  height: 100%;
+
+  margin-inline: auto;
+}
+
+
+/* ---------------------------------------------------------
+   06. BRAND
+   --------------------------------------------------------- */
+
+.brand {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-3);
+
+  flex-shrink: 0;
+
+  color: var(--color-ink);
+
+  font-family: var(--font-sans);
+  font-size: var(--text-base);
+  font-weight: var(--weight-semibold);
+
+  letter-spacing: -0.02em;
+
+  transition:
+    opacity var(--duration-fast) ease;
+}
+
+.brand:hover {
+  opacity: 0.68;
+}
+
+.brand:focus-visible {
+  opacity: 1;
+}
+
+.brand-mark {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 30px;
+  height: 30px;
+
+  border-radius: var(--radius-circle);
+
+  background: var(--color-ink);
+  color: var(--color-bg);
+
+  font-family: var(--font-serif);
+  font-size: 0.75rem;
+  line-height: 1;
+}
+
+
+/* ---------------------------------------------------------
+   07. DESKTOP HEADER NAVIGATION
+   --------------------------------------------------------- */
+
+.header-nav {
+  display: flex;
+  align-items: center;
+
+  gap: var(--space-7);
+
+  height: 100%;
+}
+
+.header-nav a {
+  position: relative;
+
+  display: inline-flex;
+  align-items: center;
+
+  height: 100%;
+
+  color: var(--color-muted);
+
+  font-size: var(--text-sm);
+  font-weight: var(--weight-medium);
+
+  transition:
+    color var(--duration-fast) ease;
+}
+
+.header-nav a::after {
+  content: "";
+
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+
+  height: 1px;
+
+  background: currentColor;
+
+  transform: scaleX(0);
+  transform-origin: right;
+
+  transition:
+    transform var(--duration-standard) var(--ease-standard);
+}
+
+.header-nav a:hover {
+  color: var(--color-ink);
+}
+
+.header-nav a:hover::after,
+.header-nav a[aria-current="page"]::after {
+  transform: scaleX(1);
+  transform-origin: left;
+}
+
+.header-nav a[aria-current="page"] {
+  color: var(--color-ink);
+}
+
+
+/* ---------------------------------------------------------
+   08. HEADER ACTION AREA
+   --------------------------------------------------------- */
+
+.site-header__actions {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+
+/* ---------------------------------------------------------
+   09. MAIN CONTENT
+   --------------------------------------------------------- */
+
+main {
+  position: relative;
+  width: 100%;
+}
+
+
+/* Prevent anchor targets from hiding beneath sticky header */
+
+[id] {
+  scroll-margin-top: calc(var(--nav-height) + var(--space-6));
+}
+
+
+/* ---------------------------------------------------------
+   10. HOME PAGE STRUCTURE
+   --------------------------------------------------------- */
+
+.home-page {
+  position: relative;
+  width: 100%;
+}
+
+.home-page .hero {
+  min-height: 0;
+}
+
+
+/* ---------------------------------------------------------
+   11. PAGE INTRO
+   --------------------------------------------------------- */
+
+.page-intro {
+  position: relative;
+
+  width: 100%;
+
+  padding-top: clamp(
+    56px,
+    8vw,
+    112px
+  );
+
+  padding-bottom: var(--space-12);
+}
+
+.page-intro__inner {
+  display: grid;
+
+  grid-template-columns:
+    minmax(0, 1.4fr)
+    minmax(260px, 0.6fr);
+
+  gap: var(--space-12);
+
+  align-items: end;
+}
+
+.page-intro__content {
+  max-width: 900px;
+}
+
+.page-intro__eyebrow {
+  margin-bottom: var(--space-5);
+}
+
+.page-intro__description {
+  max-width: var(--reading-width);
+
+  margin-top: var(--space-6);
+}
+
+.page-intro__aside {
+  justify-self: end;
+
+  max-width: 320px;
+}
+
+
+/* ---------------------------------------------------------
+   12. TWO-COLUMN PAGE STRUCTURE
+   --------------------------------------------------------- */
+
+.split-layout {
+  display: grid;
+
+  grid-template-columns:
+    minmax(0, 1fr)
+    minmax(280px, 0.42fr);
+
+  gap: clamp(
+    var(--space-10),
+    7vw,
+    var(--space-17)
+  );
+
+  align-items: start;
+}
+
+.split-layout--equal {
+  grid-template-columns:
+    repeat(2, minmax(0, 1fr));
+}
+
+.split-layout--reverse > :first-child {
+  order: 2;
+}
+
+.split-layout--reverse > :last-child {
+  order: 1;
+}
+
+
+/* ---------------------------------------------------------
+   13. CONTENT / SIDEBAR
+   --------------------------------------------------------- */
+
+.content-layout {
+  display: grid;
+
+  grid-template-columns:
+    minmax(0, 1fr)
+    minmax(240px, 320px);
+
+  gap: var(--space-12);
+
+  align-items: start;
+}
+
+.content-layout__main {
+  min-width: 0;
+}
+
+.content-layout__aside {
+  position: sticky;
+  top: calc(
+    var(--nav-height) + var(--space-8)
+  );
+
+  min-width: 0;
+}
+
+
+/* ---------------------------------------------------------
+   14. FULL-BLEED SECTION
+   --------------------------------------------------------- */
+
+.full-bleed {
+  width: 100%;
+}
+
+.full-bleed > .container {
+  width: min(
+    calc(100% - (var(--page-gutter) * 2)),
+    var(--max-width)
+  );
+}
+
+
+/* ---------------------------------------------------------
+   15. FOOTER
+   --------------------------------------------------------- */
+
+.site-footer {
+  position: relative;
+
+  width: 100%;
+
+  padding-top: var(--footer-padding);
+  padding-bottom: calc(
+    var(--footer-padding) + var(--safe-bottom)
+  );
+
+  background: var(--color-dark);
+  color: var(--color-on-dark);
+}
+
+.site-footer__inner {
+  display: grid;
+
+  grid-template-columns:
+    minmax(0, 1.4fr)
+    repeat(2, minmax(140px, 0.5fr));
+
+  gap: var(--space-12);
+}
+
+.site-footer__brand {
+  max-width: 420px;
+}
+
+.site-footer__description {
+  max-width: 380px;
+
+  margin-top: var(--space-5);
+
+  color: var(--color-on-dark-muted);
+}
+
+.site-footer__group {
+  min-width: 0;
+}
+
+.site-footer__label {
+  margin-bottom: var(--space-5);
+
+  color: var(--color-on-dark-subtle);
+
+  font-size: var(--text-xs);
+  font-weight: var(--weight-semibold);
+
+  letter-spacing: var(--tracking-caps);
+  text-transform: uppercase;
+}
+
+.site-footer__links {
+  display: grid;
+  gap: var(--space-3);
+}
+
+.site-footer__links a {
+  width: fit-content;
+
+  color: var(--color-on-dark-muted);
+
+  font-size: var(--text-sm);
+
+  transition:
+    color var(--duration-fast) ease;
+}
+
+.site-footer__links a:hover {
+  color: var(--color-on-dark);
+}
+
+.site-footer__bottom {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  gap: var(--space-6);
+
+  margin-top: var(--space-13);
+  padding-top: var(--space-6);
+
+  border-top:
+    1px solid rgba(255, 255, 255, 0.10);
+}
+
+.site-footer__copyright {
+  color: var(--color-on-dark-subtle);
+
+  font-size: var(--text-xs);
+}
+
+
+/* ---------------------------------------------------------
+   16. MOBILE NAVIGATION
+   --------------------------------------------------------- */
+
+.mobile-nav {
+  display: none;
+}
+
+
+/* ---------------------------------------------------------
+   17. MOBILE NAV INNER
+   --------------------------------------------------------- */
+
+.mobile-nav__inner {
+  display: grid;
+
+  grid-template-columns:
+    repeat(3, minmax(0, 1fr));
+
+  align-items: stretch;
+
+  width: 100%;
+  height: var(--mobile-nav-height);
+
+  padding:
+    var(--space-2)
+    var(--page-gutter-mobile)
+    calc(
+      var(--space-2) +
+      var(--safe-bottom)
+    );
+}
+
+.mobile-nav__item {
+  display: flex;
+  flex-direction: column;
+
+  align-items: center;
+  justify-content: center;
+
+  gap: 5px;
+
+  min-width: 0;
+
+  color: var(--color-muted);
+
+  font-size: var(--text-xs);
+  font-weight: var(--weight-medium);
+
+  transition:
+    color var(--duration-fast) ease;
+}
+
+.mobile-nav__item:hover,
+.mobile-nav__item[aria-current="page"] {
+  color: var(--color-ink);
+}
+
+.mobile-nav__icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 28px;
+  height: 28px;
+
+  font-size: 1rem;
+  line-height: 1;
+}
+
+
+/* ---------------------------------------------------------
+   18. MOBILE NAV SAFE SPACE
+   --------------------------------------------------------- */
+
+.has-mobile-nav {
+  padding-bottom: calc(
+    var(--mobile-nav-height) +
+    var(--safe-bottom)
+  );
+}
+
+
+/* ---------------------------------------------------------
+   19. OVERFLOW UTILITIES
+   --------------------------------------------------------- */
+
+.overflow-hidden {
+  overflow: hidden;
+}
+
+.overflow-x-hidden {
+  overflow-x: hidden;
+}
+
+.overflow-visible {
+  overflow: visible;
+}
+
+
+/* ---------------------------------------------------------
+   20. STACK UTILITIES
+   --------------------------------------------------------- */
+
+.stack {
+  display: flex;
+  flex-direction: column;
+}
+
+.stack--xs {
+  gap: var(--space-2);
+}
+
+.stack--sm {
+  gap: var(--space-4);
+}
+
+.stack--md {
+  gap: var(--space-6);
+}
+
+.stack--lg {
+  gap: var(--space-9);
+}
+
+.stack--xl {
+  gap: var(--space-12);
+}
+
+
+/* ---------------------------------------------------------
+   21. INLINE UTILITIES
+   --------------------------------------------------------- */
+
+.inline {
+  display: flex;
+  align-items: center;
+}
+
+.inline--sm {
+  gap: var(--space-3);
+}
+
+.inline--md {
+  gap: var(--space-5);
+}
+
+.inline--lg {
+  gap: var(--space-8);
+}
+
+
+/* ---------------------------------------------------------
+   22. RESPONSIVE — LARGE TABLET
+   --------------------------------------------------------- */
+
+@media (max-width: 1200px) {
+
+  .container,
+  .container--wide,
+  .container--reading,
+  .container--narrow,
+  .site-header__inner {
+    width: min(
+      calc(100% - (var(--page-gutter-tablet) * 2)),
+      var(--max-width)
+    );
+  }
+
+  .full-bleed > .container {
+    width: min(
+      calc(100% - (var(--page-gutter-tablet) * 2)),
+      var(--max-width)
+    );
+  }
+
+  .site-footer__inner {
+    grid-template-columns:
+      minmax(0, 1.2fr)
+      repeat(2, minmax(120px, 0.6fr));
+  }
+
+  .split-layout {
+    gap: var(--space-10);
+  }
+}
+
+
+/* ---------------------------------------------------------
+   23. RESPONSIVE — TABLET
+   --------------------------------------------------------- */
+
+@media (max-width: 900px) {
+
+  .page-intro__inner {
+    grid-template-columns: 1fr;
+    gap: var(--space-8);
+  }
+
+  .page-intro__aside {
+    justify-self: start;
+    max-width: 520px;
+  }
+
+  .split-layout,
+  .split-layout--equal {
+    grid-template-columns: 1fr;
+  }
+
+  .split-layout--reverse > :first-child,
+  .split-layout--reverse > :last-child {
+    order: initial;
+  }
+
+  .content-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .content-layout__aside {
+    position: static;
+  }
+
+  .site-footer__inner {
+    grid-template-columns:
+      repeat(2, minmax(0, 1fr));
+  }
+
+  .site-footer__brand {
+    grid-column: 1 / -1;
+  }
+}
+
+
+/* ---------------------------------------------------------
+   24. RESPONSIVE — MOBILE
+   --------------------------------------------------------- */
+
+@media (max-width: 700px) {
+
+  :root {
+    --nav-height: 64px;
+  }
+
+  html {
+    scroll-padding-top: var(--nav-height);
+  }
+
+  .container,
+  .container--wide,
+  .container--reading,
+  .container--narrow,
+  .site-header__inner {
+    width: calc(
+      100% - (var(--page-gutter-mobile) * 2)
+    );
+  }
+
+  .full-bleed > .container {
+    width: calc(
+      100% - (var(--page-gutter-mobile) * 2)
+    );
+  }
+
+  .site-header {
+    height: var(--nav-height);
+  }
+
+  .header-nav,
+  .site-header__actions {
+    display: none;
+  }
+
+  .site-header__inner {
+    justify-content: space-between;
+  }
+
+  .brand-mark {
+    width: 28px;
+    height: 28px;
+  }
+
+  .section__header {
+    display: block;
+
+    margin-bottom: var(--space-8);
+  }
+
+  .section__action {
+    margin-top: var(--space-5);
+  }
+
+  .page-intro {
+    padding-top: var(--space-12);
+    padding-bottom: var(--space-8);
+  }
+
+  .page-intro__inner {
+    gap: var(--space-7);
+  }
+
+  .site-footer {
+    padding-bottom: calc(
+      var(--footer-padding) +
+      var(--mobile-nav-height) +
+      var(--safe-bottom)
+    );
+  }
+
+  .site-footer__inner {
+    grid-template-columns: 1fr;
+    gap: var(--space-9);
+  }
+
+  .site-footer__brand {
+    grid-column: auto;
+  }
+
+  .site-footer__bottom {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .mobile-nav {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+
+    z-index: var(--z-mobile-nav);
+
+    display: block;
+
+    width: 100%;
+
+    padding-bottom: var(--safe-bottom);
+
+    background: var(--mobile-nav-background);
+
+    border-top: var(--border-soft);
+
+    box-shadow:
+      0 -8px 30px rgba(17, 17, 17, 0.06);
+
+    backdrop-filter: blur(var(--mobile-nav-blur));
+    -webkit-backdrop-filter: blur(var(--mobile-nav-blur));
+  }
+
+  .has-mobile-nav {
+    padding-bottom: calc(
+      var(--mobile-nav-height) +
+      var(--safe-bottom)
+    );
+  }
+
+  [id] {
+    scroll-margin-top: calc(
+      var(--nav-height) +
+      var(--space-5)
+    );
+  }
+}
+
+
+/* ---------------------------------------------------------
+   25. RESPONSIVE — SMALL MOBILE
+   --------------------------------------------------------- */
+
+@media (max-width: 390px) {
+
+  .mobile-nav__inner {
+    padding-left: 12px;
+    padding-right: 12px;
+  }
+
+  .mobile-nav__item {
+    font-size: 0.625rem;
+  }
+
+  .page-intro {
+    padding-top: var(--space-10);
+  }
+}
+
+
+/* ---------------------------------------------------------
+   26. LANDSCAPE MOBILE
+   --------------------------------------------------------- */
+
+@media (
+  max-width: 900px
+) and (
+  orientation: landscape
+) and (
+  max-height: 600px
+) {
+
+  .site-header {
+    position: relative;
+  }
+
+  .page-intro {
+    padding-top: var(--space-8);
+    padding-bottom: var(--space-8);
+  }
+
+  .mobile-nav {
+    display: none;
+  }
+
+  .has-mobile-nav {
+    padding-bottom: 0;
+  }
+}
+
+
+/* ---------------------------------------------------------
+   27. REDUCED MOTION
+   --------------------------------------------------------- */
+
+@media (prefers-reduced-motion: reduce) {
+
+  .header-nav a::after {
+    transition: none;
+  }
+
+  .brand,
+  .header-nav a,
+  .site-footer__links a,
+  .mobile-nav__item {
+    transition: none;
+  }
+}
+
+
+/* ---------------------------------------------------------
+   28. PRINT
+   --------------------------------------------------------- */
+
+@media print {
+
+  .site-header,
+  .mobile-nav {
+    display: none !important;
+  }
+
+  .site-footer {
+    padding: 32px 0;
+  }
+
+  .page {
+    min-height: auto;
+  }
+
+  .has-mobile-nav {
+    padding-bottom: 0;
+  }
+}
