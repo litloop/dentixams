@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+
   <meta charset="UTF-8">
 
   <meta
@@ -18,34 +19,47 @@
     content="#f4f2ed"
   >
 
-  <meta name="robots" content="index, follow">
+  <meta
+    name="robots"
+    content="index, follow"
+  >
 
   <title>FeelFrame™ — Some feelings deserve to be seen.</title>
 
-  <!-- Fonts are loaded by style.css if already defined there. -->
-  <link rel="stylesheet" href="style.css">
+  <link
+    rel="stylesheet"
+    href="style.css"
+  >
 
-  <!-- Prevent missing favicon requests from affecting the page. -->
   <link
     rel="icon"
     href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%E2%97%87%3C/text%3E%3C/svg%3E"
   >
+
 </head>
 
-<body>
+
+<body class="home-page">
 
   <!-- =========================================================
        FEELFRAME™
        HOMEPAGE
        ========================================================= -->
 
-  <div class="site-shell" id="app">
+  <div
+    class="site-shell"
+    id="app"
+  >
+
 
     <!-- =======================================================
          HEADER
          ======================================================= -->
 
-    <header class="site-header" id="site-header">
+    <header
+      class="site-header"
+      id="site-header"
+    >
 
       <div class="header-inner">
 
@@ -54,13 +68,17 @@
           href="index.html"
           aria-label="FeelFrame™ home"
         >
-          <span class="brand-name">FeelFrame™</span>
+          <span class="brand-name">
+            FeelFrame™
+          </span>
         </a>
+
 
         <nav
           class="desktop-nav"
           aria-label="Primary navigation"
         >
+
           <a
             class="nav-link is-active"
             href="index.html"
@@ -69,6 +87,7 @@
             Home
           </a>
 
+
           <a
             class="nav-link"
             href="explore.html"
@@ -76,12 +95,14 @@
             Explore
           </a>
 
+
           <a
             class="nav-link"
             href="create.html"
           >
             Create
           </a>
+
         </nav>
 
       </div>
@@ -95,6 +116,7 @@
 
     <main id="main-content">
 
+
       <!-- =====================================================
            HERO / EMOTIONAL ENTRY
            ===================================================== -->
@@ -107,9 +129,13 @@
 
         <div class="hero-inner">
 
-          <p class="eyebrow" id="hero-eyebrow">
+          <p
+            class="eyebrow"
+            id="hero-eyebrow"
+          >
             FEELFRAME™
           </p>
+
 
           <h1
             class="hero-title"
@@ -118,6 +144,7 @@
             Some feelings<br>
             deserve to be seen.
           </h1>
+
 
           <div class="hero-action">
 
@@ -144,37 +171,16 @@
       <section
         class="featured-section"
         id="featured"
-        aria-labelledby="featured-title"
+        aria-label="Featured visual stories"
       >
-
-        <div class="section-heading">
-
-          <div class="section-heading-copy">
-
-            <p class="section-kicker">
-              FEATURED
-            </p>
-
-            <h2
-              class="section-title"
-              id="featured-title"
-            >
-              Visual stories
-            </h2>
-
-          </div>
-
-        </div>
-
-
-        <!-- Coverflow viewport -->
 
         <div
           class="coverflow"
           id="coverflow"
           tabindex="0"
-          aria-label="Featured visual stories"
+          role="region"
           aria-roledescription="carousel"
+          aria-label="Featured visual stories"
         >
 
           <div
@@ -183,8 +189,8 @@
           >
 
             <!--
-              Story cards are rendered dynamically by script.js
-              from data.json.
+              Featured story cards are rendered dynamically
+              by script.js from data.json.
 
               Expected state classes:
 
@@ -200,7 +206,9 @@
         </div>
 
 
-        <!-- Coverflow controls -->
+        <!-- ===================================================
+             COVERFLOW CONTROLS
+             =================================================== -->
 
         <div
           class="coverflow-controls"
@@ -223,7 +231,7 @@
             id="coverflow-dots"
             aria-label="Featured story positions"
           >
-            <!-- Dots rendered by script.js -->
+            <!-- Dots rendered dynamically by script.js -->
           </div>
 
 
@@ -259,6 +267,7 @@
               THE COLLECTION
             </p>
 
+
             <h2
               class="section-title"
               id="story-board-title"
@@ -287,8 +296,8 @@
         >
 
           <!--
-            Story cards are rendered dynamically by script.js
-            from data.json.
+            Story cards are rendered dynamically
+            by script.js from data.json.
           -->
 
         </div>
@@ -297,7 +306,7 @@
 
 
       <!-- =====================================================
-           EMPTY / ERROR STATE
+           EMPTY STATE
            ===================================================== -->
 
       <section
@@ -313,6 +322,7 @@
             Nothing to show yet.
           </p>
 
+
           <p class="empty-state-copy">
             FeelFrame™ is preparing the next visual story.
           </p>
@@ -322,17 +332,6 @@
       </section>
 
     </main>
-
-
-    <!-- =======================================================
-         FOOTER
-         ======================================================= -->
-
-    <!--
-      Home intentionally keeps the footer minimal.
-      The persistent mobile navigation below is the primary
-      navigation experience on smaller screens.
-    -->
 
 
     <!-- =======================================================
@@ -350,6 +349,7 @@
         href="index.html"
         aria-current="page"
       >
+
         <span
           class="mobile-nav-icon"
           aria-hidden="true"
@@ -357,9 +357,11 @@
           ⌂
         </span>
 
+
         <span class="mobile-nav-label">
           Home
         </span>
+
       </a>
 
 
@@ -367,6 +369,7 @@
         class="mobile-nav-item"
         href="explore.html"
       >
+
         <span
           class="mobile-nav-icon"
           aria-hidden="true"
@@ -374,9 +377,11 @@
           ◇
         </span>
 
+
         <span class="mobile-nav-label">
           Explore
         </span>
+
       </a>
 
 
@@ -384,6 +389,7 @@
         class="mobile-nav-item"
         href="create.html"
       >
+
         <span
           class="mobile-nav-icon"
           aria-hidden="true"
@@ -391,16 +397,18 @@
           ＋
         </span>
 
+
         <span class="mobile-nav-label">
           Create
         </span>
+
       </a>
 
     </nav>
 
 
     <!-- =======================================================
-         GLOBAL ERROR MESSAGE
+         GLOBAL ERROR
          ======================================================= -->
 
     <div
@@ -416,9 +424,11 @@
           Something went wrong.
         </p>
 
+
         <p class="global-error-message">
           FeelFrame™ could not load this experience right now.
         </p>
+
 
         <button
           class="button button-secondary"
@@ -436,10 +446,13 @@
 
 
   <!-- =========================================================
-       APPLICATION DATA + ENGINE
+       APPLICATION ENGINE
        ========================================================= -->
 
-  <script src="script.js" defer></script>
+  <script
+    src="script.js"
+    defer
+  ></script>
 
 </body>
 </html>
