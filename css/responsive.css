@@ -1,0 +1,809 @@
+/* =========================================================
+FeelFrame™ — Responsive
+responsive.css
+Production responsive behavior
+========================================================= */
+
+/* =========================================================
+LARGE DESKTOP
+========================================================= */
+
+@media (max-width: 1200px) {
+
+:root {
+–page-gutter: 32px;
+}
+
+.container,
+.container–wide,
+.container–reading,
+.container–narrow {
+width: min(
+calc(100% - (var(–page-gutter) * 2)),
+var(–max-width)
+);
+}
+
+/* Header */
+
+.site-header__inner {
+gap: var(–space-6);
+}
+
+.header-nav {
+gap: var(–space-5);
+}
+
+/* Coverflow */
+
+.coverflow {
+height: 560px;
+}
+
+.cover-card {
+width: 340px;
+height: 475px;
+}
+
+/* Story board */
+
+.story-board {
+gap: var(–space-4);
+}
+}
+
+/* =========================================================
+TABLET
+========================================================= */
+
+@media (max-width: 900px) {
+
+:root {
+–page-gutter: 28px;
+–section-space: 88px;
+
+--cover-width: 320px;
+--cover-height: 450px;
+--cover-side: 245px;
+--cover-far: 430px;
+
+}
+
+/* —————————————————––
+GLOBAL LAYOUT
+—————————————————–– */
+
+.container,
+.container–wide,
+.container–reading,
+.container–narrow {
+width: min(
+calc(100% - (var(–page-gutter) * 2)),
+var(–max-width)
+);
+}
+
+.section {
+padding-block: var(–space-section-sm);
+}
+
+/* —————————————————––
+HEADER
+—————————————————–– */
+
+.site-header {
+height: var(–nav-height);
+}
+
+.site-header__inner {
+gap: var(–space-4);
+}
+
+.header-nav {
+gap: var(–space-4);
+}
+
+.header-nav a {
+font-size: var(–text-xs);
+}
+
+.site-header__actions {
+gap: var(–space-2);
+}
+
+/* —————————————————––
+COVERFLOW
+—————————————————–– */
+
+.coverflow {
+height: 530px;
+}
+
+.cover-card.is-left {
+transform:
+translate3d(
+calc(-50% - var(–cover-side)),
+-50%,
+-20px
+)
+rotateY(24deg)
+scale(0.9);
+}
+
+.cover-card.is-right {
+transform:
+translate3d(
+calc(-50% + var(–cover-side)),
+-50%,
+-20px
+)
+rotateY(-24deg)
+scale(0.9);
+}
+
+.cover-card.is-far-left {
+transform:
+translate3d(
+calc(-50% - var(–cover-far)),
+-50%,
+-130px
+)
+rotateY(34deg)
+scale(0.78);
+}
+
+.cover-card.is-far-right {
+transform:
+translate3d(
+calc(-50% + var(–cover-far)),
+-50%,
+-130px
+)
+rotateY(-34deg)
+scale(0.78);
+}
+
+/* —————————————————––
+MOBILE NAV PREPARATION
+—————————————————–– */
+
+.has-mobile-nav {
+padding-bottom: var(–mobile-nav-height);
+}
+
+.mobile-nav {
+display: block;
+}
+}
+
+/* =========================================================
+MOBILE
+========================================================= */
+
+@media (max-width: 700px) {
+
+:root {
+–page-gutter: 20px;
+–section-space: 64px;
+
+--cover-width: min(78vw, 310px);
+--cover-height: min(112vw, 435px);
+--cover-side: 210px;
+--cover-far: 350px;
+
+}
+
+/* —————————————————––
+GLOBAL
+—————————————————–– */
+
+html {
+scroll-padding-top: var(–nav-height);
+}
+
+body {
+font-size: var(–text-sm);
+}
+
+.container,
+.container–wide,
+.container–reading,
+.container–narrow {
+width: calc(100% - (var(–page-gutter) * 2));
+}
+
+.section {
+padding-block: var(–space-section-sm);
+}
+
+/* —————————————————––
+HEADER
+—————————————————–– */
+
+.site-header {
+height: var(–nav-height);
+}
+
+.site-header__inner {
+min-height: var(–nav-height);
+}
+
+.header-nav {
+display: none;
+}
+
+.site-header__actions {
+margin-left: auto;
+}
+
+.site-header__actions .btn:not(.btn–icon) {
+display: none;
+}
+
+.brand {
+max-width: 180px;
+}
+
+/* —————————————————––
+HERO
+—————————————————–– */
+
+.hero,
+.home-page .hero {
+min-height: 0;
+padding-block: var(–space-section-sm);
+}
+
+.hero__title,
+.home-page .hero__title {
+max-width: 10ch;
+font-size: clamp(3rem, 15vw, 4.8rem);
+line-height: 0.92;
+}
+
+.hero__description {
+max-width: 52ch;
+margin-top: var(–space-5);
+}
+
+/* —————————————————––
+COVERFLOW
+—————————————————–– */
+
+.featured-section,
+.coverflow-section,
+.home-featured {
+padding-block: var(–space-section-sm);
+}
+
+.coverflow {
+height: 470px;
+
+perspective: 1200px;
+
+}
+
+.cover-card {
+border-radius: var(–radius-lg);
+}
+
+.cover-card.is-center {
+transform:
+translate3d(-50%, -50%, 80px)
+rotateY(0deg)
+scale(1);
+}
+
+.cover-card.is-left {
+opacity: 0.42;
+
+transform:
+  translate3d(
+    calc(-50% - var(--cover-side)),
+    -50%,
+    -60px
+  )
+  rotateY(24deg)
+  scale(0.8);
+
+}
+
+.cover-card.is-right {
+opacity: 0.42;
+
+transform:
+  translate3d(
+    calc(-50% + var(--cover-side)),
+    -50%,
+    -60px
+  )
+  rotateY(-24deg)
+  scale(0.8);
+
+}
+
+.cover-card.is-far-left,
+.cover-card.is-far-right {
+opacity: 0;
+
+pointer-events: none;
+
+}
+
+.cover-card__meta {
+padding:
+var(–space-6)
+var(–space-5)
+var(–space-6);
+}
+
+.cover-card__title {
+font-size: var(–text-lg);
+}
+
+.coverflow-controls {
+margin-top: var(–space-4);
+}
+
+/* —————————————————––
+STORY BOARD
+—————————————————–– */
+
+.story-board {
+grid-template-columns: 1fr;
+}
+
+.story-board > .story-card,
+.story-board > .story-card:nth-child(n) {
+grid-column: auto;
+}
+
+/* —————————————————––
+STORY CARDS
+—————————————————–– */
+
+.story-card–large {
+grid-column: auto;
+}
+
+/* —————————————————––
+BUTTONS
+—————————————————–– */
+
+.btn–large {
+min-height: 52px;
+}
+
+/* —————————————————––
+META OBJECTS
+—————————————————–– */
+
+.meta-grid,
+.meta-grid–three {
+grid-template-columns: 1fr;
+}
+
+.meta-object {
+min-height: 0;
+}
+
+/* —————————————————––
+FORMS
+—————————————————–– */
+
+.form-grid,
+.form-grid–three,
+.form-grid–wide {
+grid-template-columns: 1fr;
+}
+
+.form-field–full {
+grid-column: auto;
+}
+
+.choice-grid {
+grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.choice-grid–compact {
+grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.make-yours {
+padding: var(–space-7) var(–space-5);
+border-radius: var(–radius-lg);
+}
+
+.make-yours__title {
+font-size: clamp(2rem, 10vw, 3rem);
+}
+
+.form-actions {
+flex-direction: column;
+align-items: stretch;
+}
+
+.form-actions > .btn {
+width: 100%;
+}
+
+/* —————————————————––
+STORE / PRODUCT
+—————————————————–– */
+
+.store-grid,
+.related-stories__grid {
+grid-template-columns: 1fr;
+}
+
+.product-meta,
+.product-meta–three,
+.story-information__grid {
+grid-template-columns: 1fr;
+}
+
+.product-visual,
+.create-preview {
+position: relative;
+top: auto;
+}
+
+.product-information__title,
+.story-hero__title {
+font-size: clamp(2.8rem, 13vw, 4.5rem);
+}
+
+.product-information__actions {
+flex-direction: column;
+align-items: stretch;
+}
+
+.product-information__actions .btn {
+width: 100%;
+}
+
+.purchase-panel__actions {
+flex-direction: column;
+}
+
+.purchase-panel__actions .btn {
+width: 100%;
+}
+
+/* —————————————————––
+PAGE CONTENT
+—————————————————–– */
+
+.product-details__grid,
+.story-body__grid {
+grid-template-columns: 1fr;
+}
+
+.product-details__label,
+.story-body__aside {
+position: relative;
+top: auto;
+}
+
+/* —————————————————––
+FOOTER
+—————————————————–– */
+
+.site-footer {
+padding-bottom: calc(
+var(–space-10) + var(–mobile-nav-height)
+);
+}
+
+/* —————————————————––
+MOBILE NAV
+—————————————————–– */
+
+.mobile-nav {
+position: fixed;
+right: 0;
+bottom: 0;
+left: 0;
+
+z-index: var(--z-mobile-nav);
+display: block;
+padding:
+  var(--space-2)
+  var(--page-gutter)
+  calc(
+    var(--space-2) +
+    var(--safe-bottom)
+  );
+background: rgba(244, 242, 237, 0.92);
+border-top: 1px solid var(--border);
+backdrop-filter: blur(18px);
+-webkit-backdrop-filter: blur(18px);
+
+}
+
+.mobile-nav__inner {
+display: grid;
+grid-template-columns: repeat(3, 1fr);
+gap: var(–space-2);
+
+max-width: 500px;
+margin-inline: auto;
+
+}
+
+.mobile-nav__item {
+display: flex;
+flex-direction: column;
+align-items: center;
+justify-content: center;
+
+min-height: 52px;
+color: var(--muted);
+border-radius: var(--radius-md);
+text-decoration: none;
+transition:
+  color var(--motion-fast),
+  background var(--motion-fast);
+
+}
+
+.mobile-nav__item:hover,
+.mobile-nav__item.is-active {
+color: var(–ink);
+background: rgba(17, 17, 17, 0.045);
+}
+
+.mobile-nav__icon {
+display: inline-flex;
+align-items: center;
+justify-content: center;
+
+width: 20px;
+height: 20px;
+margin-bottom: 3px;
+
+}
+
+.mobile-nav__label {
+font-size: 10px;
+font-weight: var(–weight-medium);
+line-height: 1;
+}
+
+/* Home deliberately does not carry the mobile nav. */
+
+.home-page + .mobile-nav,
+body:has(.home-page) .mobile-nav {
+display: none;
+}
+}
+
+/* =========================================================
+SMALL MOBILE
+========================================================= */
+
+@media (max-width: 390px) {
+
+:root {
+–page-gutter: 16px;
+
+--cover-width: min(82vw, 290px);
+--cover-height: min(116vw, 410px);
+--cover-side: 180px;
+--cover-far: 300px;
+
+}
+
+.brand {
+max-width: 150px;
+}
+
+.home-page .hero__title,
+.hero__title,
+.explore-hero__title,
+.create-hero__title {
+font-size: 3rem;
+}
+
+.home-statement__text {
+font-size: 2rem;
+}
+
+.coverflow {
+height: 440px;
+perspective: 1000px;
+}
+
+.cover-card.is-left {
+opacity: 0.25;
+
+transform:
+  translate3d(
+    calc(-50% - var(--cover-side)),
+    -50%,
+    -80px
+  )
+  rotateY(20deg)
+  scale(0.72);
+
+}
+
+.cover-card.is-right {
+opacity: 0.25;
+
+transform:
+  translate3d(
+    calc(-50% + var(--cover-side)),
+    -50%,
+    -80px
+  )
+  rotateY(-20deg)
+  scale(0.72);
+
+}
+
+.cover-card__meta {
+padding: var(–space-5);
+}
+
+.choice-grid,
+.choice-grid–compact {
+grid-template-columns: 1fr;
+}
+
+.choice–compact {
+justify-content: flex-start;
+text-align: left;
+}
+
+.upload-preview {
+grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.form-control {
+min-height: 50px;
+}
+
+.mobile-nav {
+padding-inline: var(–space-2);
+}
+}
+
+/* =========================================================
+LANDSCAPE MOBILE
+========================================================= */
+
+@media (max-width: 900px) and (orientation: landscape) {
+
+.coverflow {
+height: 460px;
+}
+
+.cover-card {
+width: 280px;
+height: 390px;
+}
+
+.mobile-nav__item {
+min-height: 46px;
+}
+}
+
+/* =========================================================
+VERY SHORT VIEWPORTS
+========================================================= */
+
+@media (max-height: 650px) and (max-width: 700px) {
+
+.site-header {
+height: 64px;
+}
+
+.coverflow {
+height: 420px;
+}
+
+.mobile-nav__item {
+min-height: 46px;
+}
+}
+
+/* =========================================================
+POINTER / HOVER CAPABILITY
+========================================================= */
+
+@media (hover: none) and (pointer: coarse) {
+
+.cover-card:hover img {
+transform: none;
+}
+
+.btn:hover {
+transform: none;
+}
+
+.story-card:hover {
+transform: none;
+}
+
+.choice:hover {
+transform: none;
+}
+}
+
+/* =========================================================
+REDUCED MOTION
+========================================================= */
+
+@media (prefers-reduced-motion: reduce) {
+
+*,
+*::before,
+*::after {
+scroll-behavior: auto !important;
+}
+
+.cover-card,
+.cover-card img,
+.btn,
+.story-card,
+.choice,
+.mobile-nav__item {
+transition: none !important;
+}
+
+.cover-card:hover img {
+transform: none;
+}
+}
+
+/* =========================================================
+PRINT
+========================================================= */
+
+@media print {
+
+:root {
+–page-gutter: 20px;
+}
+
+.site-header,
+.mobile-nav,
+.site-footer,
+.coverflow-controls {
+display: none !important;
+}
+
+.has-mobile-nav {
+padding-bottom: 0;
+}
+
+.page,
+.section,
+.hero,
+.product-hero,
+.story-hero,
+.create-hero {
+padding-block: 20px;
+}
+
+.coverflow {
+height: auto;
+perspective: none;
+}
+
+.cover-card {
+position: relative;
+top: auto;
+left: auto;
+
+width: 100%;
+height: auto;
+margin-bottom: 20px;
+opacity: 1 !important;
+pointer-events: auto;
+transform: none !important;
+filter: none !important;
+
+}
+}
