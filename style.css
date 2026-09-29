@@ -2,7 +2,6 @@
 
 /* =========================================================
    FEELFRAME™ — PRODUCTION STYLE SYSTEM
-   Source of truth for index.html + site-wide components
    ========================================================= */
 
 :root {
@@ -28,6 +27,7 @@
   --radius-pill: 999px;
 
   --max-width: 1440px;
+  --content-width: 1250px;
   --page-gutter: 48px;
 
   --nav-height: 74px;
@@ -171,14 +171,10 @@ a:focus:not(:focus-visible) {
 }
 
 /* =========================================================
-   GLOBAL SHELL
+   GLOBAL CONTAINERS
    ========================================================= */
 
-.site-shell {
-  width: 100%;
-  min-height: 100vh;
-}
-
+.site-shell,
 .container {
   width: min(
     calc(100% - (var(--page-gutter) * 2)),
@@ -186,6 +182,19 @@ a:focus:not(:focus-visible) {
   );
   margin-right: auto;
   margin-left: auto;
+}
+
+.page {
+  width: 100%;
+  min-height: 100vh;
+  padding-bottom: 40px;
+}
+
+.section {
+  position: relative;
+  width: 100%;
+  padding-top: 80px;
+  padding-bottom: 80px;
 }
 
 /* =========================================================
@@ -227,8 +236,7 @@ a:focus:not(:focus-visible) {
   letter-spacing: -0.045em;
 }
 
-.eyebrow,
-.section-kicker {
+.eyebrow {
   margin-bottom: 12px;
   color: var(--muted);
   font-size: 0.68rem;
@@ -256,6 +264,7 @@ a:focus:not(:focus-visible) {
   height: var(--nav-height);
 }
 
+.site-header__inner,
 .header-inner {
   display: flex;
   width: min(
@@ -277,10 +286,6 @@ a:focus:not(:focus-visible) {
   letter-spacing: -0.03em;
 }
 
-.brand-name {
-  display: inline-block;
-}
-
 .brand-mark {
   width: 7px;
   height: 7px;
@@ -288,13 +293,15 @@ a:focus:not(:focus-visible) {
   background: var(--black);
 }
 
+.header-nav,
 .desktop-nav {
   display: flex;
   align-items: center;
   gap: 30px;
 }
 
-.nav-link {
+.header-nav a,
+.desktop-nav .nav-link {
   position: relative;
   color: var(--muted);
   font-size: 0.82rem;
@@ -302,12 +309,15 @@ a:focus:not(:focus-visible) {
   transition: color 180ms ease;
 }
 
-.nav-link:hover,
-.nav-link.is-active {
+.header-nav a:hover,
+.header-nav a.active,
+.desktop-nav .nav-link:hover,
+.desktop-nav .nav-link.is-active {
   color: var(--black);
 }
 
-.nav-link::after {
+.header-nav a::after,
+.desktop-nav .nav-link::after {
   position: absolute;
   right: 0;
   bottom: -7px;
@@ -320,8 +330,10 @@ a:focus:not(:focus-visible) {
   transition: transform 280ms var(--ease);
 }
 
-.nav-link:hover::after,
-.nav-link.is-active::after {
+.header-nav a:hover::after,
+.header-nav a.active::after,
+.desktop-nav .nav-link:hover::after,
+.desktop-nav .nav-link.is-active::after {
   transform: scaleX(1);
   transform-origin: left;
 }
@@ -330,13 +342,14 @@ a:focus:not(:focus-visible) {
    BUTTONS
    ========================================================= */
 
+.btn,
 .button {
   display: inline-flex;
   min-height: 48px;
   padding: 0 21px;
   align-items: center;
   justify-content: center;
-  gap: 9px;
+  border: 1px solid transparent;
   border-radius: var(--radius-pill);
   cursor: pointer;
   font-size: 0.82rem;
@@ -350,58 +363,67 @@ a:focus:not(:focus-visible) {
     box-shadow 180ms ease;
 }
 
+.btn:hover,
 .button:hover {
   transform: translateY(-2px);
 }
 
+.btn:active,
 .button:active {
   transform: translateY(0);
 }
 
+.btn--dark,
 .button-primary {
   background: var(--black);
   color: var(--white);
 }
 
+.btn--dark:hover,
 .button-primary:hover {
   box-shadow: var(--shadow-soft);
 }
 
+.btn--light,
 .button-secondary {
-  border: 1px solid var(--border-strong);
   background: var(--white);
   color: var(--black);
 }
 
-.button-secondary:hover {
+.btn--outline {
+  border-color: var(--border-strong);
+  background: transparent;
+  color: var(--black);
+}
+
+.btn--outline:hover {
   border-color: var(--black);
+  background: var(--white);
+}
+
+.btn--full {
+  width: 100%;
 }
 
 /* =========================================================
    HOME HERO
    ========================================================= */
 
+.hero,
 .hero-section {
   display: flex;
-  width: 100%;
   min-height: calc(100vh - var(--nav-height));
   padding-top: 70px;
   padding-bottom: 50px;
   align-items: flex-end;
 }
 
+.hero__content,
 .hero-inner {
-  width: min(
-    calc(100% - (var(--page-gutter) * 2)),
-    var(--max-width)
-  );
-  margin: 0 auto;
+  width: 100%;
 }
 
-.hero-section .eyebrow {
-  margin-bottom: 18px;
-}
-
+.hero__statement,
 .hero-title {
   max-width: 1050px;
   margin: 0;
@@ -412,63 +434,110 @@ a:focus:not(:focus-visible) {
   letter-spacing: -0.055em;
 }
 
-.hero-action {
+.hero__footer {
   display: flex;
-  margin-top: 45px;
-  align-items: center;
-}
-
-/* =========================================================
-   SECTION HEADINGS
-   ========================================================= */
-
-.section-heading {
-  display: flex;
-  width: min(
-    calc(100% - (var(--page-gutter) * 2)),
-    var(--max-width)
-  );
-  margin: 0 auto 32px;
+  margin-top: 50px;
   align-items: flex-end;
   justify-content: space-between;
-  gap: 30px;
+  gap: 35px;
 }
 
-.section-heading-copy {
-  min-width: 0;
-}
-
-.section-heading .section-kicker {
-  margin-bottom: 10px;
-}
-
-.section-link {
-  display: inline-flex;
-  flex: 0 0 auto;
-  align-items: center;
-  gap: 7px;
+.hero__description {
+  max-width: 480px;
+  margin-bottom: 0;
   color: var(--muted);
-  font-size: 0.76rem;
-  font-weight: 700;
-  transition:
-    color 180ms ease,
-    transform 180ms ease;
 }
 
-.section-link:hover {
-  color: var(--black);
-  transform: translateX(3px);
+.hero-action {
+  margin-top: 38px;
 }
 
 /* =========================================================
-   FEATURED / COVERFLOW
+   MAKE IT YOURS
+   ========================================================= */
+
+.make-yours {
+  display: flex;
+  width: 100%;
+  padding: 22px 0;
+  align-items: center;
+  justify-content: space-between;
+  gap: 25px;
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+}
+
+.make-yours__text {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.make-yours__label {
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+}
+
+.make-yours__sub {
+  color: var(--muted);
+  font-size: 0.8rem;
+}
+
+.make-yours__arrow {
+  display: grid;
+  width: 44px;
+  height: 44px;
+  flex: 0 0 44px;
+  place-items: center;
+  border: 1px solid var(--border);
+  border-radius: 50%;
+  background: var(--white);
+  transition:
+    background 180ms ease,
+    color 180ms ease,
+    transform 280ms var(--ease);
+}
+
+.make-yours:hover .make-yours__arrow {
+  background: var(--black);
+  color: var(--white);
+  transform: translateX(5px);
+}
+
+/* =========================================================
+   HOMEPAGE FEATURED SECTION
    ========================================================= */
 
 .featured-section {
   position: relative;
   width: 100%;
-  padding-top: 10px;
+  padding-top: 0;
   padding-bottom: 75px;
+  overflow: hidden;
+}
+
+/*
+  Important:
+  There is intentionally no large section heading here.
+  The homepage goes directly from the emotional CTA
+  into the visual Coverflow.
+*/
+
+.featured-section .section-heading {
+  display: none;
+}
+
+/* =========================================================
+   COVERFLOW
+   ========================================================= */
+
+.coverflow-section {
+  position: relative;
+  width: 100%;
+  padding-top: 30px;
+  padding-bottom: 85px;
   overflow: hidden;
 }
 
@@ -501,7 +570,6 @@ a:focus:not(:focus-visible) {
   border-radius: var(--radius-lg);
   background: var(--white);
   box-shadow: var(--shadow-heavy);
-  cursor: pointer;
   transform-origin: center center;
   transform-style: preserve-3d;
   transition:
@@ -558,9 +626,9 @@ a:focus:not(:focus-visible) {
   letter-spacing: -0.03em;
 }
 
-/* ---------------------------------------------------------
+/* =========================================================
    COVERFLOW STATES
-   --------------------------------------------------------- */
+   ========================================================= */
 
 .cover-card.is-center {
   z-index: 5;
@@ -655,11 +723,12 @@ a:focus:not(:focus-visible) {
   gap: 12px;
 }
 
+.coverflow-control,
 .coverflow-button {
   display: grid;
   width: 44px;
   height: 44px;
-  flex: 0 0 44px;
+  padding: 0;
   place-items: center;
   border: 1px solid var(--border);
   border-radius: 50%;
@@ -672,6 +741,7 @@ a:focus:not(:focus-visible) {
     transform 180ms ease;
 }
 
+.coverflow-control:hover,
 .coverflow-button:hover {
   background: var(--black);
   color: var(--white);
@@ -704,22 +774,66 @@ a:focus:not(:focus-visible) {
 }
 
 /* =========================================================
-   STORY BOARD / BENTO
+   STORY BOARD
    ========================================================= */
 
+.story-board,
 .story-board-section {
   width: 100%;
-  padding-top: 70px;
-  padding-bottom: 90px;
+  padding-top: 80px;
+  padding-bottom: 80px;
+}
+
+.story-board__header,
+.section-heading {
+  display: flex;
+  margin-bottom: 38px;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 30px;
+}
+
+.section-heading-copy {
+  min-width: 0;
+}
+
+.section-kicker {
+  margin-bottom: 10px;
+  color: var(--muted);
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.13em;
+  line-height: 1.2;
+  text-transform: uppercase;
+}
+
+.section-link {
+  display: inline-flex;
+  flex: 0 0 auto;
+  align-items: center;
+  gap: 7px;
+  color: var(--muted);
+  font-size: 0.76rem;
+  font-weight: 700;
+  transition:
+    color 180ms ease,
+    transform 180ms ease;
+}
+
+.section-link:hover {
+  color: var(--black);
+  transform: translateX(3px);
+}
+
+.story-board__header p {
+  max-width: 440px;
+  margin-bottom: 0;
+  color: var(--muted);
 }
 
 .story-grid,
 .explore-grid {
-  width: min(
-    calc(100% - (var(--page-gutter) * 2)),
-    var(--max-width)
-  );
-  margin: 0 auto;
+  width: 100%;
   column-count: 4;
   column-gap: 18px;
 }
@@ -1373,19 +1487,16 @@ a:focus:not(:focus-visible) {
    ========================================================= */
 
 .empty-state,
+.error-state,
 .global-error {
-  width: min(
-    calc(100% - (var(--page-gutter) * 2)),
-    var(--max-width)
-  );
-  margin-right: auto;
-  margin-left: auto;
+  width: 100%;
 }
 
 .empty-state {
   display: flex;
   min-height: 260px;
   padding: 40px;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
   border: 1px dashed var(--border-strong);
@@ -1395,18 +1506,54 @@ a:focus:not(:focus-visible) {
 }
 
 .empty-state-inner {
-  max-width: 500px;
+  max-width: 480px;
 }
 
 .empty-state-title {
   margin-bottom: 8px;
   font-family: var(--font-serif);
   font-size: 1.8rem;
+  line-height: 1.05;
 }
 
 .empty-state-copy {
+  max-width: 440px;
   margin-bottom: 0;
   color: var(--muted);
+}
+
+.error-state {
+  display: flex;
+  min-height: 260px;
+  padding: 40px;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  border: 1px dashed var(--border-strong);
+  border-radius: var(--radius-lg);
+  background: #faf9f6;
+  text-align: center;
+}
+
+.error-state h2 {
+  margin-bottom: 8px;
+  font-family: var(--font-serif);
+  font-size: 1.8rem;
+}
+
+.error-state p {
+  max-width: 440px;
+  margin-bottom: 20px;
+  color: var(--muted);
+}
+
+/* =========================================================
+   GLOBAL ERROR
+   ========================================================= */
+
+.global-error[hidden],
+.empty-state[hidden] {
+  display: none !important;
 }
 
 .global-error {
@@ -1420,17 +1567,18 @@ a:focus:not(:focus-visible) {
 .global-error-inner {
   width: min(100%, 560px);
   margin: 0 auto;
-  padding: 22px;
+  padding: 22px 24px;
   border: 1px solid var(--border);
   border-radius: var(--radius-lg);
-  background: var(--white);
+  background: rgba(255, 255, 255, 0.96);
   box-shadow: var(--shadow-heavy);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
 }
 
 .global-error-title {
   margin-bottom: 5px;
-  font-family: var(--font-serif);
-  font-size: 1.25rem;
+  font-weight: 700;
 }
 
 .global-error-message {
@@ -1510,12 +1658,21 @@ a:focus:not(:focus-visible) {
 }
 
 /* =========================================================
-   MOBILE NAVIGATION
+   MOBILE BOTTOM NAVIGATION
    ========================================================= */
 
 .mobile-nav {
   display: none;
 }
+
+/* New homepage HTML uses:
+   .mobile-nav-item
+   .mobile-nav-icon
+   .mobile-nav-label
+   .is-active
+
+   Keep the older selectors working too.
+*/
 
 /* =========================================================
    >1200px
@@ -1574,14 +1731,16 @@ a:focus:not(:focus-visible) {
     --cover-far: 390px;
   }
 
+  .hero,
   .hero-section {
     min-height: auto;
     padding-top: 55px;
     padding-bottom: 45px;
   }
 
-  .featured-section {
-    padding-bottom: 65px;
+  .hero__footer {
+    align-items: flex-start;
+    flex-direction: column;
   }
 
   .coverflow {
@@ -1635,6 +1794,7 @@ a:focus:not(:focus-visible) {
 @media (max-width: 700px) {
   :root {
     --page-gutter: 18px;
+
     --nav-height: 64px;
 
     --cover-width: min(76vw, 290px);
@@ -1651,49 +1811,73 @@ a:focus:not(:focus-visible) {
     overflow-x: hidden;
   }
 
+  .site-shell,
+  .container {
+    width: calc(100% - (var(--page-gutter) * 2));
+    max-width: none;
+  }
+
+  .site-header {
+    height: var(--nav-height);
+  }
+
+  .site-header__inner,
   .header-inner {
     width: calc(100% - 36px);
   }
 
+  .header-nav,
   .desktop-nav {
     display: none;
   }
 
+  .hero,
   .hero-section {
     padding-top: 45px;
     padding-bottom: 32px;
   }
 
+  .hero__statement,
   .hero-title {
     font-size: clamp(3rem, 15vw, 5rem);
     letter-spacing: -0.06em;
   }
 
-  .hero-action {
+  .hero__footer {
     margin-top: 32px;
+    gap: 24px;
+  }
+
+  .hero__description {
+    font-size: 0.92rem;
+  }
+
+  .hero-action {
+    margin-top: 28px;
+  }
+
+  .make-yours {
+    padding-top: 18px;
+    padding-bottom: 18px;
   }
 
   /* -------------------------------------------------------
-     MOBILE SECTION HEADINGS
+     MOBILE FEATURED SECTION
      ------------------------------------------------------- */
 
-  .section-heading {
-    width: calc(100% - 36px);
-    margin-bottom: 25px;
-    align-items: flex-start;
-    flex-direction: column;
-    gap: 14px;
-  }
-
-  .section-title {
-    font-size: clamp(2rem, 10vw, 3.2rem);
+  .featured-section {
+    width: 100vw;
+    margin-left: calc(50% - 50vw);
+    padding-top: 0;
+    padding-bottom: 58px;
+    overflow: hidden;
   }
 
   /* -------------------------------------------------------
      MOBILE COVERFLOW
      ------------------------------------------------------- */
 
-  .featured-section {
+  .coverflow-section {
     width: 100vw;
     margin-left: calc(50% - 50vw);
     padding-top: 5px;
@@ -1778,14 +1962,22 @@ a:focus:not(:focus-visible) {
      MOBILE STORY BOARD
      ------------------------------------------------------- */
 
+  .story-board,
   .story-board-section {
     padding-top: 58px;
     padding-bottom: 60px;
   }
 
+  .story-board__header,
+  .section-heading {
+    margin-bottom: 25px;
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 14px;
+  }
+
   .story-grid,
   .explore-grid {
-    width: calc(100% - 36px);
     column-count: 2;
     column-gap: 10px;
   }
@@ -1899,6 +2091,10 @@ a:focus:not(:focus-visible) {
     gap: 35px;
   }
 
+  .story-visual {
+    width: 100%;
+  }
+
   .story-title {
     font-size: clamp(2.7rem, 14vw, 4.4rem);
   }
@@ -1974,6 +2170,7 @@ a:focus:not(:focus-visible) {
     -webkit-backdrop-filter: blur(22px);
   }
 
+  .mobile-nav a,
   .mobile-nav-item {
     display: flex;
     min-width: 0;
@@ -1981,7 +2178,7 @@ a:focus:not(:focus-visible) {
     padding: 4px;
     align-items: center;
     justify-content: center;
-    gap: 5px;
+    gap: 6px;
     border-radius: var(--radius-pill);
     color: var(--muted);
     font-size: 0.7rem;
@@ -1992,21 +2189,30 @@ a:focus:not(:focus-visible) {
       color 180ms ease;
   }
 
+  .mobile-nav a.active,
+  .mobile-nav a.is-active,
   .mobile-nav-item.is-active {
     background: var(--black);
     color: var(--white);
   }
 
   .mobile-nav-icon {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
     font-size: 0.95rem;
     line-height: 1;
   }
 
   .mobile-nav-label {
     line-height: 1;
+  }
+
+  .page {
+    padding-bottom: 105px;
+  }
+
+  .global-error {
+    right: 12px;
+    bottom: 88px;
+    left: 12px;
   }
 }
 
@@ -2025,11 +2231,17 @@ a:focus:not(:focus-visible) {
     --cover-side: 52vw;
   }
 
+  .site-shell,
+  .container {
+    width: calc(100% - 30px);
+  }
+
+  .site-header__inner,
   .header-inner {
     width: calc(100% - 30px);
   }
 
-  .hero-title {
+  .display {
     font-size: 2.8rem;
   }
 
@@ -2047,7 +2259,6 @@ a:focus:not(:focus-visible) {
 
   .story-grid,
   .explore-grid {
-    width: calc(100% - 30px);
     column-gap: 8px;
   }
 
@@ -2080,10 +2291,15 @@ a:focus:not(:focus-visible) {
     right: 9px;
     left: 9px;
   }
+
+  .mobile-nav-label {
+    font-size: 0.66rem;
+  }
 }
 
 /* =========================================================
    ≤900px LANDSCAPE
+   LANDSCAPE MOBILE
    ========================================================= */
 
 @media (max-width: 900px) and (orientation: landscape) {
@@ -2093,12 +2309,14 @@ a:focus:not(:focus-visible) {
     --cover-side: 205px;
   }
 
+  .hero,
   .hero-section {
     min-height: auto;
     padding-top: 30px;
     padding-bottom: 30px;
   }
 
+  .coverflow-section,
   .featured-section {
     padding-top: 0;
     padding-bottom: 45px;
@@ -2165,8 +2383,9 @@ a:focus:not(:focus-visible) {
   }
 
   .story-card:hover,
+  .btn:hover,
   .button:hover,
-  .section-link:hover {
+  .make-yours:hover .make-yours__arrow {
     transform: none !important;
   }
 }
@@ -2179,12 +2398,17 @@ a:focus:not(:focus-visible) {
   .site-header,
   .mobile-nav,
   .coverflow-controls,
-  .site-footer {
+  .site-footer,
+  .global-error {
     display: none !important;
   }
 
   body {
     background: #ffffff;
     color: #000000;
+  }
+
+  .page {
+    padding: 0;
   }
 }
