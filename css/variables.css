@@ -1,7 +1,9 @@
 /* =========================================================
    FeelFrame™ — Design Tokens
    variables.css
+   Production Source of Truth
    ========================================================= */
+
 
 /* ---------------------------------------------------------
    01. COLOR SYSTEM
@@ -65,16 +67,16 @@
   --font-serif: "Playfair Display", serif;
 
   /* Primary scale */
-  --text-xs: 0.6875rem;     /* 11px */
-  --text-sm: 0.8125rem;     /* 13px */
-  --text-base: 1rem;         /* 16px */
-  --text-md: 1.125rem;       /* 18px */
-  --text-lg: 1.375rem;       /* 22px */
-  --text-xl: 1.75rem;        /* 28px */
-  --text-2xl: 2.25rem;       /* 36px */
-  --text-3xl: 3rem;          /* 48px */
-  --text-4xl: 4rem;          /* 64px */
-  --text-5xl: 5.5rem;        /* 88px */
+  --text-xs: 0.6875rem;
+  --text-sm: 0.8125rem;
+  --text-base: 1rem;
+  --text-md: 1.125rem;
+  --text-lg: 1.375rem;
+  --text-xl: 1.75rem;
+  --text-2xl: 2.25rem;
+  --text-3xl: 3rem;
+  --text-4xl: 4rem;
+  --text-5xl: 5.5rem;
 
   /* Display sizing */
   --display-hero: clamp(
@@ -251,12 +253,6 @@
 
 /* ---------------------------------------------------------
    08. DETAIL / META OBJECT TOKENS
-   ---------------------------------------------------------
-   These are intentionally separate from generic cards.
-
-   The goal:
-   metadata should feel composed and editorial,
-   not like a plain information box.
    --------------------------------------------------------- */
 
 :root {
@@ -415,19 +411,12 @@
 :root {
 
   --z-base: 1;
-
   --z-content: 10;
-
   --z-header: 100;
-
   --z-dropdown: 200;
-
   --z-overlay: 500;
-
   --z-modal: 800;
-
   --z-mobile-nav: 900;
-
   --z-toast: 1000;
 }
 
@@ -474,9 +463,6 @@
 
 /* ---------------------------------------------------------
    17. COMPONENT-SPECIFIC TOKENS
-   ---------------------------------------------------------
-   These remain centralized so individual component files
-   don't start inventing slightly different values.
    --------------------------------------------------------- */
 
 :root {
@@ -518,4 +504,61 @@
 
   --transition-opacity:
     opacity var(--duration-standard) ease;
+}
+
+
+/* =========================================================
+   19. INTEGRATION / COMPATIBILITY ALIASES
+   =========================================================
+   Compatibility layer for existing and newer FeelFrame™
+   JavaScript/CSS naming conventions.
+
+   These aliases intentionally point to the established
+   source-of-truth tokens above rather than creating a
+   second independent design system.
+   ========================================================= */
+
+:root {
+
+  /* -------------------------------------------------------
+     Coverflow compatibility
+     ------------------------------------------------------- */
+
+  --cover-side: var(--cover-side-offset);
+  --cover-far: var(--cover-far-offset);
+
+  --cover-center-scale: var(--cover-scale-center);
+  --cover-side-scale: 0.88;
+  --cover-far-scale: var(--cover-scale-far);
+
+  --cover-side-opacity: 0.92;
+  --cover-far-opacity: 0.45;
+
+
+  /* -------------------------------------------------------
+     Section compatibility
+     ------------------------------------------------------- */
+
+  /*
+     The original system uses:
+     --section-space
+     --section-space-small
+
+     Newer CSS may reference:
+     --space-section
+     --space-section-sm
+
+     These aliases keep both naming systems compatible.
+  */
+
+  --space-section: var(--section-space);
+  --space-section-sm: var(--section-space-small);
+
+
+  /* -------------------------------------------------------
+     Explicit Coverflow compatibility values
+     ------------------------------------------------------- */
+
+  --cover-perspective: 1800px;
+  --cover-radius: 20px;
 }
