@@ -1,2515 +1,3480 @@
-"use strict";
 /* =========================================================
- FEELFRAME™
- Global JavaScript Engine
- Production Version 3.0
- ========================================================= */
-const FEELFRAME = {
- data: null,
- stories: [],
- site: {},
-filters: {
- campaign: "all",
- emotion: "all",
- search: ""
- },
-coverflow: {
- stories: [],
- current: 0,
- startX: 0,
- startY: 0,
- dragging: false,
- moved: false,
- suppressClick: false,
- pointerId: null,
- initialized: false
- }
- };
-/* INITIALIZATION */
- document.addEventListener("DOMContentLoaded", async () => {
- try {
- await loadFeelFrameData();
- initializeNavigation();
- initializePage();
- } catch (error) {
- console.error("FeelFrame initialization failed:", error);
- showGlobalError();
- }
- });
-/* DATA */
- async function loadFeelFrameData() {
- const response = await fetch("data.json", {
- cache: "no-store"
- });
-if (!response.ok) {
- throw new Error(
- Unable to load data.json (${response.status})
- );
- }
-const data = await response.json();
-if (!data || typeof data !== "object") {
- throw new Error("Invalid FeelFrame data structure.");
- }
-FEELFRAME.data = data;
-http://FEELFRAME.site =
- http://data.site && typeof http://data.site === "object"
- ? http://data.site
- : {};
-FEELFRAME.stories =
- Array.isArray(data.stories)
- ? data.stories.filter(isValidStory)
- : [];
- }
-/* STORY VALIDATION */
- function isValidStory(story) {
- return (
- story &&
- typeof story === "object" &&
- http://story.id &&
- (story.title ||
- story.image ||
- story.promptTitle)
- );
- }
-/* PAGE DETECTION */
- function initializePage() {
- const body = document.body;
-if (body.classList.contains("home-page")) {
- initializeHome();
- }
-if (body.classList.contains("explore-page")) {
- initializeExplore();
- }
-if (body.classList.contains("story-page")) {
- initializeStory();
- }
-if (body.classList.contains("create-page")) {
- initializeCreate();
- }
- }
-/* NAVIGATION */
- function initializeNavigation() {
- const currentPage = getCurrentPage();
-document
- .querySelectorAll(".bottom-nav a")
- .forEach(link => {
- const href =
- link.getAttribute("href") || "";
- const isHome =  
-    currentPage === "home" &&  
-    (  
-      href.includes("index") ||  
-      href === "/" ||  
-      href === "./"  
-    );  
-
-  const isExplore =  
-    currentPage === "explore" &&  
-    href.includes("explore");  
-
-  const isCreate =  
-    currentPage === "create" &&  
-    href.includes("create");  
-
-  if (  
-    isHome ||  
-    isExplore ||  
-    isCreate  
-  ) {  
-    link.classList.add("active");  
-  }  
-}); 
-
-}
-function getCurrentPage() {
- const path =
- window.location.pathname.toLowerCase();
-if (path.includes("explore")) {
- return "explore";
- }
-if (path.includes("create")) {
- return "create";
- }
-if (path.includes("story")) {
- return "story";
- }
-return "home";
- }
-/* HOME */
- function initializeHome() {
- renderFeaturedCoverflow();
- renderHomeBoard();
- }
-/* =========================================================
- FEATURED COVERFLOW
- ========================================================= */
-function renderFeaturedCoverflow() {
- const track =
- document.querySelector("#coverflowTrack");
-if (!track) return;
-const featured =
- FEELFRAME.stories.filter(
- story => story.featured === true
- );
-FEELFRAME.coverflow.stories = featured;
-if (!featured.length) {
- FEELFRAME.coverflow.current = 0;
-track.innerHTML = `  
-  <div class="empty-state">  
-    <h2>No featured moments yet.</h2>  
-    <p>Mark stories as featured in data.json.</p>  
-  </div>  
-`;  
-
-return; 
-
-}
-if (
- FEELFRAME.coverflow.current >=
- featured.length
- ) {
- FEELFRAME.coverflow.current = 0;
- }
-track.innerHTML =
- featured
- .map((story, index) =>
- createCoverflowCard(story, index)
- )
- .join("");
-renderCoverflowDots();
-updateCoverflow();
-initializeCoverflowControls();
- }
-/* COVERFLOW CARD */
- function createCoverflowCard(
- story,
- index
- ) {
- return `
- <article
- class="coverflow-card"
- data-index="${index}"
- data-story-id="${escapeHTML(http://story.id)}"
- tabindex="0"
- role="button"
- aria-current="${index === 0 ? "true" : "false"}"
- aria-label="Open ${escapeHTML(
- story.title || "visual story"
- )}"
- >
- <img
- src="${escapeHTML(story.image || "")}"
- alt="${escapeHTML(
- story.title || "FeelFrame visual"
- )}"
- loading="${index === 0 ? "eager" : "lazy"}"
- draggable="false"
- onerror="handleImageError(this)"
- >
- <div class="coverflow-card-content">  
-    <small>  
-      ${escapeHTML(  
-        story.campaign ||  
-        story.moment ||  
-        ""  
-      )}  
-    </small>  
-
-    <h3>  
-      ${escapeHTML(story.title || "")}  
-    </h3>  
-  </div>  
-</article> 
-
-`;
- }
-/* =========================================================
- COVERFLOW STATE
- ========================================================= */
-function updateCoverflow() {
- const cards =
- document.querySelectorAll(
- ".coverflow-card"
- );
-if (!cards.length) return;
-const total =
- FEELFRAME.coverflow.stories.length;
-const current =
- FEELFRAME.coverflow.current;
-if (!total) return;
-cards.forEach(card => {
- card.classList.remove(
- "is-center",
- "is-left",
- "is-right",
- "is-far-left",
- "is-far-right"
- );
-const index =  
-  Number(card.dataset.index);  
-
-let offset =  
-  index - current;  
-
-/*  
-  Circular positioning keeps the Cover Flow  
-  continuous even when moving from the last  
-  card back to the first card.  
-*/  
-if (offset > total / 2) {  
-  offset -= total;  
-}  
-
-if (offset < -total / 2) {  
-  offset += total;  
-}  
-
-if (offset === 0) {  
-  card.classList.add("is-center");  
-  card.setAttribute(  
-    "aria-current",  
-    "true"  
-  );  
-} else {  
-  card.setAttribute(  
-    "aria-current",  
-    "false"  
-  );  
-}  
-
-if (offset === -1) {  
-  card.classList.add("is-left");  
-}  
-
-if (offset === 1) {  
-  card.classList.add("is-right");  
-}  
-
-if (offset === -2) {  
-  card.classList.add("is-far-left");  
-}  
-
-if (offset === 2) {  
-  card.classList.add("is-far-right");  
-} 
-
-});
-updateCoverflowDots();
- }
-/* =========================================================
- COVERFLOW NAVIGATION
- ========================================================= */
-function nextCoverflow() {
- const total =
- FEELFRAME.coverflow.stories.length;
-if (!total) return;
-FEELFRAME.coverflow.current =
- (
- FEELFRAME.coverflow.current + 1
- ) % total;
-updateCoverflow();
- }
-function previousCoverflow() {
- const total =
- FEELFRAME.coverflow.stories.length;
-if (!total) return;
-FEELFRAME.coverflow.current =
- (
- FEELFRAME.coverflow.current - 1 + total
- ) % total;
-updateCoverflow();
- }
-function goToCoverflow(index) {
- const total =
- FEELFRAME.coverflow.stories.length;
-if (!total) return;
-const numericIndex =
- Number(index);
-if (!Number.isFinite(numericIndex)) {
- return;
- }
-FEELFRAME.coverflow.current =
- (
- numericIndex % total + total
- ) % total;
-updateCoverflow();
- }
-/* =========================================================
- COVERFLOW CONTROLS
- ========================================================= */
-function initializeCoverflowControls() {
- const previous =
- document.querySelector(
- "#coverflowPrevious"
- );
-const next =
- document.querySelector(
- "#coverflowNext"
- );
-const track =
- document.querySelector(
- "#coverflowTrack"
- );
-if (previous) {
- previous.onclick =
- previousCoverflow;
- }
-if (next) {
- next.onclick =
- nextCoverflow;
- }
-document
- .querySelectorAll(".coverflow-card")
- .forEach(card => {
- card.onclick = event => {
- if (
- FEELFRAME.coverflow.suppressClick
- ) {
- FEELFRAME.coverflow.suppressClick =
- false;
-     event.preventDefault();  
-      event.stopPropagation();  
-
-      return;  
-    }  
-
-    const index =  
-      Number(card.dataset.index);  
-
-    if (  
-      index !==  
-      FEELFRAME.coverflow.current  
-    ) {  
-      goToCoverflow(index);  
-      return;  
-    }  
-
-    openStory(  
-      card.dataset.storyId  
-    );  
-  };  
-
-  card.onkeydown = event => {  
-    if (  
-      event.key !== "Enter" &&  
-      event.key !== " "  
-    ) {  
-      return;  
-    }  
-
-    event.preventDefault();  
-
-    const index =  
-      Number(card.dataset.index);  
-
-    if (  
-      index !==  
-      FEELFRAME.coverflow.current  
-    ) {  
-      goToCoverflow(index);  
-      return;  
-    }  
-
-    openStory(  
-      card.dataset.storyId  
-    );  
-  };  
-}); 
-
-if (
- !FEELFRAME.coverflow.initialized
- ) {
- document.addEventListener(
- "keydown",
- handleGlobalCoverflowKeyboard
- );
-FEELFRAME.coverflow.initialized =  
-  true; 
-
-}
-if (
- track &&
- track.dataset.coverflowBound !== "true"
- ) {
- initializeCoverflowPointerEvents(
- track
- );
-track.dataset.coverflowBound =  
-  "true"; 
-
-}
- }
-/* =========================================================
- COVERFLOW POINTER ENGINE
- ========================================================= */
-function initializeCoverflowPointerEvents(
- track
- ) {
- if (!track) return;
-track.addEventListener(
- "pointerdown",
- handleCoverflowPointerDown
- );
-track.addEventListener(
- "pointermove",
- handleCoverflowPointerMove
- );
-track.addEventListener(
- "pointerup",
- handleCoverflowPointerUp
- );
-track.addEventListener(
- "pointercancel",
- handleCoverflowPointerCancel
- );
-track.addEventListener(
- "pointerleave",
- handleCoverflowPointerLeave
- );
- }
-function handleCoverflowPointerDown(
- event
- ) {
- /*
- Ignore secondary mouse buttons.
- Touch, pen and primary mouse input remain supported.
- */
- if (
- event.pointerType === "mouse" &&
- event.button !== 0
- ) {
- return;
- }
-const coverflow =
- FEELFRAME.coverflow;
-coverflow.startX =
- event.clientX;
-coverflow.startY =
- event.clientY;
-coverflow.pointerId =
- event.pointerId;
-coverflow.dragging = true;
- coverflow.moved = false;
- coverflow.suppressClick = false;
-const track = event.currentTarget;
-if (
- track &&
- typeof track.setPointerCapture ===
- "function"
- ) {
- try {
- track.setPointerCapture(
- event.pointerId
- );
- } catch (error) {
- /*
- Pointer capture is an enhancement.
- Navigation still works without it.
- */
- }
- }
- }
-function handleCoverflowPointerMove(
- event
- ) {
- const coverflow =
- FEELFRAME.coverflow;
-if (!coverflow.dragging) {
- return;
- }
-if (
- coverflow.pointerId !==
- event.pointerId
- ) {
- return;
- }
-const differenceX =
- event.clientX -
- coverflow.startX;
-const differenceY =
- event.clientY -
- coverflow.startY;
-/*
- A small movement is ignored so normal taps
- do not become accidental swipes.
- */
- const movement =
- Math.sqrt(
- differenceX * differenceX +
- differenceY * differenceY
- );
-if (movement > 8) {
- coverflow.moved = true;
- }
- }
-function handleCoverflowPointerUp(
- event
- ) {
- const coverflow =
- FEELFRAME.coverflow;
-if (!coverflow.dragging) {
- return;
- }
-if (
- coverflow.pointerId !==
- event.pointerId
- ) {
- return;
- }
-const differenceX =
- event.clientX -
- coverflow.startX;
-const differenceY =
- event.clientY -
- coverflow.startY;
-const horizontalMovement =
- Math.abs(differenceX);
-const verticalMovement =
- Math.abs(differenceY);
-const wasDrag =
- coverflow.moved ||
- horizontalMovement > 8 ||
- verticalMovement > 8;
-coverflow.dragging = false;
- coverflow.pointerId = null;
-const track = event.currentTarget;
-if (
- track &&
- typeof track.releasePointerCapture ===
- "function"
- ) {
- try {
- if (
- track.hasPointerCapture &&
- track.hasPointerCapture(
- event.pointerId
- )
- ) {
- track.releasePointerCapture(
- event.pointerId
- );
- }
- } catch (error) {
- /*
- Safe fallback if pointer capture
- is unavailable or already released.
- */
- }
- }
-if (!wasDrag) {
- return;
- }
-/*
- Once a drag has happened, suppress the
- synthetic click generated by the browser.
- */
- coverflow.suppressClick = true;
-const swipeThreshold = 45;
-/*
- Only horizontal movement navigates the
- Cover Flow. Vertical movement is allowed
- without changing stories.
- */
- if (
- horizontalMovement >=
- swipeThreshold &&
- horizontalMovement >
- verticalMovement
- ) {
- if (differenceX < 0) {
- nextCoverflow();
- } else {
- previousCoverflow();
- }
- }
-/*
- Clear the click guard after the browser has
- had a chance to dispatch the synthetic click.
- */
- window.requestAnimationFrame(() => {
- coverflow.suppressClick = false;
- });
- }
-function handleCoverflowPointerCancel(
- event
- ) {
- resetCoverflowPointerState(
- event
- );
- }
-function handleCoverflowPointerLeave(
- event
- ) {
- const coverflow =
- FEELFRAME.coverflow;
-/*
- Do not cancel an active pointer interaction
- because pointer capture may still be active.
- */
- if (
- coverflow.dragging &&
- coverflow.pointerId ===
- event.pointerId
- ) {
- return;
- }
- }
-function resetCoverflowPointerState(
- event
- ) {
- const coverflow =
- FEELFRAME.coverflow;
-if (
- coverflow.pointerId !== null &&
- event &&
- coverflow.pointerId !==
- event.pointerId
- ) {
- return;
- }
-coverflow.dragging = false;
- coverflow.moved = false;
- coverflow.pointerId = null;
-window.requestAnimationFrame(() => {
- coverflow.suppressClick = false;
- });
- }
-/* =========================================================
- COVERFLOW KEYBOARD
- ========================================================= */
-function handleGlobalCoverflowKeyboard(
- event
- ) {
- const coverflow =
- document.querySelector(
- "#coverflowTrack"
- );
-if (!coverflow) return;
-if (
- event.defaultPrevented
- ) {
- return;
- }
-if (
- event.target &&
- (
- event.target.tagName === "INPUT" ||
- event.target.tagName === "TEXTAREA" ||
- event.target.tagName === "SELECT" ||
- event.target.isContentEditable
- )
- ) {
- return;
- }
-/*
- Do not hijack browser/application shortcuts.
- */
- if (
- event.ctrlKey ||
- event.metaKey ||
- event.altKey
- ) {
- return;
- }
-if (event.key === "ArrowRight") {
- event.preventDefault();
- nextCoverflow();
- }
-if (event.key === "ArrowLeft") {
- event.preventDefault();
- previousCoverflow();
- }
-if (event.key === "Home") {
- event.preventDefault();
- goToCoverflow(0);
- }
-if (event.key === "End") {
- event.preventDefault();
-const lastIndex =  
-  FEELFRAME.coverflow.stories.length -  
-  1;  
-
-if (lastIndex >= 0) {  
-  goToCoverflow(lastIndex);  
-} 
-
-}
- }
-/* =========================================================
- COVERFLOW TOUCH FALLBACK
- ========================================================= */
-/*
- Kept as a compatibility fallback for browsers
- where Pointer Events are unavailable.
- */
- function handleCoverflowTouchStart(
- event
- ) {
- if (
- "PointerEvent" in window
- ) {
- return;
- }
-if (
- !event.changedTouches ||
- !event.changedTouches.length
- ) {
- return;
- }
-FEELFRAME.coverflow.startX =
- event.changedTouches[0].clientX;
-FEELFRAME.coverflow.startY =
- event.changedTouches[0].clientY;
-FEELFRAME.coverflow.dragging =
- true;
-FEELFRAME.coverflow.moved =
- false;
- }
-function handleCoverflowTouchEnd(
- event
- ) {
- if (
- "PointerEvent" in window
- ) {
- return;
- }
-const coverflow =
- FEELFRAME.coverflow;
-if (
- !coverflow.dragging ||
- !event.changedTouches ||
- !event.changedTouches.length
- ) {
- return;
- }
-const endX =
- event.changedTouches[0].clientX;
-const endY =
- event.changedTouches[0].clientY;
-const differenceX =
- endX - coverflow.startX;
-const differenceY =
- endY - coverflow.startY;
-const horizontalMovement =
- Math.abs(differenceX);
-const verticalMovement =
- Math.abs(differenceY);
-coverflow.dragging = false;
-if (
- horizontalMovement < 45 ||
- horizontalMovement <=
- verticalMovement
- ) {
- return;
- }
-coverflow.suppressClick =
- true;
-if (differenceX < 0) {
- nextCoverflow();
- } else {
- previousCoverflow();
- }
-window.requestAnimationFrame(() => {
- coverflow.suppressClick = false;
- });
- }
-/* =========================================================
- COVERFLOW DOTS
- ========================================================= */
-function renderCoverflowDots() {
- const container =
- document.querySelector(
- "#coverflowDots"
- );
-if (!container) return;
-const stories =
- FEELFRAME.coverflow.stories;
-container.innerHTML =
- stories
- .map(
- (_, index) => <button class="coverflow-dot" type="button" data-coverflow-index="${index}" aria-label="Show featured story ${index + 1}" aria-current="${ index === FEELFRAME.coverflow.current ? "true" : "false" }" ></button>
- )
- .join("");
-container
- .querySelectorAll(
- "[data-coverflow-index]"
- )
- .forEach(button => {
- button.onclick = () => {
- goToCoverflow(
- Number(
- button.dataset
- .coverflowIndex
- )
- );
- };
- });
- }
-function updateCoverflowDots() {
- const dots =
- document.querySelectorAll(
- ".coverflow-dot"
- );
-dots.forEach(
- (dot, index) => {
- const active =
- index ===
- FEELFRAME.coverflow.current;
- dot.classList.toggle(  
-    "active",  
-    active  
-  );  
-
-  dot.setAttribute(  
-    "aria-current",  
-    active  
-      ? "true"  
-      : "false"  
-  );  
-} 
-
-);
- }
-/* =========================================================
- HOME STORY BOARD
- ========================================================= */
-function renderHomeBoard() {
- const grid =
- document.querySelector(
- "#homeStoryGrid"
- );
-if (!grid) return;
-if (!FEELFRAME.stories.length) {
- renderEmptyState(
- grid,
- "No visual stories yet.",
- "Add stories to data.json to begin building the FeelFrame library."
- );
-return; 
-
-}
-grid.innerHTML =
- FEELFRAME.stories
- .map(createStoryCard)
- .join("");
-initializeStoryCardLinks(
- grid
- );
- }
-/* STORY CARD */
- function createStoryCard(story) {
- return `
- <article
- class="story-card"
- data-story-id="${escapeHTML(
- http://story.id
- )}"
- tabindex="0"
- role="button"
- aria-label="Open ${escapeHTML(
- story.title ||
- "visual story"
- )}"
- >
-
-
-
-<img
-src="${escapeHTML(
-story.image || ""
-)}"
-alt="${escapeHTML(
-story.title ||
-"FeelFrame visual"
-)}"
-loading="lazy"
-draggable="false"
-onerror="handleImageError(this)"
->
-   <div class="story-card-overlay"></div>  
-  </div>  
-
-  <div class="story-card-info">  
-    <div class="story-card-campaign">  
-      ${escapeHTML(  
-        story.campaign ||  
-        story.moment ||  
-        ""  
-      )}  
-    </div>  
-
-    <h3 class="story-card-title">  
-      ${escapeHTML(  
-        story.title || ""  
-      )}  
-    </h3>  
-
-    ${  
-      story.emotion  
-        ? `  
-          <div class="story-card-emotion">  
-            ${escapeHTML(  
-              story.emotion  
-            )}  
-          </div>  
-        `  
-        : ""  
-    }  
-  </div>  
-</article> 
-
-`;
- }
-function initializeStoryCardLinks(
- container
- ) {
- container
- .querySelectorAll(".story-card")
- .forEach(card => {
- const open = () => {
- openStory(
- card.dataset.storyId
- );
- };
- card.onclick = open;  
-
-  card.onkeydown = event => {  
-    if (  
-      event.key === "Enter" ||  
-      event.key === " "  
-    ) {  
-      event.preventDefault();  
-      open();  
-    }  
-  };  
-}); 
-
-}
-/* STORY ROUTING */
- function openStory(storyId) {
- if (!storyId) return;
-window.location.href =
- story.html?id=${encodeURIComponent( storyId )};
- }
-/* =========================================================
- EXPLORE
- ========================================================= */
-function initializeExplore() {
- const grid =
- document.querySelector(
- "#exploreStoryGrid"
- );
-if (!grid) return;
-initializeExploreFilters();
- initializeExploreSearch();
-renderExploreStories(
- getFilteredStories()
- );
- }
-/* DYNAMIC EXPLORE FILTERS */
- function initializeExploreFilters() {
- const filterButtons =
- document.querySelectorAll(
- ".filter-button"
- );
-filterButtons.forEach(button => {
- button.onclick = () => {
- filterButtons.forEach(item => {
- item.classList.remove(
- "active"
- );
- });
- button.classList.add(  
-    "active"  
-  );  
-
-  FEELFRAME.filters.campaign =  
-    button.dataset.filter ||  
-    "all";  
-
-  renderExploreStories(  
-    getFilteredStories()  
-  );  
-}; 
-
-});
-const campaignContainer =
- document.querySelector(
- "#campaignFilters"
- );
-if (campaignContainer) {
- renderDynamicCampaignFilters(
- campaignContainer
- );
- }
-const emotionContainer =
- document.querySelector(
- "#emotionFilters"
- );
-if (emotionContainer) {
- renderDynamicEmotionFilters(
- emotionContainer
- );
- }
- }
-function renderDynamicCampaignFilters(
- container
- ) {
- const campaigns =
- getUniqueValues(
- FEELFRAME.stories,
- "campaign"
- );
-container.innerHTML = `
-
- All
-
-
-${campaigns  
-  .map(  
-    campaign => `  
-      <button  
-        type="button"  
-        class="filter-button"  
-        data-filter="${escapeHTML(  
-          campaign  
-        )}"  
-      >  
-        ${escapeHTML(  
-          campaign  
-        )}  
-      </button>  
-    `  
-  )  
-  .join("")} 
-
-`;
-container
- .querySelectorAll(
- ".filter-button"
- )
- .forEach(button => {
- button.onclick = () => {
- container
- .querySelectorAll(
- ".filter-button"
- )
- .forEach(item => {
- item.classList.remove(
- "active"
- );
- });
-   button.classList.add(  
-      "active"  
-    );  
-
-    FEELFRAME.filters.campaign =  
-      button.dataset.filter ||  
-      "all";  
-
-    renderExploreStories(  
-      getFilteredStories()  
-    );  
-  };  
-}); 
-
-}
-function renderDynamicEmotionFilters(
- container
- ) {
- const emotions =
- getUniqueValues(
- FEELFRAME.stories,
- "emotion"
- );
-container.innerHTML = `
-
- All emotions
-
-
-${emotions  
-  .map(  
-    emotion => `  
-      <button  
-        type="button"  
-        class="filter-button"  
-        data-emotion-filter="${escapeHTML(  
-          emotion  
-        )}"  
-      >  
-        ${escapeHTML(  
-          emotion  
-        )}  
-      </button>  
-    `  
-  )  
-  .join("")} 
-
-`;
-container
- .querySelectorAll(
- "[data-emotion-filter]"
- )
- .forEach(button => {
- button.onclick = () => {
- container
- .querySelectorAll(
- "[data-emotion-filter]"
- )
- .forEach(item => {
- item.classList.remove(
- "active"
- );
- });
-   button.classList.add(  
-      "active"  
-    );  
-
-    FEELFRAME.filters.emotion =  
-      button.dataset  
-        .emotionFilter ||  
-      "all";  
-
-    renderExploreStories(  
-      getFilteredStories()  
-    );  
-  };  
-}); 
-
-}
-/* EXPLORE SEARCH */
- function initializeExploreSearch() {
- const search =
- document.querySelector(
- "#exploreSearch"
- );
-if (!search) return;
-search.addEventListener(
- "input",
- () => {
- FEELFRAME.filters.search =
- search.value.trim();
- renderExploreStories(  
-    getFilteredStories()  
-  );  
-} 
-
-);
- }
-/* FILTER ENGINE */
- function getFilteredStories() {
- const campaign =
- normalize(
- FEELFRAME.filters.campaign
- );
-const emotion =
- normalize(
- FEELFRAME.filters.emotion
- );
-const search =
- normalize(
- FEELFRAME.filters.search
- );
-return FEELFRAME.stories.filter(
- story => {
- const storyCampaign =
- normalize(
- story.campaign
- );
- const storyEmotion =  
-    normalize(  
-      story.emotion  
-    );  
-
-  const campaignMatch =  
-    campaign === "all" ||  
-    storyCampaign ===  
-      campaign;  
-
-  const emotionMatch =  
-    emotion === "all" ||  
-    storyEmotion ===  
-      emotion;  
-
-  if (  
-    !campaignMatch ||  
-    !emotionMatch  
-  ) {  
-    return false;  
-  }  
-
-  if (!search) {  
-    return true;  
-  }  
-
-  const searchable = [  
-    story.title,  
-    story.quote,  
-    story.context,  
-    story.description,  
-    story.campaign,  
-    story.emotion,  
-    story.moment,  
-    story.style,  
-    story.promptTitle  
-  ]  
-    .filter(Boolean)  
-    .join(" ");  
-
-  return normalize(  
-    searchable  
-  ).includes(search);  
-} 
-
-);
- }
-/* EXPLORE RENDERING */
- function renderExploreStories(
- stories
- ) {
- const grid =
- document.querySelector(
- "#exploreStoryGrid"
- );
-if (!grid) return;
-const count =
- document.querySelector(
- "#exploreResultCount"
- );
-const activeFilter =
- document.querySelector(
- "#exploreActiveFilter"
- );
-if (!stories.length) {
- renderEmptyState(
- grid,
- "No stories found.",
- "Try another campaign, emotion or search."
- );
- } else {
- grid.innerHTML =
- stories
- .map(createStoryCard)
- .join("");
-initializeStoryCardLinks(  
-  grid  
-); 
-
-}
-if (count) {
- count.textContent =
- ${stories.length} ${ stories.length === 1 ? "story" : "stories" };
- }
-if (activeFilter) {
- const activeButton =
- document.querySelector(
- ".filter-button.active"
- );
-activeFilter.textContent =  
-  activeButton  
-    ? activeButton.textContent.trim()  
-    : "All"; 
-
-}
- }
-/* =========================================================
- STORY PAGE
- ========================================================= */
-function initializeStory() {
- const container =
- document.querySelector(
- "#storyContent"
- );
-if (!container) return;
-const params =
- new URLSearchParams(
- window.location.search
- );
-const storyId =
- params.get("id");
-const story =
- FEELFRAME.stories.find(
- item =>
- String(http://item.id) ===
- String(storyId)
- );
-if (!story) {
- renderStoryNotFound(
- container
- );
-return; 
-
-}
-renderStory(
- container,
- story
- );
- }
-/* STORY RENDERING */
- function renderStory(
- container,
- story
- ) {
- const oldPrice =
- Number(
- story.compareAt || 0
- );
-const currentPrice =
- Number(
- story.price || 0
- );
-const hasSelar =
- isValidPurchaseURL(
- story.selarUrl
- );
-container.innerHTML = `
-
-
-
-
-<img
-src="${escapeHTML(
-story.image || ""
-)}"
-alt="${escapeHTML(
-story.title ||
-"FeelFrame visual"
-)}"
-draggable="false"
-onerror="handleImageError(this)"
->
- <article class="story-copy">  
-    ${  
-      story.campaign  
-        ? `  
-          <div class="story-campaign">  
-            ${escapeHTML(  
-              story.campaign  
-            )}  
-          </div>  
-        `  
-        : ""  
-    }  
-
-    <h1 class="story-title">  
-      ${escapeHTML(  
-        story.title || ""  
-      )}  
-    </h1>  
-
-    ${  
-      story.quote  
-        ? `  
-          <p class="story-quote">  
-            “${escapeHTML(  
-              story.quote  
-            )}”  
-          </p>  
-        `  
-        : ""  
-    }  
-
-    ${  
-      story.description  
-        ? `  
-          <p class="story-description">  
-            ${escapeHTML(  
-              story.description  
-            )}  
-          </p>  
-        `  
-        : ""  
-    }  
-
-    ${  
-      story.context  
-        ? `  
-          <div class="story-context">  
-            ${escapeHTML(  
-              story.context  
-            )}  
-          </div>  
-        `  
-        : ""  
-    }  
-
-    ${  
-      story.moment ||  
-      story.emotion ||  
-      story.style  
-        ? createStoryMeta(  
-            story  
-          )  
-        : ""  
-    }  
-
-    ${  
-      story.promptTitle  
-        ? createPromptProduct(  
-            story,  
-            oldPrice,  
-            currentPrice,  
-            hasSelar  
-          )  
-        : ""  
-    }  
-  </article>  
-</div> 
-
-`;
- }
-/* STORY META */
- function createStoryMeta(
- story
- ) {
- const values = [
- story.emotion,
- story.moment,
- story.style
- ].filter(Boolean);
-if (!values.length) {
- return "";
- }
-return <div class="story-meta"> ${values .map( value => ${escapeHTML(
- value
- )} ) .join("")} </div> ;
- }
-/* PROMPT PRODUCT */
- function createPromptProduct(
- story,
- oldPrice,
- currentPrice,
- hasSelar
- ) {
- const currency =
- FEELFRAME.site.currency ||
- "NGN";
-return `
-
-
-
-
-🔐 Paid creative prompt
- <h3>  
-    ${escapeHTML(  
-      story.promptTitle  
-    )}  
-  </h3>  
-
-  <p class="prompt-product-description">  
-    The creative prompt behind this visual.  
-  </p>  
-
-  <div class="prompt-price-row">  
-    ${  
-      oldPrice > currentPrice  
-        ? `  
-          <span  
-            class="prompt-old-price"  
-            aria-label="Original price"  
-          >  
-            ${formatCurrency(  
-              oldPrice,  
-              currency  
-            )}  
-          </span>  
-        `  
-        : ""  
-    }  
-
-    ${  
-      currentPrice  
-        ? `  
-          <span  
-            class="prompt-current-price"  
-            aria-label="Current price"  
-          >  
-            ${formatCurrency(  
-              currentPrice,  
-              currency  
-            )}  
-          </span>  
-        `  
-        : ""  
-    }  
-  </div>  
-
-  ${  
-    hasSelar  
-      ? `  
-        <a  
-          class="prompt-buy"  
-          href="${escapeHTML(  
-            story.selarUrl  
-          )}"  
-          target="_blank"  
-          rel="noopener noreferrer"  
-          aria-label="Get ${escapeHTML(  
-            story.promptTitle  
-          )}"  
-        >  
-          Get prompt  
-          <span>→</span>  
-        </a>  
-      `  
-      : `  
-        <button  
-          class="prompt-buy"  
-          type="button"  
-          disabled  
-          aria-disabled="true"  
-          title="Checkout link will be added soon"  
-        >  
-          Checkout coming soon  
-        </button>  
-      `  
-  }  
-</section> 
-
-`;
- }
-/* STORY NOT FOUND */
- function renderStoryNotFound(
- container
- ) {
- container.innerHTML = `
-
-
-
-Story not found.
- <p>  
-    This visual story may have moved  
-    or no longer exists.  
-  </p>  
-
-  <a  
-    href="explore.html"  
-    class="hero-cta"  
-    style="margin-top: 20px;"  
-  >  
-    Explore stories →  
-  </a>  
-</div> 
-
-`;
- }
-/* =========================================================
- CREATE PAGE
- ========================================================= */
-function initializeCreate() {
- initializeChoiceCards();
- initializeReferenceUpload();
-const form =
- document.querySelector(
- "#feelFrameForm"
- );
-if (!form) return;
-if (
- form.dataset.initialized ===
- "true"
- ) {
- return;
- }
-form.addEventListener(
- "submit",
- event => {
- event.preventDefault();
- handleCreateSubmission(
- form
- );
- }
- );
-form.dataset.initialized =
- "true";
- }
-/* CHOICE CARDS */
- function initializeChoiceCards() {
- document
- .querySelectorAll(
- ".choice-card"
- )
- .forEach(card => {
- const input =
- card.querySelector(
- "input"
- );
- if (!input) return;  
-
-  card.addEventListener(  
-    "click",  
-    event => {  
-      if (  
-        event.target !==  
-        input  
-      ) {  
-        input.checked = true;  
-      }  
-
-      updateChoiceGroup(  
-        input  
-      );  
-    }  
-  );  
-
-  input.addEventListener(  
-    "change",  
-    () => {  
-      updateChoiceGroup(  
-        input  
-      );  
-    }  
-  );  
-
-  if (input.checked) {  
-    updateChoiceGroup(  
-      input  
-    );  
-  }  
-}); 
-
-}
-function updateChoiceGroup(
- input
- ) {
- const name =
- input.name;
-document
- .querySelectorAll(
- .choice-card input[name="${CSS.escape( name )}"]
- )
- .forEach(item => {
- const card =
- item.closest(
- ".choice-card"
- );
- if (!card) return;  
-
-  card.classList.toggle(  
-    "selected",  
-    item.checked  
-  );  
-}); 
-
-}
-/* =========================================================
- REFERENCE IMAGE
- ========================================================= */
-function initializeReferenceUpload() {
- const input =
- document.querySelector(
- "#referenceImage"
- );
-const preview =
- document.querySelector(
- "#referencePreview"
- );
-const previewImage =
- document.querySelector(
- "#referencePreview img"
- );
-if (
- !input ||
- !preview ||
- !previewImage
- ) {
- return;
- }
-input.addEventListener(
- "change",
- () => {
- const file =
- input.files?.[0];
- if (!file) {  
-    preview.classList.remove(  
-      "active"  
-    );  
-
-    previewImage.removeAttribute(  
-      "src"  
-    );  
-
-    return;  
-  }  
-
-  if (  
-    !file.type.startsWith(  
-      "image/"  
-    )  
-  ) {  
-    input.value = "";  
-
-    preview.classList.remove(  
-      "active"  
-    );  
-
-    return;  
-  }  
-
-  const reader =  
-    new FileReader();  
-
-  reader.onload =  
-    event => {  
-      previewImage.src =  
-        event.target.result;  
-
-      preview.classList.add(  
-        "active"  
-      );  
-    };  
-
-  reader.onerror = () => {  
-    input.value = "";  
-
-    preview.classList.remove(  
-      "active"  
-    );  
-
-    previewImage.removeAttribute(  
-      "src"  
-    );  
-  };  
-
-  reader.readAsDataURL(  
-    file  
-  );  
-} 
-
-);
- }
-/* =========================================================
- CREATE SUBMISSION
- ========================================================= */
-function handleCreateSubmission(
- form
- ) {
- const formData =
- new FormData(form);
-const name =
- getFormValue(
- formData,
- "name"
- );
-const school =
- getFormValue(
- formData,
- "school"
- );
-const course =
- getFormValue(
- formData,
- "course"
- );
-const moment =
- getFormValue(
- formData,
- "moment"
- );
-const feeling =
- getFormValue(
- formData,
- "feeling"
- );
-const context =
- getFormValue(
- formData,
- "context"
- );
-const message =
- getFormValue(
- formData,
- "message"
- );
-const visualLanguage =
- getFormValue(
- formData,
- "visualLanguage"
- );
-const missingFields = [];
-if (!name) {
- missingFields.push(
- "Name"
- );
- }
-if (!school) {
- missingFields.push(
- "University / School"
- );
- }
-if (!course) {
- missingFields.push(
- "Course / Field"
- );
- }
-if (!moment) {
- missingFields.push(
- "Moment"
- );
- }
-if (!feeling) {
- missingFields.push(
- "Feeling"
- );
- }
-if (!context) {
- missingFields.push(
- "What you're going through"
- );
- }
-if (!message) {
- missingFields.push(
- "What you want the image to communicate"
- );
- }
-if (!visualLanguage) {
- missingFields.push(
- "Visual language"
- );
- }
-if (missingFields.length) {
- alert(
- Please complete:\n\n${missingFields.join( "\n" )}
- );
-return; 
-
-}
-const direction =
- generateCreativeDirection({
- feeling,
- context,
- visualLanguage
- });
-const commands =
- generateVisualCommands({
- feeling,
- visualLanguage
- });
-const referenceInput =
- document.querySelector(
- "#referenceImage"
- );
-const referenceFile =
- referenceInput?.files?.[0];
-const referenceText =
- referenceFile
- ? User will attach reference image: ${referenceFile.name}
- : "No reference image supplied.";
-const whatsappMessage =
- buildWhatsAppMessage({
- name,
- school,
- course,
- moment,
- feeling,
- context,
- message,
- visualLanguage,
- direction,
- commands,
- referenceText
- });
-const whatsappNumber =
- String(
- http://FEELFRAME.site
- .whatsappNumber ||
- ""
- ).replace(
- /\D/g,
- ""
- );
-if (!whatsappNumber) {
- alert(
- "FeelFrame WhatsApp contact is not configured yet."
- );
-return; 
-
-}
-const whatsappURL =
- https://wa.me/$%7BwhatsappNumber%7D?text=${encodeURIComponent( whatsappMessage )};
-window.open(
- whatsappURL,
- "_blank",
- "noopener,noreferrer"
- );
- }
-/* =========================================================
- CREATIVE DIRECTION ENGINE
- ========================================================= */
-function generateCreativeDirection({
- feeling,
- context,
- visualLanguage
- }) {
- return {
- emotion:
- emotionTranslator(
- feeling
- ),
-condition:  
-  conditionTranslator(  
-    feeling,  
-    context  
-  ),  
-
-style:  
-  styleTranslator(  
-    visualLanguage  
-  ) 
-
-};
- }
-/* EMOTION TRANSLATOR */
- function emotionTranslator(
- feeling
- ) {
- const map = {
- "Determined":
- "quiet determination and forward movement",
-"Exhausted":  
-  "visible fatigue balanced with resilience",  
-
-"Proud":  
-  "earned pride and personal accomplishment",  
-
-"Hopeful":  
-  "quiet optimism and anticipation",  
-
-"Confident":  
-  "self-assurance and controlled confidence",  
-
-"Starting Again":  
-  "renewal, reflection and a fresh beginning",  
-
-"Curious":  
-  "curiosity, discovery and openness",  
-
-"Reflective":  
-  "introspection, meaning and emotional depth",  
-
-"Bold":  
-  "confidence, expression and creative presence",  
-
-"Ambitious":  
-  "aspiration, momentum and future-focused energy",  
-
-"Inspired":  
-  "creative energy and possibility" 
-
-};
-return (
- map[feeling] ||
- "authentic human emotion"
- );
- }
-/* CONDITION TRANSLATOR */
- function conditionTranslator(
- feeling,
- context
- ) {
- const base = {
- "Determined":
- "focused, persistent and composed",
-"Exhausted":  
-  "physically and mentally tired but continuing",  
-
-"Proud":  
-  "reflective, accomplished and present",  
-
-"Hopeful":  
-  "uncertain yet optimistic",  
-
-"Confident":  
-  "grounded, self-assured and intentional",  
-
-"Starting Again":  
-  "reflective, calm and ready for change",  
-
-"Curious":  
-  "observant, open and intrigued",  
-
-"Reflective":  
-  "thoughtful, present and emotionally aware",  
-
-"Bold":  
-  "expressive, assured and visually intentional",  
-
-"Ambitious":  
-  "focused, future-oriented and driven",  
-
-"Inspired":  
-  "creative, energetic and possibility-focused" 
-
-};
-const emotionalCondition =
- base[feeling] ||
- "present and emotionally authentic";
-return ${emotionalCondition}. Context: ${truncate( context, 220 )};
- }
-/* STYLE TRANSLATOR */
- function styleTranslator(
- style
- ) {
- const map = {
- "Cinematic":
- "cinematic realism, controlled lighting, natural depth and filmic composition",
-"Cinematic Editorial":  
-  "cinematic editorial photography, sophisticated art direction, controlled depth and premium composition",  
-
-"Editorial":  
-  "premium editorial photography, sophisticated composition and magazine-level art direction",  
-
-"Luxury":  
-  "refined luxury visual language, polished composition and understated sophistication",  
-
-"Film":  
-  "35mm film character, natural imperfections, organic grain and cinematic framing",  
-
-"Dreamlike":  
-  "dreamlike atmosphere, poetic composition, soft visual transitions and subtle surrealism",  
-
-"Dark & Moody":  
-  "moody low-key lighting, rich shadows, intimate framing and atmospheric depth",  
-
-"Golden Hour":  
-  "warm golden-hour illumination, natural backlight, soft highlights and cinematic atmosphere",  
-
-"3D":  
-  "dimensional 3D composition, realistic depth, controlled perspective and commercial visual design",  
-
-"Commercial":  
-  "premium commercial art direction, controlled composition, product-style lighting and polished visual hierarchy",  
-
-"Futuristic":  
-  "futuristic editorial design, controlled light, glass and digital surfaces, cinematic depth",  
-
-"Fine Art":  
-  "fine-art portraiture, tactile texture, restrained composition and gallery-inspired visual language",  
-
-"Fashion":  
-  "high-fashion editorial direction, considered styling, sophisticated lighting and magazine composition" 
-
-};
-return (
- map[style] ||
- "cinematic visual storytelling"
- );
- }
-/* =========================================================
- INTERNAL VISUAL COMMAND ENGINE
- ========================================================= */
-function generateVisualCommands({
- feeling,
- visualLanguage
- }) {
- const commands = [
- "/hdreal"
- ];
-const styleCommands = {
- "Cinematic": [
- "/cinematic",
- "/35mmfilm",
- "/shallowdepth"
- ],
-"Cinematic Editorial": [  
-  "/cinematic",  
-  "/editorial",  
-  "/35mmfilm",  
-  "/shallowdepth"  
-],  
-
-"Editorial": [  
-  "/editorial",  
-  "/magazinecover",  
-  "/softlighting"  
-],  
-
-"Luxury": [  
-  "/luxury",  
-  "/editorial",  
-  "/rimlight"  
-],  
-
-"Film": [  
-  "/35mmfilm",  
-  "/filmgrain",  
-  "/shallowdepth"  
-],  
-
-"Dreamlike": [  
-  "/dreamcore",  
-  "/backlight",  
-  "/wideangle"  
-],  
-
-"Dark & Moody": [  
-  "/dramaticlighting",  
-  "/closeup",  
-  "/filmgrain"  
-],  
-
-"Golden Hour": [  
-  "/goldenhour",  
-  "/backlight",  
-  "/35mmfilm"  
-],  
-
-"3D": [  
-  "/3ddepth",  
-  "/cinematic",  
-  "/editorial"  
-],  
-
-"Commercial": [  
-  "/commercial",  
-  "/editorial",  
-  "/controlledlighting"  
-],  
-
-"Futuristic": [  
-  "/futuristic",  
-  "/cinematic",  
-  "/rimlight"  
-],  
-
-"Fine Art": [  
-  "/fineart",  
-  "/softlighting",  
-  "/35mmfilm"  
-],  
-
-"Fashion": [  
-  "/fashion",  
-  "/editorial",  
-  "/magazinecover"  
-] 
-
-};
-if (
- styleCommands[
- visualLanguage
- ]
- ) {
- commands.push(
- ...styleCommands[
- visualLanguage
- ]
- );
- }
-const feelingCommands = {
- "Determined":
- "/lowangle",
-"Exhausted":  
-  "/closeup",  
-
-"Proud":  
-  "/backlight",  
-
-"Hopeful":  
-  "/sunrise",  
-
-"Confident":  
-  "/lowangle",  
-
-"Starting Again":  
-  "/softlighting",  
-
-"Curious":  
-  "/wideangle",  
-
-"Reflective":  
-  "/softlighting",  
-
-"Bold":  
-  "/lowangle",  
-
-"Ambitious":  
-  "/lowangle",  
-
-"Inspired":  
-  "/backlight" 
-
-};
-if (
- feelingCommands[
- feeling
- ]
- ) {
- commands.push(
- feelingCommands[
- feeling
- ]
- );
- }
-return [
- ...new Set(commands)
- ];
- }
-/* =========================================================
- WHATSAPP MESSAGE
- ========================================================= */
-function buildWhatsAppMessage({
- name,
- school,
- course,
- moment,
- feeling,
- context,
- message,
- visualLanguage,
- direction,
- commands,
- referenceText
- }) {
- return `FEELFRAME™ — NEW VISUAL REQUEST
+   FEELFRAME™ — GLOBAL APPLICATION ENGINE
+   Production Script
+   ---------------------------------------------------------
+   Data source: data.json
+   Pages:
+   - index.html
+   - explore.html
+   - create.html
+   - story.html
+
+   Responsibilities:
+   - Data loading
+   - Global state
+   - Navigation
+   - Homepage rendering
+   - 3D Coverflow
+   - Story board
+   - Explore search/filter
+   - Story/product routing
+   - Create / personalization engine
+   - Creative direction generation
+   - WhatsApp request generation
+   - Checkout validation
+   - Image resilience
+   - Accessibility
+   - Reduced motion
+   - Error / empty states
+   ========================================================= */
+
+(() => {
+  "use strict";
+
+  /* =========================================================
+     CONFIGURATION
+     ========================================================= */
+
+  const CONFIG = {
+    dataUrl: "data.json",
+
+    pages: {
+      home: "index.html",
+      explore: "explore.html",
+      create: "create.html",
+      story: "story.html"
+    },
+
+    selectors: {
+      coverflow:
+        "#coverflow, .coverflow, [data-coverflow]",
+
+      coverflowTrack:
+        "#coverflowTrack, .coverflow-track, [data-coverflow-track]",
+
+      coverflowPrev:
+        "#coverflowPrev, .coverflow-prev, [data-coverflow-prev]",
+
+      coverflowNext:
+        "#coverflowNext, .coverflow-next, [data-coverflow-next]",
+
+      coverflowDots:
+        "#coverflowDots, .coverflow-dots, [data-coverflow-dots]",
+
+      storyGrid:
+        "#storyGrid, .story-grid, [data-story-grid]",
+
+      exploreGrid:
+        "#exploreGrid, .explore-grid, [data-explore-grid]",
+
+      search:
+        "#storySearch, #searchInput, .story-search, [data-story-search]",
+
+      campaignFilter:
+        "#campaignFilter, .campaign-filter, [data-campaign-filter]",
+
+      emotionFilter:
+        "#emotionFilter, .emotion-filter, [data-emotion-filter]",
+
+      storyCount:
+        "#storyCount, .story-count, [data-story-count]",
+
+      emptyState:
+        "#emptyState, .empty-state, [data-empty-state]",
+
+      globalError:
+        "#globalError, .global-error, [data-global-error]",
+
+      createForm:
+        "#createForm, form[data-create-form], [data-create-form]",
+
+      imageInput:
+        "#referenceImage, #imageUpload, input[type='file'][data-reference]",
+
+      imagePreview:
+        "#imagePreview, .image-preview, [data-image-preview]"
+    }
+  };
+
+
+  /* =========================================================
+     APPLICATION STATE
+     ========================================================= */
+
+  const FEELFRAME = {
+    data: null,
+
+    site: {
+      name: "FeelFrame™",
+      tagline: "Some feelings deserve to be seen.",
+      description: "",
+      whatsappNumber: "",
+      currency: "NGN"
+    },
+
+    stories: [],
+
+    filters: {
+      campaign: "all",
+      emotion: "all",
+      search: ""
+    },
+
+    coverflow: {
+      stories: [],
+      current: 0,
+      dragging: false,
+      pointerId: null,
+      startX: 0,
+      currentX: 0,
+      moved: false,
+      suppressClick: false
+    },
+
+    create: {
+      referenceImage: null,
+      referenceName: ""
+    }
+  };
+
+
+  /* =========================================================
+     DOM HELPERS
+     ========================================================= */
+
+  const $ = (selector, root = document) => {
+    if (!selector) return null;
+
+    const selectors = selector
+      .split(",")
+      .map((item) => item.trim())
+      .filter(Boolean);
+
+    for (const item of selectors) {
+      const element = root.querySelector(item);
+
+      if (element) {
+        return element;
+      }
+    }
+
+    return null;
+  };
+
+
+  const $$ = (selector, root = document) => {
+    if (!selector) return [];
+
+    return Array.from(
+      root.querySelectorAll(selector)
+    );
+  };
+
+
+  const firstExisting = (...selectors) => {
+    for (const selector of selectors) {
+      const element = $(selector);
+
+      if (element) return element;
+    }
+
+    return null;
+  };
+
+
+  const escapeHTML = (value) => {
+    return String(value ?? "")
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;")
+      .replace(/'/g, "&#039;");
+  };
+
+
+  const safeText = (value, fallback = "") => {
+    if (
+      value === null ||
+      value === undefined ||
+      value === ""
+    ) {
+      return fallback;
+    }
+
+    return String(value);
+  };
+
+
+  const normalize = (value) => {
+    return String(value ?? "")
+      .trim()
+      .toLowerCase();
+  };
+
+
+  const slugify = (value) => {
+    return String(value ?? "")
+      .toLowerCase()
+      .trim()
+      .replace(/[^a-z0-9]+/g, "-")
+      .replace(/^-+|-+$/g, "");
+  };
+
+
+  const unique = (array) => {
+    return [...new Set(array.filter(Boolean))];
+  };
+
+
+  /* =========================================================
+     PAGE DETECTION
+     ========================================================= */
+
+  const getPageName = () => {
+    const path = window.location.pathname
+      .split("/")
+      .pop()
+      .toLowerCase();
+
+    if (!path || path === "/") {
+      return "home";
+    }
+
+    if (path === "index.html") {
+      return "home";
+    }
+
+    if (path === "explore.html") {
+      return "explore";
+    }
+
+    if (path === "create.html") {
+      return "create";
+    }
+
+    if (path === "story.html") {
+      return "story";
+    }
+
+    return "unknown";
+  };
+
+
+  /* =========================================================
+     URL HELPERS
+     ========================================================= */
+
+  const getStoryIdFromURL = () => {
+    const params = new URLSearchParams(
+      window.location.search
+    );
+
+    return (
+      params.get("id") ||
+      params.get("story") ||
+      params.get("product") ||
+      ""
+    );
+  };
+
+
+  const buildStoryURL = (story) => {
+    if (!story || !story.id) {
+      return CONFIG.pages.story;
+    }
+
+    return `${CONFIG.pages.story}?id=${encodeURIComponent(
+      story.id
+    )}`;
+  };
+
+
+  const navigateToStory = (story) => {
+    if (!story || !story.id) return;
+
+    window.location.href = buildStoryURL(story);
+  };
+
+
+  const navigateTo = (page) => {
+    if (!page) return;
+
+    window.location.href = page;
+  };
+
+
+  /* =========================================================
+     DATA VALIDATION
+     ========================================================= */
+
+  const isValidStory = (story) => {
+    if (!story || typeof story !== "object") {
+      return false;
+    }
+
+    return Boolean(
+      story.id &&
+      (
+        story.title ||
+        story.campaign ||
+        story.image
+      )
+    );
+  };
+
+
+  const validateData = (data) => {
+    if (!data || typeof data !== "object") {
+      throw new Error(
+        "FeelFrame data is not a valid object."
+      );
+    }
+
+    if (
+      data.stories !== undefined &&
+      !Array.isArray(data.stories)
+    ) {
+      throw new Error(
+        "FeelFrame stories must be an array."
+      );
+    }
+
+    return true;
+  };
+
+
+  /* =========================================================
+     DATA LOADING
+     ========================================================= */
+
+  const loadData = async () => {
+    try {
+      const response = await fetch(
+        CONFIG.dataUrl,
+        {
+          method: "GET",
+          headers: {
+            Accept: "application/json"
+          },
+          cache: "no-cache"
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error(
+          `Unable to load data.json (${response.status}).`
+        );
+      }
+
+      const data = await response.json();
+
+      validateData(data);
+
+      FEELFRAME.data = data;
+
+      FEELFRAME.site = {
+        ...FEELFRAME.site,
+        ...(data.site || {})
+      };
+
+      FEELFRAME.stories = Array.isArray(data.stories)
+        ? data.stories.filter(isValidStory)
+        : [];
+
+      return data;
+    } catch (error) {
+      console.error(
+        "[FeelFrame] Data loading error:",
+        error
+      );
+
+      showGlobalError(
+        "FeelFrame could not load its visual library right now."
+      );
+
+      throw error;
+    }
+  };
+
+
+  /* =========================================================
+     GLOBAL ERROR HANDLING
+     ========================================================= */
+
+  const showGlobalError = (message) => {
+    const errorElement = $(
+      CONFIG.selectors.globalError
+    );
+
+    if (!errorElement) return;
+
+    errorElement.hidden = false;
+
+    errorElement.innerHTML = `
+      <div class="error-state-content">
+        <strong>Something went wrong.</strong>
+        <span>${escapeHTML(message)}</span>
+      </div>
+    `;
+  };
+
+
+  const hideGlobalError = () => {
+    const errorElement = $(
+      CONFIG.selectors.globalError
+    );
+
+    if (!errorElement) return;
+
+    errorElement.hidden = true;
+  };
+
+
+  /* =========================================================
+     SITE METADATA
+     ========================================================= */
+
+  const updateSiteMetadata = () => {
+    const title = document.title;
+
+    if (
+      !title ||
+      title === "Document" ||
+      title.trim() === ""
+    ) {
+      document.title =
+        FEELFRAME.site.name ||
+        "FeelFrame™";
+    }
+
+    const metaDescription = document.querySelector(
+      'meta[name="description"]'
+    );
+
+    if (
+      metaDescription &&
+      FEELFRAME.site.description
+    ) {
+      metaDescription.setAttribute(
+        "content",
+        FEELFRAME.site.description
+      );
+    }
+
+    $$("[data-site-name]").forEach((element) => {
+      element.textContent =
+        FEELFRAME.site.name || "FeelFrame™";
+    });
+
+    $$("[data-site-tagline]").forEach((element) => {
+      element.textContent =
+        FEELFRAME.site.tagline ||
+        "Some feelings deserve to be seen.";
+    });
+
+    $$("[data-site-description]").forEach((element) => {
+      element.textContent =
+        FEELFRAME.site.description || "";
+    });
+  };
+
+
+  /* =========================================================
+     IMAGE RESILIENCE
+     ========================================================= */
+
+  const setupImageFallbacks = () => {
+    $$("img").forEach((image) => {
+      if (image.dataset.ffImageBound === "true") {
+        return;
+      }
+
+      image.dataset.ffImageBound = "true";
+
+      image.addEventListener(
+        "error",
+        () => {
+          image.classList.add("image-error");
+
+          image.setAttribute(
+            "aria-hidden",
+            "true"
+          );
+
+          const parent = image.closest(
+            ".story-card, .cover-card, .story-visual, .visual-card, [data-story-card]"
+          );
+
+          if (parent) {
+            parent.classList.add(
+              "has-image-error"
+            );
+          }
+        },
+        { once: true }
+      );
+    });
+  };
+
+
+  /* =========================================================
+     STORY CARD MARKUP
+     ========================================================= */
+
+  const getStoryImage = (story) => {
+    return safeText(
+      story.image,
+      ""
+    );
+  };
+
+
+  const createStoryCard = (
+    story,
+    {
+      cover = false,
+      index = 0
+    } = {}
+  ) => {
+    const image = getStoryImage(story);
+
+    const cardClass = cover
+      ? "cover-card"
+      : "story-card";
+
+    return `
+      <article
+        class="${cardClass}"
+        data-story-card
+        data-story-id="${escapeHTML(story.id)}"
+        data-index="${index}"
+        tabindex="0"
+        role="link"
+        aria-label="Open ${escapeHTML(
+          story.title || story.campaign || "visual story"
+        )}"
+      >
+
+        <div class="story-card-image-wrap">
+
+          ${
+            image
+              ? `
+                <img
+                  class="story-card-image"
+                  src="${escapeHTML(image)}"
+                  alt="${escapeHTML(
+                    story.title ||
+                    story.campaign ||
+                    "FeelFrame visual story"
+                  )}"
+                  loading="${
+                    cover ? "eager" : "lazy"
+                  }"
+                  decoding="async"
+                >
+              `
+              : `
+                <div
+                  class="story-card-image story-card-image-empty"
+                  aria-hidden="true"
+                ></div>
+              `
+          }
+
+        </div>
+
+        <div class="story-card-overlay">
+
+          <div class="story-card-meta">
+
+            ${
+              story.campaign
+                ? `
+                  <span class="story-card-campaign">
+                    ${escapeHTML(story.campaign)}
+                  </span>
+                `
+                : ""
+            }
+
+            ${
+              story.emotion
+                ? `
+                  <span class="story-card-emotion">
+                    ${escapeHTML(story.emotion)}
+                  </span>
+                `
+                : ""
+            }
+
+          </div>
+
+          <h3 class="story-card-title">
+            ${escapeHTML(
+              story.title ||
+              story.campaign ||
+              "Untitled Story"
+            )}
+          </h3>
+
+          ${
+            story.moment
+              ? `
+                <p class="story-card-moment">
+                  ${escapeHTML(story.moment)}
+                </p>
+              `
+              : ""
+          }
+
+        </div>
+
+      </article>
+    `;
+  };
+
+
+  /* =========================================================
+     STORY CARD EVENTS
+     ========================================================= */
+
+  const bindStoryCardEvents = (root = document) => {
+    $$(
+      "[data-story-card]",
+      root
+    ).forEach((card) => {
+      if (card.dataset.ffBound === "true") {
+        return;
+      }
+
+      card.dataset.ffBound = "true";
+
+      const open = () => {
+        const storyId =
+          card.dataset.storyId;
+
+        const story =
+          findStoryById(storyId);
+
+        if (story) {
+          navigateToStory(story);
+        }
+      };
+
+      card.addEventListener(
+        "click",
+        (event) => {
+          if (
+            card.dataset.suppressClick ===
+            "true"
+          ) {
+            return;
+          }
+
+          if (
+            event.target.closest(
+              "a, button"
+            )
+          ) {
+            return;
+          }
+
+          open();
+        }
+      );
+
+      card.addEventListener(
+        "keydown",
+        (event) => {
+          if (
+            event.key === "Enter" ||
+            event.key === " "
+          ) {
+            event.preventDefault();
+            open();
+          }
+        }
+      );
+    });
+  };
+
+
+  /* =========================================================
+     STORY LOOKUP
+     ========================================================= */
+
+  const findStoryById = (id) => {
+    if (!id) return null;
+
+    return FEELFRAME.stories.find(
+      (story) =>
+        String(story.id) === String(id)
+    ) || null;
+  };
+
+
+  /* =========================================================
+     HOMEPAGE STORY BOARD
+     ========================================================= */
+
+  const renderHomeStoryBoard = () => {
+    const grid =
+      $(
+        CONFIG.selectors.storyGrid
+      );
+
+    if (!grid) return;
+
+    const stories = FEELFRAME.stories;
+
+    if (!stories.length) {
+      grid.innerHTML = "";
+      showEmptyState(grid);
+      return;
+    }
+
+    grid.innerHTML = stories
+      .map((story, index) =>
+        createStoryCard(
+          story,
+          {
+            cover: false,
+            index
+          }
+        )
+      )
+      .join("");
+
+    bindStoryCardEvents(grid);
+    setupImageFallbacks();
+  };
+
+
+  /* =========================================================
+     EMPTY STATES
+     ========================================================= */
+
+  const showEmptyState = (container) => {
+    if (!container) return;
+
+    const empty =
+      $(
+        CONFIG.selectors.emptyState
+      );
+
+    if (empty) {
+      empty.hidden = false;
+    } else {
+      container.innerHTML = `
+        <div class="empty-state-content">
+          <strong>No visual stories yet.</strong>
+          <span>New FeelFrame stories will appear here.</span>
+        </div>
+      `;
+    }
+  };
+
+
+  const hideEmptyState = () => {
+    const empty =
+      $(
+        CONFIG.selectors.emptyState
+      );
+
+    if (empty) {
+      empty.hidden = true;
+    }
+  };
+
+
+  /* =========================================================
+     COVERFLOW
+     ========================================================= */
+
+  const getFeaturedStories = () => {
+    const featured =
+      FEELFRAME.stories.filter(
+        (story) =>
+          story.featured === true ||
+          story.featured === "true" ||
+          story.featured === 1
+      );
+
+    return featured.length
+      ? featured
+      : FEELFRAME.stories;
+  };
+
+
+  const renderCoverflow = () => {
+    const track =
+      $(
+        CONFIG.selectors.coverflowTrack
+      );
+
+    if (!track) return;
+
+    const stories =
+      getFeaturedStories();
+
+    FEELFRAME.coverflow.stories =
+      stories;
+
+    if (!stories.length) {
+      track.innerHTML = "";
+      return;
+    }
+
+    if (
+      FEELFRAME.coverflow.current >=
+      stories.length
+    ) {
+      FEELFRAME.coverflow.current = 0;
+    }
+
+    track.innerHTML = stories
+      .map((story, index) =>
+        createStoryCard(
+          story,
+          {
+            cover: true,
+            index
+          }
+        )
+      )
+      .join("");
+
+    bindCoverflowCards(track);
+    updateCoverflow();
+
+    renderCoverflowDots();
+    setupImageFallbacks();
+  };
+
+
+  const getCircularOffset = (
+    index,
+    current,
+    total
+  ) => {
+    if (!total) return 0;
+
+    let offset =
+      index - current;
+
+    const half =
+      Math.floor(total / 2);
+
+    if (offset > half) {
+      offset -= total;
+    }
+
+    if (offset < -half) {
+      offset += total;
+    }
+
+    return offset;
+  };
+
+
+  const updateCoverflow = () => {
+    const track =
+      $(
+        CONFIG.selectors.coverflowTrack
+      );
+
+    if (!track) return;
+
+    const cards =
+      $$(
+        "[data-story-card]",
+        track
+      );
+
+    const total =
+      cards.length;
+
+    if (!total) return;
+
+    const current =
+      FEELFRAME.coverflow.current;
+
+    cards.forEach((card, index) => {
+      const offset =
+        getCircularOffset(
+          index,
+          current,
+          total
+        );
+
+      card.classList.remove(
+        "is-center",
+        "is-left",
+        "is-right",
+        "is-far-left",
+        "is-far-right"
+      );
+
+      if (offset === 0) {
+        card.classList.add(
+          "is-center"
+        );
+      } else if (offset === -1) {
+        card.classList.add(
+          "is-left"
+        );
+      } else if (offset === 1) {
+        card.classList.add(
+          "is-right"
+        );
+      } else if (offset < -1) {
+        card.classList.add(
+          "is-far-left"
+        );
+      } else if (offset > 1) {
+        card.classList.add(
+          "is-far-right"
+        );
+      }
+
+      card.dataset.coverOffset =
+        String(offset);
+
+      card.setAttribute(
+        "aria-current",
+        offset === 0
+          ? "true"
+          : "false"
+      );
+    });
+
+    updateCoverflowDots();
+  };
+
+
+  const moveCoverflow = (
+    direction
+  ) => {
+    const stories =
+      FEELFRAME.coverflow.stories;
+
+    if (!stories.length) return;
+
+    const total =
+      stories.length;
+
+    let next =
+      FEELFRAME.coverflow.current +
+      direction;
+
+    if (next < 0) {
+      next = total - 1;
+    }
+
+    if (next >= total) {
+      next = 0;
+    }
+
+    FEELFRAME.coverflow.current =
+      next;
+
+    updateCoverflow();
+  };
+
+
+  const goToCoverflow = (
+    index
+  ) => {
+    const stories =
+      FEELFRAME.coverflow.stories;
+
+    if (!stories.length) return;
+
+    const normalized =
+      (
+        index % stories.length +
+        stories.length
+      ) %
+      stories.length;
+
+    FEELFRAME.coverflow.current =
+      normalized;
+
+    updateCoverflow();
+  };
+
+
+  const renderCoverflowDots = () => {
+    const container =
+      $(
+        CONFIG.selectors.coverflowDots
+      );
+
+    if (!container) return;
+
+    const stories =
+      FEELFRAME.coverflow.stories;
+
+    container.innerHTML =
+      stories
+        .map(
+          (story, index) => `
+            <button
+              type="button"
+              class="coverflow-dot"
+              data-cover-index="${index}"
+              aria-label="Show ${
+                escapeHTML(
+                  story.title ||
+                  story.campaign ||
+                  `story ${index + 1}`
+                )
+              }"
+            ></button>
+          `
+        )
+        .join("");
+
+    $$(".coverflow-dot", container)
+      .forEach((dot) => {
+        dot.addEventListener(
+          "click",
+          () => {
+            goToCoverflow(
+              Number(
+                dot.dataset.coverIndex
+              )
+            );
+          }
+        );
+      });
+
+    updateCoverflowDots();
+  };
+
+
+  const updateCoverflowDots = () => {
+    const container =
+      $(
+        CONFIG.selectors.coverflowDots
+      );
+
+    if (!container) return;
+
+    const dots =
+      $$(".coverflow-dot", container);
+
+    dots.forEach((dot, index) => {
+      const active =
+        index ===
+        FEELFRAME.coverflow.current;
+
+      dot.classList.toggle(
+        "is-active",
+        active
+      );
+
+      dot.setAttribute(
+        "aria-current",
+        active
+          ? "true"
+          : "false"
+      );
+    });
+  };
+
+
+  const bindCoverflowCards = (
+    track
+  ) => {
+    const cards =
+      $$(
+        "[data-story-card]",
+        track
+      );
+
+    cards.forEach((card) => {
+      if (
+        card.dataset.ffCoverBound ===
+        "true"
+      ) {
+        return;
+      }
+
+      card.dataset.ffCoverBound =
+        "true";
+
+      card.addEventListener(
+        "click",
+        (event) => {
+          if (
+            FEELFRAME.coverflow.suppressClick
+          ) {
+            event.preventDefault();
+
+            FEELFRAME.coverflow.suppressClick =
+              false;
+
+            return;
+          }
+
+          const index =
+            Number(card.dataset.index);
+
+          const offset =
+            getCircularOffset(
+              index,
+              FEELFRAME.coverflow.current,
+              cards.length
+            );
+
+          if (offset !== 0) {
+            event.preventDefault();
+
+            goToCoverflow(index);
+
+            return;
+          }
+
+          const story =
+            findStoryById(
+              card.dataset.storyId
+            );
+
+          if (story) {
+            navigateToStory(story);
+          }
+        }
+      );
+
+      card.addEventListener(
+        "keydown",
+        (event) => {
+          if (
+            event.key !== "Enter" &&
+            event.key !== " "
+          ) {
+            return;
+          }
+
+          event.preventDefault();
+
+          const index =
+            Number(card.dataset.index);
+
+          const offset =
+            getCircularOffset(
+              index,
+              FEELFRAME.coverflow.current,
+              cards.length
+            );
+
+          if (offset !== 0) {
+            goToCoverflow(index);
+            return;
+          }
+
+          const story =
+            findStoryById(
+              card.dataset.storyId
+            );
+
+          if (story) {
+            navigateToStory(story);
+          }
+        }
+      );
+    });
+  };
+
+
+  const setupCoverflowControls = () => {
+    const previous =
+      $(
+        CONFIG.selectors.coverflowPrev
+      );
+
+    const next =
+      $(
+        CONFIG.selectors.coverflowNext
+      );
+
+    if (previous) {
+      previous.addEventListener(
+        "click",
+        () => moveCoverflow(-1)
+      );
+    }
+
+    if (next) {
+      next.addEventListener(
+        "click",
+        () => moveCoverflow(1)
+      );
+    }
+  };
+
+
+  const setupCoverflowKeyboard = () => {
+    const container =
+      $(
+        CONFIG.selectors.coverflow
+      );
+
+    if (!container) return;
+
+    if (
+      container.dataset.ffKeyboardBound ===
+      "true"
+    ) {
+      return;
+    }
+
+    container.dataset.ffKeyboardBound =
+      "true";
+
+    container.addEventListener(
+      "keydown",
+      (event) => {
+        if (
+          event.key === "ArrowLeft"
+        ) {
+          event.preventDefault();
+          moveCoverflow(-1);
+        }
+
+        if (
+          event.key === "ArrowRight"
+        ) {
+          event.preventDefault();
+          moveCoverflow(1);
+        }
+      }
+    );
+  };
+
+
+  const setupCoverflowPointer = () => {
+    const container =
+      $(
+        CONFIG.selectors.coverflow
+      );
+
+    if (!container) return;
+
+    if (
+      container.dataset.ffPointerBound ===
+      "true"
+    ) {
+      return;
+    }
+
+    container.dataset.ffPointerBound =
+      "true";
+
+    container.addEventListener(
+      "pointerdown",
+      (event) => {
+        if (
+          event.pointerType === "mouse" &&
+          event.button !== 0
+        ) {
+          return;
+        }
+
+        FEELFRAME.coverflow.dragging =
+          true;
+
+        FEELFRAME.coverflow.pointerId =
+          event.pointerId;
+
+        FEELFRAME.coverflow.startX =
+          event.clientX;
+
+        FEELFRAME.coverflow.currentX =
+          event.clientX;
+
+        FEELFRAME.coverflow.moved =
+          false;
+
+        try {
+          container.setPointerCapture(
+            event.pointerId
+          );
+        } catch (_) {}
+      }
+    );
+
+    container.addEventListener(
+      "pointermove",
+      (event) => {
+        if (
+          !FEELFRAME.coverflow.dragging ||
+          event.pointerId !==
+            FEELFRAME.coverflow.pointerId
+        ) {
+          return;
+        }
+
+        FEELFRAME.coverflow.currentX =
+          event.clientX;
+
+        const distance =
+          event.clientX -
+          FEELFRAME.coverflow.startX;
+
+        if (Math.abs(distance) > 8) {
+          FEELFRAME.coverflow.moved =
+            true;
+        }
+      }
+    );
+
+    const finishPointer =
+      (event) => {
+        if (
+          !FEELFRAME.coverflow.dragging ||
+          event.pointerId !==
+            FEELFRAME.coverflow.pointerId
+        ) {
+          return;
+        }
+
+        const distance =
+          FEELFRAME.coverflow.currentX -
+          FEELFRAME.coverflow.startX;
+
+        FEELFRAME.coverflow.dragging =
+          false;
+
+        if (
+          Math.abs(distance) > 45
+        ) {
+          FEELFRAME.coverflow.suppressClick =
+            true;
+
+          if (distance < 0) {
+            moveCoverflow(1);
+          } else {
+            moveCoverflow(-1);
+          }
+        }
+
+        try {
+          container.releasePointerCapture(
+            event.pointerId
+          );
+        } catch (_) {}
+
+        window.setTimeout(
+          () => {
+            FEELFRAME.coverflow.suppressClick =
+              false;
+          },
+          100
+        );
+      };
+
+    container.addEventListener(
+      "pointerup",
+      finishPointer
+    );
+
+    container.addEventListener(
+      "pointercancel",
+      finishPointer
+    );
+  };
+
+
+  const setupCoverflow = () => {
+    if (
+      !$(
+        CONFIG.selectors.coverflow
+      )
+    ) {
+      return;
+    }
+
+    renderCoverflow();
+    setupCoverflowControls();
+    setupCoverflowKeyboard();
+    setupCoverflowPointer();
+  };
+
+
+  /* =========================================================
+     EXPLORE FILTER DATA
+     ========================================================= */
+
+  const getCampaigns = () => {
+    return unique(
+      FEELFRAME.stories.map(
+        (story) => story.campaign
+      )
+    ).sort(
+      (a, b) =>
+        String(a).localeCompare(
+          String(b)
+        )
+    );
+  };
+
+
+  const getEmotions = () => {
+    return unique(
+      FEELFRAME.stories.map(
+        (story) => story.emotion
+      )
+    ).sort(
+      (a, b) =>
+        String(a).localeCompare(
+          String(b)
+        )
+    );
+  };
+
+
+  /* =========================================================
+     EXPLORE FILTER UI
+     ========================================================= */
+
+  const populateFilter = (
+    selector,
+    values,
+    selected
+  ) => {
+    const element = $(selector);
+
+    if (!element) return;
+
+    if (
+      element.tagName === "SELECT"
+    ) {
+      const firstOption =
+        element.querySelector(
+          "option[value='all'], option:not([value])"
+        );
+
+      element.innerHTML = `
+        <option value="all">
+          All
+        </option>
+        ${values
+          .map(
+            (value) => `
+              <option
+                value="${escapeHTML(value)}"
+              >
+                ${escapeHTML(value)}
+              </option>
+            `
+          )
+          .join("")}
+      `;
+
+      element.value =
+        selected || "all";
+
+      return;
+    }
+
+    const current =
+      selected || "all";
+
+    element.innerHTML = `
+      <button
+        type="button"
+        class="filter-pill ${
+          current === "all"
+            ? "is-active"
+            : ""
+        }"
+        data-filter-value="all"
+      >
+        All
+      </button>
+
+      ${values
+        .map(
+          (value) => `
+            <button
+              type="button"
+              class="filter-pill ${
+                normalize(current) ===
+                normalize(value)
+                  ? "is-active"
+                  : ""
+              }"
+              data-filter-value="${escapeHTML(
+                value
+              )}"
+            >
+              ${escapeHTML(value)}
+            </button>
+          `
+        )
+        .join("")}
+    `;
+
+    $$(
+      "[data-filter-value]",
+      element
+    ).forEach((button) => {
+      button.addEventListener(
+        "click",
+        () => {
+          const value =
+            button.dataset.filterValue ||
+            "all";
+
+          if (
+            element ===
+            $(
+              CONFIG.selectors.campaignFilter
+            )
+          ) {
+            FEELFRAME.filters.campaign =
+              value;
+          } else {
+            FEELFRAME.filters.emotion =
+              value;
+          }
+
+          renderExplore();
+        }
+      );
+    });
+  };
+
+
+  const setupExploreFilters = () => {
+    populateFilter(
+      CONFIG.selectors.campaignFilter,
+      getCampaigns(),
+      FEELFRAME.filters.campaign
+    );
+
+    populateFilter(
+      CONFIG.selectors.emotionFilter,
+      getEmotions(),
+      FEELFRAME.filters.emotion
+    );
+
+    const search =
+      $(
+        CONFIG.selectors.search
+      );
+
+    if (
+      search &&
+      search.dataset.ffSearchBound !==
+        "true"
+    ) {
+      search.dataset.ffSearchBound =
+        "true";
+
+      search.addEventListener(
+        "input",
+        () => {
+          FEELFRAME.filters.search =
+            search.value.trim();
+
+          renderExplore();
+        }
+      );
+    }
+  };
+
+
+  /* =========================================================
+     EXPLORE SEARCH
+     ========================================================= */
+
+  const getSearchableStoryText = (
+    story
+  ) => {
+    const fields = [
+      "title",
+      "quote",
+      "context",
+      "description",
+      "campaign",
+      "emotion",
+      "moment",
+      "style",
+      "visualLanguage",
+      "condition",
+      "promptTitle"
+    ];
+
+    return fields
+      .map(
+        (field) =>
+          story[field] || ""
+      )
+      .join(" ")
+      .toLowerCase();
+  };
+
+
+  const getFilteredStories = () => {
+    const campaign =
+      normalize(
+        FEELFRAME.filters.campaign
+      );
+
+    const emotion =
+      normalize(
+        FEELFRAME.filters.emotion
+      );
+
+    const search =
+      normalize(
+        FEELFRAME.filters.search
+      );
+
+    return FEELFRAME.stories.filter(
+      (story) => {
+        const matchesCampaign =
+          campaign === "all" ||
+          normalize(
+            story.campaign
+          ) === campaign;
+
+        const matchesEmotion =
+          emotion === "all" ||
+          normalize(
+            story.emotion
+          ) === emotion;
+
+        const matchesSearch =
+          !search ||
+          getSearchableStoryText(
+            story
+          ).includes(search);
+
+        return (
+          matchesCampaign &&
+          matchesEmotion &&
+          matchesSearch
+        );
+      }
+    );
+  };
+
+
+  /* =========================================================
+     EXPLORE RENDERING
+     ========================================================= */
+
+  const renderExplore = () => {
+    const grid =
+      firstExisting(
+        CONFIG.selectors.exploreGrid,
+        CONFIG.selectors.storyGrid
+      );
+
+    if (!grid) return;
+
+    const results =
+      getFilteredStories();
+
+    const count =
+      $(
+        CONFIG.selectors.storyCount
+      );
+
+    if (count) {
+      count.textContent =
+        `${results.length} ${
+          results.length === 1
+            ? "story"
+            : "stories"
+        }`;
+    }
+
+    if (!results.length) {
+      grid.innerHTML = "";
+
+      showEmptyState(grid);
+
+      return;
+    }
+
+    hideEmptyState();
+
+    grid.innerHTML =
+      results
+        .map(
+          (story, index) =>
+            createStoryCard(
+              story,
+              {
+                cover: false,
+                index
+              }
+            )
+        )
+        .join("");
+
+    bindStoryCardEvents(grid);
+
+    setupImageFallbacks();
+  };
+
+
+  /* =========================================================
+     CREATE — FEELING TRANSLATION ENGINE
+     ========================================================= */
+
+  const EMOTION_RULES = {
+    determined: {
+      emotion:
+        "Quiet determination and forward movement",
+      condition:
+        "Focused, persistent and composed",
+      commands: [
+        "/lowangle"
+      ]
+    },
+
+    proud: {
+      emotion:
+        "Confidence, achievement and self-recognition",
+      condition:
+        "Elevated, assured and present",
+      commands: [
+        "/backlight"
+      ]
+    },
+
+    hopeful: {
+      emotion:
+        "Hope, possibility and forward movement",
+      condition:
+        "Open, optimistic and quietly expectant",
+      commands: [
+        "/sunrise"
+      ]
+    },
+
+    curious: {
+      emotion:
+        "Curiosity, discovery and exploration",
+      condition:
+        "Observant, open and exploratory",
+      commands: [
+        "/wideangle"
+      ]
+    },
+
+    reflective: {
+      emotion:
+        "Reflection, memory and inner awareness",
+      condition:
+        "Quiet, thoughtful and introspective",
+      commands: [
+        "/softlight"
+      ]
+    },
+
+    bold: {
+      emotion:
+        "Boldness, presence and visual confidence",
+      condition:
+        "Strong, expressive and unapologetic",
+      commands: [
+        "/lowangle"
+      ]
+    },
+
+    ambitious: {
+      emotion:
+        "Ambition, movement and future focus",
+      condition:
+        "Driven, focused and forward-looking",
+      commands: [
+        "/lowangle"
+      ]
+    },
+
+    inspired: {
+      emotion:
+        "Inspiration, possibility and creative energy",
+      condition:
+        "Expressive, energetic and open",
+      commands: [
+        "/backlight"
+      ]
+    },
+
+    grateful: {
+      emotion:
+        "Gratitude, warmth and appreciation",
+      condition:
+        "Warm, grounded and emotionally open",
+      commands: [
+        "/softlight"
+      ]
+    },
+
+    calm: {
+      emotion:
+        "Calm presence and emotional clarity",
+      condition:
+        "Balanced, quiet and composed",
+      commands: [
+        "/softlight"
+      ]
+    },
+
+    excited: {
+      emotion:
+        "Excitement, energy and anticipation",
+      condition:
+        "Energetic, expressive and forward-moving",
+      commands: [
+        "/wideangle"
+      ]
+    }
+  };
+
+
+  const VISUAL_LANGUAGE_RULES = {
+    cinematic: {
+      style:
+        "Cinematic realism, controlled lighting, natural depth and filmic composition",
+      commands: [
+        "/cinematic",
+        "/35mmfilm",
+        "/shallowdepth"
+      ]
+    },
+
+    editorial: {
+      style:
+        "Editorial composition, refined styling, intentional framing and magazine-inspired art direction",
+      commands: [
+        "/editorial"
+      ]
+    },
+
+    film: {
+      style:
+        "Filmic visual language, natural grain, atmospheric lighting and cinematic composition",
+      commands: [
+        "/35mmfilm",
+        "/cinematic"
+      ]
+    },
+
+    luxury: {
+      style:
+        "Luxury visual direction, refined composition, controlled highlights and premium editorial styling",
+      commands: [
+        "/luxury",
+        "/editorial",
+        "/rimlight"
+      ]
+    },
+
+    dreamlike: {
+      style:
+        "Dreamlike atmosphere, soft transitions, atmospheric light and imaginative spatial composition",
+      commands: [
+        "/dreamcore",
+        "/backlight",
+        "/wideangle"
+      ]
+    },
+
+    minimal: {
+      style:
+        "Minimal visual composition, controlled space, restrained styling and deliberate subject placement",
+      commands: [
+        "/minimal"
+      ]
+    },
+
+    artistic: {
+      style:
+        "Artistic visual interpretation, expressive composition and intentional visual abstraction",
+      commands: [
+        "/artistic"
+      ]
+    },
+
+    "dark & moody": {
+      style:
+        "Dark atmospheric composition, controlled shadows, restrained highlights and cinematic depth",
+      commands: [
+        "/moody",
+        "/cinematic"
+      ]
+    },
+
+    dark: {
+      style:
+        "Dark atmospheric composition, controlled shadows, restrained highlights and cinematic depth",
+      commands: [
+        "/moody",
+        "/cinematic"
+      ]
+    }
+  };
+
+
+  const getEmotionRule = (
+    feeling
+  ) => {
+    const key =
+      normalize(feeling);
+
+    return (
+      EMOTION_RULES[key] || {
+        emotion:
+          safeText(
+            feeling,
+            "A deeply personal emotional state"
+          ),
+        condition:
+          "Present, intentional and emotionally grounded",
+        commands: []
+      }
+    );
+  };
+
+
+  const getVisualLanguageRule = (
+    language
+  ) => {
+    const key =
+      normalize(language);
+
+    return (
+      VISUAL_LANGUAGE_RULES[key] || {
+        style:
+          safeText(
+            language,
+            "Intentional visual storytelling"
+          ),
+        commands: []
+      }
+    );
+  };
+
+
+  const uniqueCommands = (
+    commands
+  ) => {
+    return unique(
+      commands.map(
+        (command) =>
+          String(command).trim()
+      )
+    );
+  };
+
+
+  const buildCreativeDirection = ({
+    feeling,
+    visualLanguage,
+    moment,
+    context,
+    intendedMessage
+  }) => {
+    const emotionRule =
+      getEmotionRule(feeling);
+
+    const visualRule =
+      getVisualLanguageRule(
+        visualLanguage
+      );
+
+    const commands =
+      uniqueCommands([
+        ...(emotionRule.commands || []),
+        ...(visualRule.commands || [])
+      ]);
+
+    const parts = [
+      emotionRule.emotion,
+      emotionRule.condition,
+      visualRule.style
+    ];
+
+    if (moment) {
+      parts.push(
+        `The visual should communicate the significance of ${moment}.`
+      );
+    }
+
+    if (context) {
+      parts.push(
+        `The personal context should feel authentic and emotionally grounded: ${context}.`
+      );
+    }
+
+    if (intendedMessage) {
+      parts.push(
+        `The final visual should communicate: ${intendedMessage}.`
+      );
+    }
+
+    return {
+      emotion:
+        emotionRule.emotion,
+
+      condition:
+        emotionRule.condition,
+
+      style:
+        visualRule.style,
+
+      commands,
+
+      direction:
+        parts.join(" ")
+    };
+  };
+
+
+  /* =========================================================
+     CREATE FORM HELPERS
+     ========================================================= */
+
+  const getFormValue = (
+    form,
+    ...names
+  ) => {
+    for (const name of names) {
+      const field =
+        form.elements[name] ||
+        form.querySelector(
+          `[name="${CSS.escape(name)}"], #${CSS.escape(name)}`
+        );
+
+      if (
+        field &&
+        typeof field.value ===
+          "string"
+      ) {
+        return field.value.trim();
+      }
+    }
+
+    return "";
+  };
+
+
+  const getSelectedChoice = (
+    form,
+    selector
+  ) => {
+    const selected =
+      form.querySelector(
+        `${selector}:checked`
+      );
+
+    return selected
+      ? selected.value.trim()
+      : "";
+  };
+
+
+  const getCreateFormData = (
+    form
+  ) => {
+    const name =
+      getFormValue(
+        form,
+        "name",
+        "fullName",
+        "fullname"
+      );
+
+    const school =
+      getFormValue(
+        form,
+        "school",
+        "university",
+        "institution"
+      );
+
+    const course =
+      getFormValue(
+        form,
+        "course",
+        "field",
+        "courseField"
+      );
+
+    const moment =
+      getFormValue(
+        form,
+        "moment",
+        "yourMoment"
+      );
+
+    const feeling =
+      getFormValue(
+        form,
+        "feeling",
+        "emotion"
+      ) ||
+      getSelectedChoice(
+        form,
+        'input[name="feeling"]'
+      );
+
+    const context =
+      getFormValue(
+        form,
+        "context",
+        "story",
+        "whatGoingThrough",
+        "whatImGoingThrough"
+      );
+
+    const intendedMessage =
+      getFormValue(
+        form,
+        "message",
+        "intendedMessage",
+        "whatCommunicate",
+        "whatYouWantToCommunicate"
+      );
+
+    const visualLanguage =
+      getFormValue(
+        form,
+        "visualLanguage",
+        "visual",
+        "style"
+      ) ||
+      getSelectedChoice(
+        form,
+        'input[name="visualLanguage"]'
+      );
+
+    return {
+      name,
+      school,
+      course,
+      moment,
+      feeling,
+      context,
+      intendedMessage,
+      visualLanguage,
+      referenceName:
+        FEELFRAME.create.referenceName
+    };
+  };
+
+
+  /* =========================================================
+     CREATE VALIDATION
+     ========================================================= */
+
+  const validateCreateForm = (
+    values
+  ) => {
+    const required = [
+      ["name", "your name"],
+      ["moment", "your moment"],
+      ["feeling", "your feeling"],
+      ["context", "your story"],
+      [
+        "visualLanguage",
+        "your visual language"
+      ]
+    ];
+
+    const missing =
+      required
+        .filter(
+          ([key]) =>
+            !String(
+              values[key] || ""
+            ).trim()
+        )
+        .map(
+          ([, label]) =>
+            label
+        );
+
+    if (missing.length) {
+      return {
+        valid: false,
+        message:
+          `Please complete: ${missing.join(
+            ", "
+          )}.`
+      };
+    }
+
+    return {
+      valid: true,
+      message: ""
+    };
+  };
+
+
+  /* =========================================================
+     REFERENCE IMAGE HANDLING
+     ========================================================= */
+
+  const setupReferenceImage = () => {
+    const input =
+      $(
+        CONFIG.selectors.imageInput
+      );
+
+    if (!input) return;
+
+    if (
+      input.dataset.ffImageBound ===
+      "true"
+    ) {
+      return;
+    }
+
+    input.dataset.ffImageBound =
+      "true";
+
+    input.addEventListener(
+      "change",
+      () => {
+        const file =
+          input.files &&
+          input.files[0];
+
+        if (!file) {
+          FEELFRAME.create.referenceImage =
+            null;
+
+          FEELFRAME.create.referenceName =
+            "";
+
+          clearImagePreview();
+
+          return;
+        }
+
+        if (
+          !file.type.startsWith(
+            "image/"
+          )
+        ) {
+          input.value = "";
+
+          FEELFRAME.create.referenceImage =
+            null;
+
+          FEELFRAME.create.referenceName =
+            "";
+
+          clearImagePreview();
+
+          return;
+        }
+
+        FEELFRAME.create.referenceImage =
+          file;
+
+        FEELFRAME.create.referenceName =
+          file.name;
+
+        previewImage(file);
+      }
+    );
+  };
+
+
+  const previewImage = (
+    file
+  ) => {
+    const preview =
+      $(
+        CONFIG.selectors.imagePreview
+      );
+
+    if (!preview) return;
+
+    const url =
+      URL.createObjectURL(file);
+
+    preview.hidden = false;
+
+    if (
+      preview.tagName === "IMG"
+    ) {
+      preview.src = url;
+      preview.alt =
+        "Selected reference image";
+    } else {
+      preview.innerHTML = `
+        <img
+          src="${url}"
+          alt="Selected reference image"
+        >
+      `;
+    }
+
+    preview.dataset.objectUrl =
+      url;
+  };
+
+
+  const clearImagePreview = () => {
+    const preview =
+      $(
+        CONFIG.selectors.imagePreview
+      );
+
+    if (!preview) return;
+
+    const oldUrl =
+      preview.dataset.objectUrl;
+
+    if (oldUrl) {
+      URL.revokeObjectURL(
+        oldUrl
+      );
+    }
+
+    preview.hidden = true;
+
+    if (
+      preview.tagName !== "IMG"
+    ) {
+      preview.innerHTML = "";
+    } else {
+      preview.removeAttribute(
+        "src"
+      );
+    }
+
+    delete preview.dataset.objectUrl;
+  };
+
+
+  /* =========================================================
+     WHATSAPP MESSAGE
+     ========================================================= */
+
+  const buildWhatsAppMessage = (
+    values,
+    creative
+  ) => {
+    const siteName =
+      FEELFRAME.site.name ||
+      "FeelFrame™";
+
+    const reference =
+      values.referenceName
+        ? values.referenceName
+        : "No reference image provided";
+
+    return `
+Hello ${siteName},
+
+I'd like to create a personalized visual story.
+
+━━━━━━━━━━━━━━━━
 PERSONAL DETAILS
-Name: ${name}
- University / School: ${school}
- Course / Field: ${course}
+━━━━━━━━━━━━━━━━
+
+Name:
+${values.name || "Not provided"}
+
+School / University:
+${values.school || "Not provided"}
+
+Course / Field:
+${values.course || "Not provided"}
+
+━━━━━━━━━━━━━━━━
 THE MOMENT
-Campaign: ${moment}
- Feeling: ${feeling}
+━━━━━━━━━━━━━━━━
+
+${values.moment || "Not provided"}
+
+━━━━━━━━━━━━━━━━
 WHAT I'M GOING THROUGH
-${context}
+━━━━━━━━━━━━━━━━
+
+${values.context || "Not provided"}
+
+━━━━━━━━━━━━━━━━
 WHAT I WANT THE IMAGE TO COMMUNICATE
-${message}
+━━━━━━━━━━━━━━━━
+
+${values.intendedMessage || "Not provided"}
+
+━━━━━━━━━━━━━━━━
 VISUAL LANGUAGE
-${visualLanguage}
+━━━━━━━━━━━━━━━━
+
+${values.visualLanguage || "Not provided"}
+
+━━━━━━━━━━━━━━━━
 REFERENCE IMAGE
-${referenceText}
-FEELFRAME CREATIVE DIRECTION
-Emotion → ${direction.emotion}
-Condition → ${direction.condition}
-Style → ${direction.style}
-COMMANDS
-${commands.join("\n")}
-Please create my FeelFrame visual.`;
- }
-/* FORM HELPERS */
- function getFormValue(
- formData,
- name
- ) {
- const value =
- formData.get(name);
-if (
- value === null ||
- value === undefined
- ) {
- return "";
- }
-return String(value).trim();
- }
-/* =========================================================
- CURRENCY
- ========================================================= */
-function formatNaira(
- amount
- ) {
- return formatCurrency(
- amount,
- "NGN"
- );
- }
-function formatCurrency(
- amount,
- currency = "NGN"
- ) {
- const number =
- Number(amount);
-if (
- !Number.isFinite(number)
- ) {
- return "₦0";
- }
-try {
- return new Intl.NumberFormat(
- "en-NG",
- {
- style: "currency",
- currency,
- maximumFractionDigits: 0
- }
- ).format(number);
- } catch (error) {
- return ${currency} ${number.toLocaleString()};
- }
- }
-/* =========================================================
- NORMALIZATION
- ========================================================= */
-function normalize(
- value
- ) {
- return String(
- value || ""
- )
- .trim()
- .toLowerCase();
- }
-/* =========================================================
- UNIQUE VALUES
- ========================================================= */
-function getUniqueValues(
- stories,
- property
- ) {
- return [
- ...new Set(
- stories
- .map(
- story =>
- String(
- story[property] ||
- ""
- ).trim()
- )
- .filter(Boolean)
- )
- ].sort(
- (a, b) =>
- a.localeCompare(b)
- );
- }
-/* =========================================================
- TRUNCATION
- ========================================================= */
-function truncate(
- value,
- length
- ) {
- const text =
- String(value || "");
-if (
- text.length <= length
- ) {
- return text;
- }
-return (
- text
- .slice(0, length)
- .trim() + "…"
- );
- }
-/* =========================================================
- PURCHASE URL VALIDATION
- ========================================================= */
-function isValidPurchaseURL(
- url
- ) {
- if (!url) return false;
-if (
- url ===
- "REAL-SELAR-LINK"
- ) {
- return false;
- }
-try {
- const parsed =
- new URL(url);
-return (  
-  parsed.protocol ===  
-    "https:" &&  
-  Boolean(  
-    parsed.hostname  
-  )  
-); 
+━━━━━━━━━━━━━━━━
 
-} catch {
- return false;
- }
- }
-/* =========================================================
- IMAGE ERROR HANDLING
- ========================================================= */
-function handleImageError(
- image
- ) {
- if (!image) return;
-image.onerror = null;
-image.classList.add(
- "image-error"
- );
-image.alt =
- "FeelFrame visual unavailable";
- }
-/* =========================================================
- EMPTY STATES
- ========================================================= */
-function renderEmptyState(
- container,
- title,
- message
- ) {
- if (!container) return;
-container.innerHTML = `
+${reference}
+
+━━━━━━━━━━━━━━━━
+CREATIVE DIRECTION
+━━━━━━━━━━━━━━━━
+
+${creative.direction}
+
+━━━━━━━━━━━━━━━━
+CREATIVE INTERPRETATION
+━━━━━━━━━━━━━━━━
+
+Emotion:
+${creative.emotion}
+
+Condition:
+${creative.condition}
+
+Style:
+${creative.style}
+
+Commands:
+${creative.commands.length
+  ? creative.commands.join(" ")
+  : "None"}
+
+━━━━━━━━━━━━━━━━
+
+Submitted through FeelFrame™.
+Some feelings deserve to be seen.
+    `.trim();
+  };
 
 
+  const openWhatsApp = (
+    message
+  ) => {
+    const number =
+      String(
+        FEELFRAME.site.whatsappNumber ||
+        ""
+      )
+        .replace(/\D/g, "");
 
-${escapeHTML(
-title
-)}
- <p>${escapeHTML(  
-    message  
-  )}</p>  
-</div> 
+    if (!number) {
+      showGlobalError(
+        "WhatsApp contact information is not configured."
+      );
 
-`;
- }
-/* =========================================================
- SECURITY
- ========================================================= */
-function escapeHTML(
- value
- ) {
- return String(
- value ?? ""
- )
- .replace(
- /&/g,
- "&"
- )
- .replace(
- /</g,
- "<"
- )
- .replace(
- />/g,
- ">"
- )
- .replace(
- /"/g,
- """
- )
- .replace(
- /'/g,
- "'"
- );
- }
-/* =========================================================
- GLOBAL ERROR
- ========================================================= */
-function showGlobalError() {
- const targets = [
- "#homeStoryGrid",
- "#exploreStoryGrid",
- "#storyContent",
- "#coverflowTrack"
- ];
-targets.forEach(
- selector => {
- const element =
- document.querySelector(
- selector
- );
- if (!element) return;  
+      return;
+    }
 
-  renderEmptyState(  
-    element,  
-    "Something went wrong.",  
-    "FeelFrame could not load its visual stories. Please refresh the page."  
-  );  
-} 
+    const url =
+      `https://wa.me/${number}?text=${encodeURIComponent(
+        message
+      )}`;
 
-);
- }
+    window.location.href = url;
+  };
 
+
+  /* =========================================================
+     CREATE FORM SUBMISSION
+     ========================================================= */
+
+  const setupCreateForm = () => {
+    const form =
+      $(
+        CONFIG.selectors.createForm
+      );
+
+    if (!form) return;
+
+    if (
+      form.dataset.ffFormBound ===
+      "true"
+    ) {
+      return;
+    }
+
+    form.dataset.ffFormBound =
+      "true";
+
+    form.addEventListener(
+      "submit",
+      (event) => {
+        event.preventDefault();
+
+        const values =
+          getCreateFormData(form);
+
+        const validation =
+          validateCreateForm(
+            values
+          );
+
+        if (!validation.valid) {
+          showFormMessage(
+            form,
+            validation.message,
+            "error"
+          );
+
+          return;
+        }
+
+        const creative =
+          buildCreativeDirection(
+            values
+          );
+
+        const message =
+          buildWhatsAppMessage(
+            values,
+            creative
+          );
+
+        showFormMessage(
+          form,
+          "Your creative brief is ready. Opening WhatsApp…",
+          "success"
+        );
+
+        window.setTimeout(
+          () => {
+            openWhatsApp(
+              message
+            );
+          },
+          250
+        );
+      }
+    );
+  };
+
+
+  const showFormMessage = (
+    form,
+    message,
+    type = "info"
+  ) => {
+    let element =
+      form.querySelector(
+        "[data-form-message]"
+      );
+
+    if (!element) {
+      element =
+        document.createElement(
+          "div"
+        );
+
+      element.dataset.formMessage =
+        "true";
+
+      form.prepend(element);
+    }
+
+    element.className =
+      `form-message form-message-${type}`;
+
+    element.textContent =
+      message;
+
+    element.setAttribute(
+      "role",
+      type === "error"
+        ? "alert"
+        : "status"
+    );
+  };
+
+
+  /* =========================================================
+     STORY PAGE
+     ========================================================= */
+
+  const renderStoryPage = () => {
+    const id =
+      getStoryIdFromURL();
+
+    const story =
+      findStoryById(id);
+
+    if (!story) {
+      renderStoryNotFound();
+      return;
+    }
+
+    renderStoryData(
+      story
+    );
+
+    setupStoryPurchase(
+      story
+    );
+
+    setupImageFallbacks();
+  };
+
+
+  const renderStoryData = (
+    story
+  ) => {
+    const setText = (
+      selectors,
+      value,
+      fallback = ""
+    ) => {
+      const element =
+        firstExisting(
+          ...selectors
+        );
+
+      if (!element) return;
+
+      element.textContent =
+        safeText(
+          value,
+          fallback
+        );
+    };
+
+
+    const image =
+      firstExisting(
+        "#storyImage",
+        ".story-image",
+        "[data-story-image]"
+      );
+
+    if (image) {
+      const source =
+        getStoryImage(
+          story
+        );
+
+      if (
+        source &&
+        image.tagName === "IMG"
+      ) {
+        image.src = source;
+
+        image.alt =
+          story.title ||
+          story.campaign ||
+          "FeelFrame visual story";
+      }
+    }
+
+
+    setText(
+      [
+        "#storyCampaign",
+        ".story-campaign",
+        "[data-story-campaign]"
+      ],
+      story.campaign
+    );
+
+    setText(
+      [
+        "#storyTitle",
+        ".story-title",
+        "[data-story-title]"
+      ],
+      story.title
+    );
+
+    setText(
+      [
+        "#storyQuote",
+        ".story-quote",
+        "[data-story-quote]"
+      ],
+      story.quote
+    );
+
+    setText(
+      [
+        "#storyDescription",
+        ".story-description",
+        "[data-story-description]"
+      ],
+      story.description
+    );
+
+    setText(
+      [
+        "#storyContext",
+        ".story-context",
+        "[data-story-context]"
+      ],
+      story.context
+    );
+
+    setText(
+      [
+        "#storyEmotion",
+        ".story-emotion",
+        "[data-story-emotion]"
+      ],
+      story.emotion
+    );
+
+    setText(
+      [
+        "#storyMoment",
+        ".story-moment",
+        "[data-story-moment]"
+      ],
+      story.moment
+    );
+
+    setText(
+      [
+        "#storyStyle",
+        ".story-style",
+        "[data-story-style]"
+      ],
+      story.style
+    );
+
+    setText(
+      [
+        "#storyVisualLanguage",
+        ".story-visual-language",
+        "[data-story-visual-language]"
+      ],
+      story.visualLanguage
+    );
+
+    setText(
+      [
+        "#storyCondition",
+        ".story-condition",
+        "[data-story-condition]"
+      ],
+      story.condition
+    );
+
+    setText(
+      [
+        "#promptTitle",
+        ".prompt-title",
+        "[data-prompt-title]"
+      ],
+      story.promptTitle
+    );
+
+
+    renderCommands(
+      story.commands
+    );
+
+    renderStoryPrice(
+      story
+    );
+
+    renderStoryProduct(
+      story
+    );
+  };
+
+
+  const renderCommands = (
+    commands
+  ) => {
+    const container =
+      firstExisting(
+        "#storyCommands",
+        ".story-commands",
+        "[data-story-commands]"
+      );
+
+    if (!container) return;
+
+    let values = [];
+
+    if (
+      Array.isArray(commands)
+    ) {
+      values = commands;
+    } else if (
+      typeof commands === "string"
+    ) {
+      values =
+        commands
+          .split(/[\s,]+/)
+          .filter(Boolean);
+    }
+
+    container.innerHTML =
+      values
+        .map(
+          (command) => `
+            <span class="command-tag">
+              ${escapeHTML(command)}
+            </span>
+          `
+        )
+        .join("");
+  };
+
+
+  const formatPrice = (
+    value
+  ) => {
+    if (
+      value === null ||
+      value === undefined ||
+      value === ""
+    ) {
+      return "";
+    }
+
+    const number =
+      Number(
+        String(value)
+          .replace(/,/g, "")
+      );
+
+    if (
+      Number.isNaN(number)
+    ) {
+      return String(value);
+    }
+
+    try {
+      return new Intl.NumberFormat(
+        "en-NG",
+        {
+          style: "currency",
+          currency:
+            FEELFRAME.site.currency ||
+            "NGN",
+          maximumFractionDigits: 0
+        }
+      ).format(number);
+    } catch (_) {
+      return `${FEELFRAME.site.currency || "NGN"} ${number.toLocaleString()}`;
+    }
+  };
+
+
+  const renderStoryPrice = (
+    story
+  ) => {
+    const oldPrice =
+      firstExisting(
+        "#promptOldPrice",
+        ".prompt-old-price",
+        "[data-prompt-old-price]"
+      );
+
+    const currentPrice =
+      firstExisting(
+        "#promptCurrentPrice",
+        ".prompt-current-price",
+        "[data-prompt-current-price]"
+      );
+
+    if (oldPrice) {
+      if (
+        story.compareAt !== undefined &&
+        story.compareAt !== null &&
+        story.compareAt !== ""
+      ) {
+        oldPrice.textContent =
+          formatPrice(
+            story.compareAt
+          );
+
+        oldPrice.hidden = false;
+      } else {
+        oldPrice.hidden = true;
+      }
+    }
+
+    if (currentPrice) {
+      currentPrice.textContent =
+        formatPrice(
+          story.price
+        );
+    }
+  };
+
+
+  const renderStoryProduct = (
+    story
+  ) => {
+    const productTitle =
+      firstExisting(
+        "#promptProductTitle",
+        ".prompt-product-title",
+        "[data-prompt-product-title]"
+      );
+
+    const productDescription =
+      firstExisting(
+        "#promptProductDescription",
+        ".prompt-product-description",
+        "[data-prompt-product-description]"
+      );
+
+    if (productTitle) {
+      productTitle.textContent =
+        story.promptTitle ||
+        "Creative Prompt System";
+    }
+
+    if (productDescription) {
+      productDescription.textContent =
+        "Access the complete creative system behind this visual experience.";
+    }
+  };
+
+
+  const renderStoryNotFound = () => {
+    const container =
+      firstExisting(
+        "#storyContent",
+        ".story-content",
+        "main"
+      );
+
+    if (!container) return;
+
+    container.innerHTML = `
+      <section class="empty-state story-not-found">
+        <div class="empty-state-content">
+          <strong>Story not found.</strong>
+          <span>
+            This FeelFrame visual story may no longer be available.
+          </span>
+          <a href="${CONFIG.pages.explore}">
+            Explore visual stories
+          </a>
+        </div>
+      </section>
+    `;
+  };
+
+
+  /* =========================================================
+     CHECKOUT / PRODUCT VALIDATION
+     ========================================================= */
+
+  const isValidCheckoutURL = (
+    url
+  ) => {
+    if (!url || typeof url !== "string") {
+      return false;
+    }
+
+    try {
+      const parsed =
+        new URL(
+          url,
+          window.location.href
+        );
+
+      return (
+        parsed.protocol === "https:" &&
+        parsed.hostname.length > 0
+      );
+    } catch (_) {
+      return false;
+    }
+  };
+
+
+  const setupStoryPurchase = (
+    story
+  ) => {
+    const buttons =
+      $$(
+        [
+          "[data-buy-product]",
+          "[data-checkout]",
+          "#buyPrompt",
+          ".buy-prompt"
+        ].join(",")
+      );
+
+    buttons.forEach((button) => {
+      if (
+        button.dataset.ffPurchaseBound ===
+        "true"
+      ) {
+        return;
+      }
+
+      button.dataset.ffPurchaseBound =
+        "true";
+
+      button.addEventListener(
+        "click",
+        (event) => {
+          event.preventDefault();
+
+          if (
+            !isValidCheckoutURL(
+              story.selarUrl
+            )
+          ) {
+            showGlobalError(
+              "This product does not currently have a valid checkout destination."
+            );
+
+            return;
+          }
+
+          window.location.href =
+            story.selarUrl;
+        }
+      );
+    });
+  };
+
+
+  /* =========================================================
+     NAVIGATION
+     ========================================================= */
+
+  const setupNavigation = () => {
+    $$(
+      "[data-nav], [data-page-link]"
+    ).forEach((link) => {
+      if (
+        link.dataset.ffNavBound ===
+        "true"
+      ) {
+        return;
+      }
+
+      link.dataset.ffNavBound =
+        "true";
+
+      link.addEventListener(
+        "click",
+        (event) => {
+          const target =
+            link.dataset.nav ||
+            link.dataset.pageLink;
+
+          if (!target) return;
+
+          if (
+            target.startsWith(
+              "http"
+            ) ||
+            target.startsWith(
+              "mailto:"
+            ) ||
+            target.startsWith(
+              "https://wa.me"
+            )
+          ) {
+            return;
+          }
+
+          event.preventDefault();
+
+          navigateTo(target);
+        }
+      );
+    });
+  };
+
+
+  /* =========================================================
+     CREATE → CREATIVE DIRECTION PREVIEW
+     ========================================================= */
+
+  const setupCreativePreview = () => {
+    const form =
+      $(
+        CONFIG.selectors.createForm
+      );
+
+    if (!form) return;
+
+    const preview =
+      firstExisting(
+        "#creativeDirection",
+        ".creative-direction",
+        "[data-creative-direction]"
+      );
+
+    if (!preview) return;
+
+    const update = () => {
+      const values =
+        getCreateFormData(form);
+
+      if (
+        !values.feeling &&
+        !values.visualLanguage
+      ) {
+        preview.textContent =
+          "Your creative direction will appear here as you shape your story.";
+
+        return;
+      }
+
+      const creative =
+        buildCreativeDirection(
+          values
+        );
+
+      preview.textContent =
+        creative.direction;
+    };
+
+    form.addEventListener(
+      "input",
+      update
+    );
+
+    form.addEventListener(
+      "change",
+      update
+    );
+
+    update();
+  };
+
+
+  /* =========================================================
+     REDUCED MOTION
+     ========================================================= */
+
+  const prefersReducedMotion = () => {
+    return (
+      window.matchMedia &&
+      window.matchMedia(
+        "(prefers-reduced-motion: reduce)"
+      ).matches
+    );
+  };
+
+
+  const applyReducedMotionState = () => {
+    document.documentElement.classList.toggle(
+      "reduced-motion",
+      prefersReducedMotion()
+    );
+  };
+
+
+  const setupReducedMotionListener = () => {
+    if (
+      !window.matchMedia
+    ) {
+      return;
+    }
+
+    const media =
+      window.matchMedia(
+        "(prefers-reduced-motion: reduce)"
+      );
+
+    const handler = () => {
+      applyReducedMotionState();
+    };
+
+    if (
+      media.addEventListener
+    ) {
+      media.addEventListener(
+        "change",
+        handler
+      );
+    } else if (
+      media.addListener
+    ) {
+      media.addListener(
+        handler
+      );
+    }
+  };
+
+
+  /* =========================================================
+     GENERAL ACCESSIBILITY
+     ========================================================= */
+
+  const setupAccessibility = () => {
+    $$(
+      "[data-story-card]"
+    ).forEach((card) => {
+      if (
+        !card.hasAttribute(
+          "tabindex"
+        )
+      ) {
+        card.setAttribute(
+          "tabindex",
+          "0"
+        );
+      }
+    });
+
+    $$("img").forEach((image) => {
+      if (
+        !image.hasAttribute(
+          "decoding"
+        )
+      ) {
+        image.setAttribute(
+          "decoding",
+          "async"
+        );
+      }
+    });
+  };
+
+
+  /* =========================================================
+     FORM AUTOFILL SAFETY
+     ========================================================= */
+
+  const setupFormSafety = () => {
+    $$("form").forEach((form) => {
+      form.addEventListener(
+        "invalid",
+        (event) => {
+          const field =
+            event.target;
+
+          if (
+            field &&
+            typeof field.focus ===
+              "function"
+          ) {
+            window.setTimeout(
+              () => field.focus(),
+              0
+            );
+          }
+        },
+        true
+      );
+    });
+  };
+
+
+  /* =========================================================
+     PAGE INITIALIZATION
+     ========================================================= */
+
+  const initializePage = () => {
+    const page =
+      getPageName();
+
+    hideGlobalError();
+
+    updateSiteMetadata();
+
+    setupNavigation();
+
+    setupReducedMotionState();
+
+    setupReducedMotionListener();
+
+    setupAccessibility();
+
+    setupFormSafety();
+
+    switch (page) {
+      case "home":
+        renderHomeStoryBoard();
+        setupCoverflow();
+        break;
+
+      case "explore":
+        setupExploreFilters();
+        renderExplore();
+        break;
+
+      case "create":
+        setupReferenceImage();
+        setupCreateForm();
+        setupCreativePreview();
+        break;
+
+      case "story":
+        renderStoryPage();
+        break;
+
+      default:
+        /*
+         * Some pages may use the global script
+         * without matching one of the four
+         * primary routes.
+         */
+        renderHomeStoryBoard();
+        setupCoverflow();
+        break;
+    }
+
+    setupImageFallbacks();
+  };
+
+
+  /* =========================================================
+     RESIZE HANDLING
+     ========================================================= */
+
+  let resizeTimer = null;
+
+  const setupResizeHandling = () => {
+    window.addEventListener(
+      "resize",
+      () => {
+        window.clearTimeout(
+          resizeTimer
+        );
+
+        resizeTimer =
+          window.setTimeout(
+            () => {
+              if (
+                $(
+                  CONFIG.selectors.coverflow
+                )
+              ) {
+                updateCoverflow();
+              }
+            },
+            120
+          );
+      },
+      {
+        passive: true
+      }
+    );
+  };
+
+
+  /* =========================================================
+     INITIAL APPLICATION BOOT
+     ========================================================= */
+
+  const boot = async () => {
+    try {
+      await loadData();
+
+      initializePage();
+
+      setupResizeHandling();
+
+      document.documentElement.dataset.feelframeReady =
+        "true";
+
+      document.dispatchEvent(
+        new CustomEvent(
+          "feelframe:ready",
+          {
+            detail: FEELFRAME
+          }
+        )
+      );
+
+    } catch (error) {
+      document.documentElement.dataset.feelframeReady =
+        "false";
+
+      console.error(
+        "[FeelFrame] Application boot failed:",
+        error
+      );
+    }
+  };
+
+
+  /* =========================================================
+     GLOBAL ERROR SAFETY
+     ========================================================= */
+
+  window.addEventListener(
+    "error",
+    (event) => {
+      console.error(
+        "[FeelFrame] Runtime error:",
+        event.error || event.message
+      );
+    }
+  );
+
+
+  window.addEventListener(
+    "unhandledrejection",
+    (event) => {
+      console.error(
+        "[FeelFrame] Unhandled promise rejection:",
+        event.reason
+      );
+    }
+  );
+
+
+  /* =========================================================
+     PUBLIC API
+     ========================================================= */
+
+  window.FEELFRAME =
+    FEELFRAME;
+
+  window.FeelFrame = {
+    state: FEELFRAME,
+
+    findStory:
+      findStoryById,
+
+    navigateToStory,
+
+    renderExplore,
+
+    renderCoverflow,
+
+    moveCoverflow,
+
+    goToCoverflow,
+
+    buildCreativeDirection,
+
+    buildWhatsAppMessage,
+
+    formatPrice
+  };
+
+
+  /* =========================================================
+     START
+     ========================================================= */
+
+  if (
+    document.readyState ===
+    "loading"
+  ) {
+    document.addEventListener(
+      "DOMContentLoaded",
+      boot,
+      {
+        once: true
+      }
+    );
+  } else {
+    boot();
+  }
+
+})();
