@@ -1,443 +1,445 @@
-<!DOCTYPE html>  <html lang="en">  
-<head>  
-  <meta charset="UTF-8" />  <meta  
-name="viewport"  
-content="width=device-width, initial-scale=1.0"  
-/>
-
-<meta  
-name="description"  
-content="FeelFrame™ — Some feelings deserve to be seen."  
-/>
-
-<meta  
-name="theme-color"  
-content="#f5f3ee"  
-/>
-
-  <title>  
-    FeelFrame™ — Some feelings deserve to be seen.  
-  </title>    <!-- =========================================================  
-       FONTS  
-       ========================================================= -->    <link  
-    rel="preconnect"  
-    href="https://fonts.googleapis.com"  
-  />    <link  
-    rel="preconnect"  
-    href="https://fonts.gstatic.com"  
-    crossorigin  
-  />    <link  
-    href="https://fonts.googleapis.com/css2?family=DM\+Sans:wght@400;500;600;700&family=Playfair\+Display:wght@500;600;700&display=swap"  
-    rel="stylesheet"  
-  />    <!-- =========================================================  
-       MAIN STYLESHEET  
-       ========================================================= -->    <link  
-    rel="stylesheet"  
-    href="style.css"  
-  />  
-</head>  <body class="home-page">    <!-- =========================================================  
-       HEADER  
-       ========================================================= -->    <header class="site-header">  <div class="site-header-inner">  
-
-  <a  
-    href="index.html"  
-    class="brand"  
-    aria-label="FeelFrame home"  
-  >  
-    FeelFrame<span class="brand-mark">™</span>  
-  </a>  
-
-</div>
-
-  </header>    <!-- =========================================================  
-       MAIN CONTENT  
-       ========================================================= -->    <main id="main-content">  <!-- =======================================================  
-     HOME HERO  
-
-     The hero contains:  
-
-     1. Emotional headline  
-     2. Creation CTA  
-     3. Immediate 3D Cover Flow  
-
-     The Cover Flow remains directly inside the hero so  
-     visitors encounter the visual product immediately.  
-     ======================================================= -->  
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0, viewport-fit=cover"
+  >
+
+  <meta
+    name="description"
+    content="FeelFrame™ — Some feelings deserve to be seen. Turn real moments, emotions and experiences into visual stories."
+  >
+
+  <meta
+    name="theme-color"
+    content="#f4f2ed"
+  >
+
+  <meta name="robots" content="index, follow">
+
+  <title>FeelFrame™ — Some feelings deserve to be seen.</title>
+
+  <!-- Fonts are loaded by style.css if already defined there. -->
+  <link rel="stylesheet" href="style.css">
+
+  <!-- Prevent missing favicon requests from affecting the page. -->
+  <link
+    rel="icon"
+    href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%E2%97%87%3C/text%3E%3C/svg%3E"
+  >
+</head>
+
+<body>
+
+  <!-- =========================================================
+       FEELFRAME™
+       HOMEPAGE
+       ========================================================= -->
+
+  <div class="site-shell" id="app">
+
+    <!-- =======================================================
+         HEADER
+         ======================================================= -->
+
+    <header class="site-header" id="site-header">
+
+      <div class="header-inner">
+
+        <a
+          class="brand"
+          href="index.html"
+          aria-label="FeelFrame™ home"
+        >
+          <span class="brand-name">FeelFrame™</span>
+        </a>
+
+        <nav
+          class="desktop-nav"
+          aria-label="Primary navigation"
+        >
+          <a
+            class="nav-link is-active"
+            href="index.html"
+            aria-current="page"
+          >
+            Home
+          </a>
 
-<section  
-  class="home-hero"  
-  aria-labelledby="homeHeroTitle"  
->  
+          <a
+            class="nav-link"
+            href="explore.html"
+          >
+            Explore
+          </a>
+
+          <a
+            class="nav-link"
+            href="create.html"
+          >
+            Create
+          </a>
+        </nav>
+
+      </div>
+
+    </header>
+
 
+    <!-- =======================================================
+         MAIN
+         ======================================================= -->
+
+    <main id="main-content">
+
+      <!-- =====================================================
+           HERO / EMOTIONAL ENTRY
+           ===================================================== -->
 
-  <!-- =====================================================  
-       HERO INTRO  
-       ===================================================== -->  
+      <section
+        class="hero-section"
+        id="hero"
+        aria-labelledby="hero-title"
+      >
 
-  <div class="home-hero-intro">  
+        <div class="hero-inner">
 
-    <div class="home-hero-copy">  
+          <p class="eyebrow" id="hero-eyebrow">
+            FEELFRAME™
+          </p>
 
-      <h1  
-        class="home-hero-title"  
-        id="homeHeroTitle"  
-      >  
-        Some feelings deserve to be seen.  
-      </h1>  
+          <h1
+            class="hero-title"
+            id="hero-title"
+          >
+            Some feelings<br>
+            deserve to be seen.
+          </h1>
 
-    </div>  
+          <div class="hero-action">
 
+            <a
+              class="button button-primary"
+              href="create.html"
+              id="make-it-yours"
+            >
+              Make it yours
+              <span aria-hidden="true">→</span>
+            </a>
 
-    <!-- ===================================================  
-         HERO CTA  
-         =================================================== -->  
+          </div>
 
-    <a  
-      href="create.html"  
-      class="hero-cta"  
-      aria-label="Make your own FeelFrame"  
-    >  
+        </div>
 
-      <span>  
-        Make it yours  
-      </span>  
+      </section>
 
-      <span  
-        class="hero-cta-arrow"  
-        aria-hidden="true"  
-      >  
-        →  
-      </span>  
 
-    </a>  
+      <!-- =====================================================
+           FEATURED COVERFLOW
+           ===================================================== -->
 
-  </div>  
+      <section
+        class="featured-section"
+        id="featured"
+        aria-labelledby="featured-title"
+      >
 
+        <div class="section-heading">
 
+          <div class="section-heading-copy">
 
-  <!-- =====================================================  
-       FEATURED / 3D COVER FLOW  
+            <p class="section-kicker">
+              FEATURED
+            </p>
 
-       Featured stories are generated from data.json  
-       by script.js.  
-       ===================================================== -->  
+            <h2
+              class="section-title"
+              id="featured-title"
+            >
+              Visual stories
+            </h2>
 
-  <section  
-    class="featured-section"  
-    aria-label="FeelFrame visual moments"  
-  >  
+          </div>
 
+        </div>
 
-    <!-- ===================================================  
-         COVER FLOW VIEWPORT  
-         =================================================== -->  
 
-    <div  
-      class="coverflow"  
-      id="coverflowViewport"  
-      aria-label="Featured FeelFrame moments"  
-      role="region"  
-    >  
+        <!-- Coverflow viewport -->
 
+        <div
+          class="coverflow"
+          id="coverflow"
+          tabindex="0"
+          aria-label="Featured visual stories"
+          aria-roledescription="carousel"
+        >
 
-      <!-- =================================================  
-           COVER FLOW TRACK  
+          <div
+            class="coverflow-track"
+            id="coverflow-track"
+          >
 
-           Cards are generated by script.js.  
-           ================================================= -->  
+            <!--
+              Story cards are rendered dynamically by script.js
+              from data.json.
 
-      <div  
-        class="coverflow-track"  
-        id="coverflowTrack"  
-      >  
+              Expected state classes:
 
-        <!--  
-          Featured cards are generated here by script.js  
-          from data.json.  
-        -->  
+              .is-center
+              .is-left
+              .is-right
+              .is-far-left
+              .is-far-right
+            -->
 
-      </div>  
+          </div>
 
+        </div>
 
-    </div>  
 
+        <!-- Coverflow controls -->
 
+        <div
+          class="coverflow-controls"
+          id="coverflow-controls"
+          aria-label="Featured story controls"
+        >
 
-    <!-- ===================================================  
-         COVER FLOW CONTROLS  
-         =================================================== -->  
+          <button
+            class="coverflow-button"
+            type="button"
+            id="coverflow-prev"
+            aria-label="Previous featured story"
+          >
+            <span aria-hidden="true">←</span>
+          </button>
 
-    <div  
-      class="coverflow-controls"  
-      aria-label="Featured story controls"  
-    >  
 
+          <div
+            class="coverflow-dots"
+            id="coverflow-dots"
+            aria-label="Featured story positions"
+          >
+            <!-- Dots rendered by script.js -->
+          </div>
 
-      <div class="coverflow-buttons">  
 
+          <button
+            class="coverflow-button"
+            type="button"
+            id="coverflow-next"
+            aria-label="Next featured story"
+          >
+            <span aria-hidden="true">→</span>
+          </button>
 
-        <!-- =================================================  
-             PREVIOUS BUTTON  
+        </div>
 
-             ID intentionally matches production script.js.  
-             ================================================= -->  
+      </section>
 
-        <button  
-          type="button"  
-          class="coverflow-button"  
-          id="coverflowPrevious"  
-          aria-label="Previous featured story"  
-        >  
-          ←  
-        </button>  
 
+      <!-- =====================================================
+           STORY BOARD / BENTO DISCOVERY
+           ===================================================== -->
 
+      <section
+        class="story-board-section"
+        id="story-board"
+        aria-labelledby="story-board-title"
+      >
 
-        <!-- ===============================================  
-             DOT NAVIGATION  
+        <div class="section-heading">
 
-             Dots are generated by script.js.  
-             =============================================== -->  
+          <div class="section-heading-copy">
 
-        <div  
-          class="coverflow-dots"  
-          id="coverflowDots"  
-          role="tablist"  
-          aria-label="Featured stories"  
-        >  
+            <p class="section-kicker">
+              THE COLLECTION
+            </p>
 
-          <!--  
-            Dots generated by JavaScript.  
-          -->  
+            <h2
+              class="section-title"
+              id="story-board-title"
+            >
+              Moments worth seeing.
+            </h2>
 
-        </div>  
+          </div>
 
 
+          <a
+            class="section-link"
+            href="explore.html"
+          >
+            Explore all
+            <span aria-hidden="true">→</span>
+          </a>
 
-        <!-- ===============================================  
-             NEXT BUTTON  
-             =============================================== -->  
+        </div>
 
-        <button  
-          type="button"  
-          class="coverflow-button"  
-          id="coverflowNext"  
-          aria-label="Next featured story"  
-        >  
-          →  
-        </button>  
 
+        <div
+          class="story-grid"
+          id="story-grid"
+          aria-live="polite"
+        >
 
-      </div>  
+          <!--
+            Story cards are rendered dynamically by script.js
+            from data.json.
+          -->
 
+        </div>
 
-    </div>  
+      </section>
 
 
-  </section>  
+      <!-- =====================================================
+           EMPTY / ERROR STATE
+           ===================================================== -->
 
+      <section
+        class="empty-state"
+        id="home-empty-state"
+        hidden
+        aria-live="polite"
+      >
 
-</section>  
+        <div class="empty-state-inner">
 
+          <p class="empty-state-title">
+            Nothing to show yet.
+          </p>
 
+          <p class="empty-state-copy">
+            FeelFrame™ is preparing the next visual story.
+          </p>
 
-<!-- =======================================================  
-     STORY BOARD  
+        </div>
 
-     Pinterest / Bento-style visual exploration remains  
-     separate from the hero Cover Flow.  
+      </section>
 
-     Cards are generated by script.js from data.json.  
-     ======================================================= -->  
+    </main>
 
-<section  
-  class="story-board-section"  
-  aria-labelledby="storyBoardTitle"  
->  
 
+    <!-- =======================================================
+         FOOTER
+         ======================================================= -->
 
-  <!-- =====================================================  
-       SECTION HEADING  
-       ===================================================== -->  
+    <!--
+      Home intentionally keeps the footer minimal.
+      The persistent mobile navigation below is the primary
+      navigation experience on smaller screens.
+    -->
 
-  <div class="section-heading">  
 
-    <div>  
+    <!-- =======================================================
+         MOBILE / STICKY NAVIGATION
+         ======================================================= -->
 
-      <p class="section-eyebrow">  
-        Explore  
-      </p>  
+    <nav
+      class="mobile-nav"
+      id="mobile-nav"
+      aria-label="Mobile navigation"
+    >
 
-      <h2  
-        class="section-title"  
-        id="storyBoardTitle"  
-      >  
-        Moments worth seeing.  
-      </h2>  
+      <a
+        class="mobile-nav-item is-active"
+        href="index.html"
+        aria-current="page"
+      >
+        <span
+          class="mobile-nav-icon"
+          aria-hidden="true"
+        >
+          ⌂
+        </span>
 
-    </div>  
+        <span class="mobile-nav-label">
+          Home
+        </span>
+      </a>
 
-  </div>  
 
+      <a
+        class="mobile-nav-item"
+        href="explore.html"
+      >
+        <span
+          class="mobile-nav-icon"
+          aria-hidden="true"
+        >
+          ◇
+        </span>
 
+        <span class="mobile-nav-label">
+          Explore
+        </span>
+      </a>
 
-  <!-- =====================================================  
-       STORY BOARD  
 
-       IMPORTANT:  
-       The ID matches the production script.js:  
-       #homeStoryGrid  
-       ===================================================== -->  
+      <a
+        class="mobile-nav-item"
+        href="create.html"
+      >
+        <span
+          class="mobile-nav-icon"
+          aria-hidden="true"
+        >
+          ＋
+        </span>
 
-  <div  
-    class="story-board"  
-    id="homeStoryGrid"  
-    aria-live="polite"  
-  >  
+        <span class="mobile-nav-label">
+          Create
+        </span>
+      </a>
 
-    <!--  
-      Story cards are generated here by script.js  
-      from data.json.  
-    -->  
+    </nav>
 
-  </div>  
 
+    <!-- =======================================================
+         GLOBAL ERROR MESSAGE
+         ======================================================= -->
 
-</section>  
+    <div
+      class="global-error"
+      id="global-error"
+      role="alert"
+      hidden
+    >
 
+      <div class="global-error-inner">
 
+        <p class="global-error-title">
+          Something went wrong.
+        </p>
 
-<!-- =======================================================  
-     EMPTY STATE  
+        <p class="global-error-message">
+          FeelFrame™ could not load this experience right now.
+        </p>
 
-     Retained as part of the existing page structure.  
-     script.js also provides dynamic empty states when  
-     required.  
-     ======================================================= -->  
+        <button
+          class="button button-secondary"
+          type="button"
+          id="global-error-retry"
+        >
+          Try again
+        </button>
 
-<section  
-  class="empty-state"  
-  id="emptyState"  
-  hidden  
-  aria-live="polite"  
->  
+      </div>
 
-  <div class="empty-state-inner">  
+    </div>
 
-    <span  
-      class="empty-state-mark"  
-      aria-hidden="true"  
-    >  
-      ✦  
-    </span>  
+  </div>
 
-    <h2>  
-      Nothing here yet.  
-    </h2>  
 
-    <p>  
-      New visual moments are coming soon.  
-    </p>  
+  <!-- =========================================================
+       APPLICATION DATA + ENGINE
+       ========================================================= -->
 
-  </div>  
+  <script src="script.js" defer></script>
 
-</section>
-
-  </main>    <!-- =========================================================  
-       STICKY MOBILE NAVIGATION  
-       ========================================================= -->    <nav  
-    class="bottom-nav"  
-    aria-label="Primary navigation"  
-  >  <!-- =======================================================  
-     HOME  
-     ======================================================= -->  
-
-<a  
-  href="index.html"  
-  class="bottom-nav-item is-active"  
-  aria-current="page"  
->  
-
-  <span  
-    class="bottom-nav-icon"  
-    aria-hidden="true"  
-  >  
-    ⌂  
-  </span>  
-
-  <span class="bottom-nav-label">  
-    Home  
-  </span>  
-
-</a>  
-
-
-
-<!-- =======================================================  
-     EXPLORE  
-     ======================================================= -->  
-
-<a  
-  href="explore.html"  
-  class="bottom-nav-item"  
->  
-
-  <span  
-    class="bottom-nav-icon"  
-    aria-hidden="true"  
-  >  
-    ◇  
-  </span>  
-
-  <span class="bottom-nav-label">  
-    Explore  
-  </span>  
-
-</a>  
-
-
-
-<!-- =======================================================  
-     CREATE  
-     ======================================================= -->  
-
-<a  
-  href="create.html"  
-  class="bottom-nav-item"  
->  
-
-  <span  
-    class="bottom-nav-icon"  
-    aria-hidden="true"  
-  >  
-    ＋  
-  </span>  
-
-  <span class="bottom-nav-label">  
-    Create  
-  </span>  
-
-</a>
-
-  </nav>    <!-- =========================================================  
-       PRODUCTION JAVASCRIPT  
-       =========================================================  
-  
-       All FeelFrame™ behavior now lives in script.js.  
-  
-       This prevents two separate Cover Flow engines from  
-       competing with each other and keeps the architecture:  
-  
-       index.html  
-            ↓  
-       style.css  
-            ↓  
-       script.js  
-            ↓  
-       data.json  
-  
-       ========================================================= -->    <script  
-    src="script.js"  
-    defer  
-  ></script>  </body>  
+</body>
 </html>
