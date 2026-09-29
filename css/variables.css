@@ -1,0 +1,521 @@
+/* =========================================================
+   FeelFrame™ — Design Tokens
+   variables.css
+   ========================================================= */
+
+/* ---------------------------------------------------------
+   01. COLOR SYSTEM
+   --------------------------------------------------------- */
+
+:root {
+
+  /* Core surfaces */
+  --color-bg: #f4f2ed;
+  --color-surface: #ffffff;
+  --color-surface-soft: #f8f7f3;
+  --color-surface-muted: #eeece6;
+
+  /* Core ink */
+  --color-ink: #111111;
+  --color-ink-soft: #2a2926;
+  --color-muted: #6f6d68;
+  --color-subtle: #9b9891;
+  --color-faint: #c4c1ba;
+
+  /* Borders */
+  --color-border: rgba(17, 17, 17, 0.10);
+  --color-border-soft: rgba(17, 17, 17, 0.06);
+  --color-border-strong: rgba(17, 17, 17, 0.18);
+
+  /* Inverted surfaces */
+  --color-dark: #111111;
+  --color-dark-soft: #1a1917;
+  --color-dark-muted: #262522;
+
+  /* Inverted text */
+  --color-on-dark: #f7f6f2;
+  --color-on-dark-muted: rgba(247, 246, 242, 0.68);
+  --color-on-dark-subtle: rgba(247, 246, 242, 0.46);
+
+  /* Functional colors */
+  --color-success: #3f7658;
+  --color-warning: #9a722f;
+  --color-danger: #9a4d4d;
+  --color-info: #526f78;
+
+  /* Brand / editorial accents */
+  --color-accent: #111111;
+  --color-accent-soft: rgba(17, 17, 17, 0.06);
+
+  /* Image overlays */
+  --overlay-light: rgba(255, 255, 255, 0.08);
+  --overlay-dark: rgba(0, 0, 0, 0.16);
+  --overlay-deep: rgba(0, 0, 0, 0.58);
+}
+
+
+/* ---------------------------------------------------------
+   02. TYPOGRAPHY
+   --------------------------------------------------------- */
+
+:root {
+
+  /* Families */
+  --font-sans: "DM Sans", sans-serif;
+  --font-serif: "Playfair Display", serif;
+
+  /* Primary scale */
+  --text-xs: 0.6875rem;     /* 11px */
+  --text-sm: 0.8125rem;     /* 13px */
+  --text-base: 1rem;         /* 16px */
+  --text-md: 1.125rem;       /* 18px */
+  --text-lg: 1.375rem;       /* 22px */
+  --text-xl: 1.75rem;        /* 28px */
+  --text-2xl: 2.25rem;       /* 36px */
+  --text-3xl: 3rem;          /* 48px */
+  --text-4xl: 4rem;          /* 64px */
+  --text-5xl: 5.5rem;        /* 88px */
+
+  /* Display sizing */
+  --display-hero: clamp(
+    3.25rem,
+    7vw,
+    7.5rem
+  );
+
+  --display-section: clamp(
+    2.25rem,
+    4vw,
+    4.5rem
+  );
+
+  --display-card: clamp(
+    1.35rem,
+    2vw,
+    2rem
+  );
+
+  /* Line heights */
+  --leading-none: 0.95;
+  --leading-tight: 1.08;
+  --leading-snug: 1.2;
+  --leading-normal: 1.5;
+  --leading-relaxed: 1.7;
+
+  /* Letter spacing */
+  --tracking-tight: -0.035em;
+  --tracking-display: -0.045em;
+  --tracking-normal: 0;
+  --tracking-wide: 0.06em;
+  --tracking-wider: 0.12em;
+  --tracking-caps: 0.16em;
+
+  /* Font weights */
+  --weight-regular: 400;
+  --weight-medium: 500;
+  --weight-semibold: 600;
+  --weight-bold: 700;
+}
+
+
+/* ---------------------------------------------------------
+   03. LAYOUT
+   --------------------------------------------------------- */
+
+:root {
+
+  --max-width: 1440px;
+
+  --page-gutter: 48px;
+  --page-gutter-tablet: 32px;
+  --page-gutter-mobile: 20px;
+
+  --nav-height: 74px;
+  --mobile-nav-height: 72px;
+
+  --content-width: 920px;
+  --reading-width: 720px;
+  --narrow-width: 560px;
+}
+
+
+/* ---------------------------------------------------------
+   04. SPACING
+   --------------------------------------------------------- */
+
+:root {
+
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 24px;
+  --space-7: 28px;
+  --space-8: 32px;
+  --space-9: 40px;
+  --space-10: 48px;
+  --space-11: 56px;
+  --space-12: 64px;
+  --space-13: 72px;
+  --space-14: 80px;
+  --space-15: 96px;
+  --space-16: 120px;
+  --space-17: 144px;
+
+  /* Section rhythm */
+  --section-space: clamp(72px, 9vw, 144px);
+  --section-space-small: clamp(48px, 6vw, 88px);
+}
+
+
+/* ---------------------------------------------------------
+   05. RADII
+   --------------------------------------------------------- */
+
+:root {
+
+  --radius-xs: 4px;
+  --radius-sm: 8px;
+  --radius-md: 14px;
+  --radius-lg: 20px;
+  --radius-xl: 28px;
+  --radius-2xl: 36px;
+
+  --radius-card: 20px;
+  --radius-card-large: 28px;
+
+  --radius-pill: 999px;
+  --radius-circle: 50%;
+}
+
+
+/* ---------------------------------------------------------
+   06. BORDERS
+   --------------------------------------------------------- */
+
+:root {
+
+  --border-width: 1px;
+
+  --border-default:
+    var(--border-width) solid var(--color-border);
+
+  --border-soft:
+    var(--border-width) solid var(--color-border-soft);
+
+  --border-strong:
+    var(--border-width) solid var(--color-border-strong);
+
+  --border-dark:
+    var(--border-width) solid rgba(255, 255, 255, 0.14);
+}
+
+
+/* ---------------------------------------------------------
+   07. SHADOWS
+   --------------------------------------------------------- */
+
+:root {
+
+  /* Quiet UI shadow */
+  --shadow-xs:
+    0 1px 2px rgba(17, 17, 17, 0.04);
+
+  /* Standard card */
+  --shadow-sm:
+    0 8px 24px rgba(17, 17, 17, 0.06);
+
+  /* Floating object */
+  --shadow-md:
+    0 18px 48px rgba(17, 17, 17, 0.10);
+
+  /* Large visual object */
+  --shadow-lg:
+    0 28px 80px rgba(17, 17, 17, 0.14);
+
+  /* Coverflow */
+  --shadow-cover:
+    0 30px 80px rgba(17, 17, 17, 0.20);
+
+  /* Designed detail/meta object */
+  --shadow-object:
+    0 14px 40px rgba(17, 17, 17, 0.08),
+    0 2px 8px rgba(17, 17, 17, 0.04);
+
+  /* Pressed / inset */
+  --shadow-inset:
+    inset 0 1px 0 rgba(255, 255, 255, 0.55);
+}
+
+
+/* ---------------------------------------------------------
+   08. DETAIL / META OBJECT TOKENS
+   ---------------------------------------------------------
+   These are intentionally separate from generic cards.
+
+   The goal:
+   metadata should feel composed and editorial,
+   not like a plain information box.
+   --------------------------------------------------------- */
+
+:root {
+
+  /* Object surface */
+  --meta-surface: rgba(255, 255, 255, 0.78);
+  --meta-surface-solid: #ffffff;
+
+  /* Object border */
+  --meta-border: rgba(17, 17, 17, 0.09);
+  --meta-border-hover: rgba(17, 17, 17, 0.16);
+
+  /* Object depth */
+  --meta-shadow: var(--shadow-object);
+
+  /* Internal spacing */
+  --meta-padding: 20px;
+  --meta-padding-large: 28px;
+
+  /* Labels */
+  --meta-label-size: 0.625rem;
+  --meta-label-spacing: 0.14em;
+  --meta-label-color: var(--color-subtle);
+
+  /* Values */
+  --meta-value-size: 0.9375rem;
+  --meta-value-weight: var(--weight-medium);
+  --meta-value-color: var(--color-ink);
+
+  /* Decorative geometry */
+  --meta-accent-width: 3px;
+  --meta-accent-radius: 2px;
+
+  /* Object motion */
+  --meta-transition:
+    transform 280ms cubic-bezier(.2,.8,.2,1),
+    box-shadow 280ms cubic-bezier(.2,.8,.2,1),
+    border-color 200ms ease;
+}
+
+
+/* ---------------------------------------------------------
+   09. COVERFLOW
+   --------------------------------------------------------- */
+
+:root {
+
+  --cover-width: 360px;
+  --cover-height: 500px;
+
+  --cover-side-offset: 285px;
+  --cover-far-offset: 510px;
+
+  --cover-perspective: 1800px;
+
+  --cover-radius: 20px;
+
+  --cover-shadow:
+    0 30px 80px rgba(17, 17, 17, 0.20);
+
+  --cover-transition:
+    transform 520ms cubic-bezier(.2,.8,.2,1),
+    opacity 420ms ease,
+    filter 420ms ease;
+
+  --cover-scale-center: 1;
+  --cover-scale-side: 0.86;
+  --cover-scale-far: 0.72;
+}
+
+
+/* ---------------------------------------------------------
+   10. BUTTONS / INTERACTION
+   --------------------------------------------------------- */
+
+:root {
+
+  --button-height: 48px;
+  --button-height-small: 40px;
+  --button-height-large: 56px;
+
+  --button-padding-x: 20px;
+  --button-padding-x-large: 28px;
+
+  --button-radius: var(--radius-pill);
+
+  --button-transition:
+    transform 180ms ease,
+    background-color 180ms ease,
+    color 180ms ease,
+    border-color 180ms ease,
+    box-shadow 180ms ease;
+
+  --focus-ring:
+    0 0 0 3px rgba(17, 17, 17, 0.14);
+}
+
+
+/* ---------------------------------------------------------
+   11. FORM CONTROLS
+   --------------------------------------------------------- */
+
+:root {
+
+  --field-height: 54px;
+
+  --field-padding-x: 16px;
+  --field-padding-y: 14px;
+
+  --field-radius: var(--radius-md);
+
+  --field-background: rgba(255, 255, 255, 0.78);
+
+  --field-border: rgba(17, 17, 17, 0.12);
+  --field-border-focus: rgba(17, 17, 17, 0.35);
+
+  --field-placeholder:
+    rgba(17, 17, 17, 0.40);
+
+  --field-transition:
+    border-color 180ms ease,
+    box-shadow 180ms ease,
+    background-color 180ms ease;
+}
+
+
+/* ---------------------------------------------------------
+   12. MOTION
+   --------------------------------------------------------- */
+
+:root {
+
+  --ease-standard:
+    cubic-bezier(.2, .8, .2, 1);
+
+  --ease-smooth:
+    cubic-bezier(.22, 1, .36, 1);
+
+  --ease-in:
+    cubic-bezier(.4, 0, 1, 1);
+
+  --ease-out:
+    cubic-bezier(0, 0, .2, 1);
+
+  --duration-fast: 160ms;
+  --duration-standard: 280ms;
+  --duration-slow: 520ms;
+  --duration-slower: 800ms;
+}
+
+
+/* ---------------------------------------------------------
+   13. Z-INDEX
+   --------------------------------------------------------- */
+
+:root {
+
+  --z-base: 1;
+
+  --z-content: 10;
+
+  --z-header: 100;
+
+  --z-dropdown: 200;
+
+  --z-overlay: 500;
+
+  --z-modal: 800;
+
+  --z-mobile-nav: 900;
+
+  --z-toast: 1000;
+}
+
+
+/* ---------------------------------------------------------
+   14. IMAGE / MEDIA RATIOS
+   --------------------------------------------------------- */
+
+:root {
+
+  --ratio-square: 1 / 1;
+  --ratio-portrait: 4 / 5;
+  --ratio-landscape: 16 / 10;
+  --ratio-wide: 16 / 9;
+  --ratio-story: 3 / 4;
+}
+
+
+/* ---------------------------------------------------------
+   15. RESPONSIVE BREAKPOINTS
+   --------------------------------------------------------- */
+
+:root {
+
+  --breakpoint-xl: 1200px;
+  --breakpoint-lg: 900px;
+  --breakpoint-md: 700px;
+  --breakpoint-sm: 390px;
+}
+
+
+/* ---------------------------------------------------------
+   16. ACCESSIBILITY / SAFE AREAS
+   --------------------------------------------------------- */
+
+:root {
+
+  --safe-top: env(safe-area-inset-top, 0px);
+  --safe-right: env(safe-area-inset-right, 0px);
+  --safe-bottom: env(safe-area-inset-bottom, 0px);
+  --safe-left: env(safe-area-inset-left, 0px);
+}
+
+
+/* ---------------------------------------------------------
+   17. COMPONENT-SPECIFIC TOKENS
+   ---------------------------------------------------------
+   These remain centralized so individual component files
+   don't start inventing slightly different values.
+   --------------------------------------------------------- */
+
+:root {
+
+  /* Story cards */
+  --story-card-radius: var(--radius-card);
+  --story-card-shadow: var(--shadow-sm);
+
+  /* Explore */
+  --explore-pill-height: 38px;
+
+  /* Upload */
+  --upload-radius: var(--radius-lg);
+
+  /* Footer */
+  --footer-padding: clamp(56px, 8vw, 112px);
+
+  /* Mobile navigation */
+  --mobile-nav-blur: 18px;
+  --mobile-nav-background: rgba(244, 242, 237, 0.88);
+}
+
+
+/* ---------------------------------------------------------
+   18. GLOBAL TRANSITION POLICY
+   --------------------------------------------------------- */
+
+:root {
+
+  --transition-color:
+    color var(--duration-fast) ease,
+    background-color var(--duration-fast) ease;
+
+  --transition-border:
+    border-color var(--duration-fast) ease;
+
+  --transition-transform:
+    transform var(--duration-standard) var(--ease-standard);
+
+  --transition-opacity:
+    opacity var(--duration-standard) ease;
+}
