@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
 
@@ -9,18 +10,13 @@
   >
 
   <meta
-    name="description"
-    content="FeelFrame™ — Visual stories built around real emotions, milestones and human moments."
-  >
-
-  <meta
     name="theme-color"
     content="#f4f2ed"
   >
 
   <meta
-    name="color-scheme"
-    content="light"
+    name="description"
+    content="FeelFrame™ — Some feelings deserve to be seen. Visual stories built around real emotions, milestones and human moments."
   >
 
   <meta
@@ -28,17 +24,29 @@
     content="index, follow"
   >
 
-  <link
-    rel="canonical"
-    href="./index.html"
+  <meta
+    property="og:type"
+    content="website"
+  >
+
+  <meta
+    property="og:title"
+    content="FeelFrame™ — Some feelings deserve to be seen."
+  >
+
+  <meta
+    property="og:description"
+    content="Visual stories built around real emotions, milestones and human moments."
+  >
+
+  <meta
+    property="og:image"
+    content="https://res.cloudinary.com/mo6vulz7/image/upload/v1790245069/IMG_1428.jpg"
   >
 
   <title>FeelFrame™ — Some feelings deserve to be seen.</title>
 
-  <!-- =====================================================
-       FONTS
-       ===================================================== -->
-
+  <!-- Fonts -->
   <link
     rel="preconnect"
     href="https://fonts.googleapis.com"
@@ -51,897 +59,841 @@
   >
 
   <link
-    href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@400;500;600&display=swap"
+    href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@500;600;700&display=swap"
     rel="stylesheet"
   >
 
-  <!-- =====================================================
-       STYLES
-       ===================================================== -->
-
+  <!-- Styles -->
   <link
     rel="stylesheet"
-    href="./css/main.css"
+    href="style.css"
   >
 </head>
 
-<body class="home-page">
+<body>
 
-  <!-- =====================================================
-       SKIP LINK
-       ===================================================== -->
+  <!-- =========================================================
+       APP
+  ========================================================== -->
 
-  <a
-    class="skip-link"
-    href="#main-content"
-  >
-    Skip to content
-  </a>
-
-  <!-- =====================================================
-       APP SHELL
-       ===================================================== -->
-
-  <div
+  <main
     id="app"
-    class="site-shell"
+    class="app"
   >
 
-    <!-- ===================================================
-         SITE HEADER
-         =================================================== -->
+    <!-- =======================================================
+         HEADER / PROFILE
+    ======================================================== -->
 
     <header
-      class="site-header"
-      id="siteHeader"
+      id="profile"
+      class="profile"
     >
-      <div class="site-header__inner">
 
-        <a
-          href="./index.html"
-          class="brand"
-          aria-label="FeelFrame™ home"
+      <div class="profile__identity">
+
+        <div
+          class="profile__mark"
+          aria-hidden="true"
         >
-          <span class="brand-mark">
-            FeelFrame™
-          </span>
-        </a>
+          F
+        </div>
 
-        <nav
-          class="header-nav"
-          aria-label="Primary navigation"
-        >
+        <div class="profile__copy">
 
-          <a
-            href="./index.html"
-            class="header-nav__link is-active"
-            aria-current="page"
+          <div class="profile__name-row">
+
+            <h1
+              id="site-name"
+              class="profile__name"
+            >
+              FeelFrame™
+            </h1>
+
+            <span
+              class="profile__verified"
+              aria-label="Verified"
+              title="Verified"
+            >
+              ✓
+            </span>
+
+          </div>
+
+          <p
+            id="site-tagline"
+            class="profile__tagline"
           >
-            Home
-          </a>
-
-          <a
-            href="./explore.html"
-            class="header-nav__link"
-          >
-            Explore
-          </a>
-
-          <a
-            href="./create.html"
-            class="header-nav__link"
-          >
-            Make it Yours
-          </a>
-
-        </nav>
-
-        <div class="site-header__actions">
-
-          <a
-            href="./create.html"
-            class="btn btn--dark btn--small"
-          >
-            Make it Yours
-          </a>
+            Some feelings deserve to be seen.
+          </p>
 
         </div>
 
       </div>
+
+      <p
+        id="site-description"
+        class="profile__description"
+      >
+        Visual stories built around real emotions, milestones and human moments.
+      </p>
+
     </header>
 
-    <!-- ===================================================
-         MAIN
-         =================================================== -->
 
-    <main
-      id="main-content"
-      class="main-content"
+    <!-- =======================================================
+         STATUS
+    ======================================================== -->
+
+    <section
+      id="status-section"
+      class="status-section"
+      aria-labelledby="status-heading"
     >
 
-      <!-- ================================================
-           HERO
-           ================================================ -->
+      <div class="section-heading">
 
-      <section
-        class="hero home-hero"
-        id="hero"
-        aria-labelledby="homeHeroTitle"
-      >
+        <div>
+          <span class="section-heading__eyebrow">
+            FEELFRAME
+          </span>
 
-        <div class="container">
-
-          <div class="hero__inner home-hero-inner">
-
-            <div class="hero__content home-hero-copy">
-
-              <div
-                class="hero__eyebrow eyebrow home-hero-intro"
-              >
-                FeelFrame™
-              </div>
-
-              <h1
-                id="homeHeroTitle"
-                class="hero__title home-hero-title"
-              >
-                Some feelings deserve to be seen.
-              </h1>
-
-              <p
-                class="hero__description"
-                id="homeHeroDescription"
-              >
-                Visual stories built around real emotions,
-                milestones and human moments.
-              </p>
-
-              <div class="hero__actions">
-
-                <a
-                  href="./create.html"
-                  class="btn btn--dark btn--large hero-cta"
-                >
-                  <span>
-                    Make it Yours
-                  </span>
-
-                  <span
-                    class="hero-cta-arrow"
-                    aria-hidden="true"
-                  >
-                    →
-                  </span>
-                </a>
-
-              </div>
-
-            </div>
-
-          </div>
-
-        </div>
-
-      </section>
-
-      <!-- ================================================
-           FEATURED COVERFLOW
-           ================================================ -->
-
-      <section
-        class="featured-section coverflow-section home-featured"
-        id="featured"
-        aria-labelledby="featuredTitle"
-      >
-
-        <div class="container container--wide">
-
-          <div class="home-featured__header">
-
-            <div>
-
-              <span class="eyebrow">
-                Featured
-              </span>
-
-              <h2
-                id="featuredTitle"
-                class="home-featured__title"
-              >
-                Turn the moment into a visual.
-              </h2>
-
-            </div>
-
-            <a
-              href="./explore.html"
-              class="text-link"
-            >
-              Explore all
-            </a>
-
-          </div>
-
-          <div
-            class="coverflow"
-            id="coverflowViewport"
-            tabindex="0"
-            role="region"
-            aria-roledescription="carousel"
-            aria-label="Featured FeelFrame visual stories"
+          <h2
+            id="status-heading"
+            class="section-heading__title"
           >
-
-            <div
-              class="coverflow-track"
-              id="coverflowTrack"
-              aria-live="polite"
-            >
-              <!--
-                Featured stories are rendered by
-                home.js from data.json.
-              -->
-            </div>
-
-          </div>
-
-          <div class="coverflow-controls">
-
-            <div class="coverflow-buttons">
-
-              <button
-                type="button"
-                class="coverflow-button"
-                id="coverflowPrevious"
-                aria-label="Previous featured story"
-              >
-                <span aria-hidden="true">
-                  ←
-                </span>
-              </button>
-
-              <button
-                type="button"
-                class="coverflow-button"
-                id="coverflowNext"
-                aria-label="Next featured story"
-              >
-                <span aria-hidden="true">
-                  →
-                </span>
-              </button>
-
-            </div>
-
-            <div
-              class="coverflow-dots"
-              id="coverflowDots"
-              role="tablist"
-              aria-label="Featured story navigation"
-            >
-              <!--
-                Coverflow navigation dots are rendered
-                by coverflow.js.
-              -->
-            </div>
-
-          </div>
-
+            Status
+          </h2>
         </div>
 
-      </section>
+        <span
+          id="status-count"
+          class="section-heading__meta"
+        >
+          0 updates
+        </span>
 
-      <!-- ================================================
-           MAKE IT YOURS
-           ================================================ -->
+      </div>
 
-      <section
-        class="home-make-yours"
+
+      <!--
+        JavaScript inserts status bubbles here.
+      -->
+
+      <div
+        id="status-list"
+        class="status-list"
+        role="list"
+        aria-label="FeelFrame status updates"
+      ></div>
+
+    </section>
+
+
+    <!-- =======================================================
+         PRIMARY ACTION
+    ======================================================== -->
+
+    <section
+      class="primary-action"
+      aria-label="Create your own visual"
+    >
+
+      <div class="primary-action__copy">
+
+        <span class="primary-action__eyebrow">
+          MAKE IT YOURS
+        </span>
+
+        <h2 class="primary-action__title">
+          Turn your moment into a visual.
+        </h2>
+
+        <p class="primary-action__text">
+          Tell us what you're feeling, what you're going through,
+          and the kind of visual you want to create.
+        </p>
+
+      </div>
+
+      <button
         id="make-it-yours"
-        aria-labelledby="makeItYoursTitle"
+        class="primary-action__button"
+        type="button"
+      >
+        Make it yours
+        <span aria-hidden="true">↗</span>
+      </button>
+
+    </section>
+
+
+    <!-- =======================================================
+         FEATURED
+    ======================================================== -->
+
+    <section
+      id="featured-section"
+      class="featured-section"
+      aria-labelledby="featured-heading"
+    >
+
+      <div class="section-heading">
+
+        <div>
+          <span class="section-heading__eyebrow">
+            CURATED
+          </span>
+
+          <h2
+            id="featured-heading"
+            class="section-heading__title"
+          >
+            Featured
+          </h2>
+        </div>
+
+        <button
+          id="view-all"
+          class="section-heading__action"
+          type="button"
+        >
+          View all
+        </button>
+
+      </div>
+
+
+      <div
+        id="featured-list"
+        class="featured-list"
+        role="list"
+        aria-label="Featured FeelFrame visual stories"
+      ></div>
+
+    </section>
+
+
+    <!-- =======================================================
+         VISUAL STORIES
+    ======================================================== -->
+
+    <section
+      id="stories-section"
+      class="stories-section"
+      aria-labelledby="stories-heading"
+    >
+
+      <div class="section-heading">
+
+        <div>
+          <span class="section-heading__eyebrow">
+            THE COLLECTION
+          </span>
+
+          <h2
+            id="stories-heading"
+            class="section-heading__title"
+          >
+            Visual Stories
+          </h2>
+        </div>
+
+      </div>
+
+
+      <div
+        id="stories-list"
+        class="stories-list"
+        role="list"
+        aria-label="FeelFrame visual stories"
+      ></div>
+
+    </section>
+
+
+    <!-- =======================================================
+         PERSONALIZATION
+    ======================================================== -->
+
+    <section
+      id="create-section"
+      class="create-section"
+      aria-labelledby="create-heading"
+    >
+
+      <div class="create-section__header">
+
+        <span class="section-heading__eyebrow">
+          PERSONALIZE
+        </span>
+
+        <h2
+          id="create-heading"
+          class="create-section__title"
+        >
+          Make the visual yours.
+        </h2>
+
+        <p class="create-section__description">
+          Start with the moment. We'll help turn it into a visual story.
+        </p>
+
+      </div>
+
+
+      <form
+        id="create-form"
+        class="create-form"
+        novalidate
       >
 
-        <div class="container">
+        <div class="form-field">
 
-          <div class="make-yours">
+          <label
+            for="create-name"
+            class="form-field__label"
+          >
+            Your name
+          </label>
 
-            <div class="make-yours__header">
+          <input
+            id="create-name"
+            name="name"
+            class="form-field__input"
+            type="text"
+            autocomplete="name"
+            placeholder="What should we call you?"
+          >
 
-              <span class="eyebrow">
-                Make it Yours
-              </span>
+        </div>
 
-              <h2
-                id="makeItYoursTitle"
-                class="make-yours__title"
-              >
-                Your moment.
-                Your feeling.
-                Your frame.
-              </h2>
 
-              <p class="make-yours__description">
-                Tell us what you're going through and
-                the visual language you want. We'll turn
-                the direction into something made for you.
-              </p>
+        <div class="form-field">
 
-            </div>
+          <label
+            for="create-school"
+            class="form-field__label"
+          >
+            School / University
+          </label>
 
-            <form
-              id="makeYoursForm"
-              class="form"
-              novalidate
+          <input
+            id="create-school"
+            name="school"
+            class="form-field__input"
+            type="text"
+            placeholder="Optional"
+          >
+
+        </div>
+
+
+        <div class="form-field">
+
+          <label
+            for="create-course"
+            class="form-field__label"
+          >
+            Course / Field
+          </label>
+
+          <input
+            id="create-course"
+            name="course"
+            class="form-field__input"
+            type="text"
+            placeholder="e.g. Computer Science"
+          >
+
+        </div>
+
+
+        <div class="form-field">
+
+          <label
+            for="create-feeling"
+            class="form-field__label"
+          >
+            How are you feeling?
+          </label>
+
+          <input
+            id="create-feeling"
+            name="feeling"
+            class="form-field__input"
+            type="text"
+            placeholder="Confident, hopeful, ambitious..."
+          >
+
+        </div>
+
+
+        <div class="form-field form-field--full">
+
+          <label
+            for="create-story"
+            class="form-field__label"
+          >
+            What's going on?
+          </label>
+
+          <textarea
+            id="create-story"
+            name="story"
+            class="form-field__input form-field__textarea"
+            rows="4"
+            placeholder="Tell us a little about the moment..."
+          ></textarea>
+
+        </div>
+
+
+        <div class="form-field form-field--full">
+
+          <label
+            for="create-message"
+            class="form-field__label"
+          >
+            What should the visual say?
+          </label>
+
+          <textarea
+            id="create-message"
+            name="message"
+            class="form-field__input form-field__textarea"
+            rows="3"
+            placeholder="The feeling, message or idea you want people to see."
+          ></textarea>
+
+        </div>
+
+
+        <div class="form-field form-field--full">
+
+          <span class="form-field__label">
+            Visual language
+          </span>
+
+          <div
+            id="visual-language"
+            class="visual-options"
+            role="radiogroup"
+            aria-label="Choose a visual language"
+          >
+
+            <button
+              class="visual-option is-active"
+              type="button"
+              role="radio"
+              aria-checked="true"
+              data-value="Cinematic"
             >
-
-              <!-- ========================================
-                   BASIC INFORMATION
-                   ======================================== -->
-
-              <div class="form-grid">
-
-                <!-- NAME -->
-
-                <div class="form-field">
-
-                  <label
-                    class="form-field__label"
-                    for="makeYoursName"
-                  >
-                    Your name
-                  </label>
-
-                  <input
-                    id="makeYoursName"
-                    name="name"
-                    class="form-control"
-                    type="text"
-                    autocomplete="name"
-                    maxlength="100"
-                    placeholder="What should we call you?"
-                  >
-
-                </div>
-
-                <!-- SCHOOL -->
-
-                <div class="form-field">
-
-                  <label
-                    class="form-field__label"
-                    for="makeYoursSchool"
-                  >
-                    School / University
-                  </label>
-
-                  <input
-                    id="makeYoursSchool"
-                    name="school"
-                    class="form-control"
-                    type="text"
-                    autocomplete="organization"
-                    maxlength="150"
-                    placeholder="Your school or university"
-                  >
-
-                </div>
-
-                <!-- COURSE -->
-
-                <div class="form-field">
-
-                  <label
-                    class="form-field__label"
-                    for="makeYoursCourse"
-                  >
-                    Course / Field
-                  </label>
-
-                  <input
-                    id="makeYoursCourse"
-                    name="course"
-                    class="form-control"
-                    type="text"
-                    maxlength="150"
-                    placeholder="What do you study or do?"
-                  >
-
-                </div>
-
-                <!-- FEELING -->
-
-                <div class="form-field">
-
-                  <label
-                    class="form-field__label"
-                    for="makeYoursFeeling"
-                  >
-                    What are you feeling?
-                  </label>
-
-                  <input
-                    id="makeYoursFeeling"
-                    name="feeling"
-                    class="form-control"
-                    type="text"
-                    maxlength="100"
-                    placeholder="Proud, hopeful, overwhelmed..."
-                  >
-
-                </div>
-
-                <!-- EXPERIENCE -->
-
-                <div class="form-field form-field--full">
-
-                  <label
-                    class="form-field__label"
-                    for="makeYoursExperience"
-                  >
-                    What are you going through?
-                  </label>
-
-                  <textarea
-                    id="makeYoursExperience"
-                    name="experience"
-                    class="form-control"
-                    rows="5"
-                    maxlength="1200"
-                    placeholder="Tell us what is happening in this moment..."
-                  ></textarea>
-
-                </div>
-
-                <!-- MESSAGE -->
-
-                <div class="form-field form-field--full">
-
-                  <label
-                    class="form-field__label"
-                    for="makeYoursMessage"
-                  >
-                    What should the visual say?
-                  </label>
-
-                  <textarea
-                    id="makeYoursMessage"
-                    name="message"
-                    class="form-control"
-                    rows="4"
-                    maxlength="800"
-                    placeholder="The message, feeling or idea you want the visual to communicate..."
-                  ></textarea>
-
-                </div>
-
-              </div>
-
-              <!-- ========================================
-                   VISUAL LANGUAGE
-                   ======================================== -->
-
-              <div class="form-section">
-
-                <div class="form-section__header">
-
-                  <h3 class="form-section__title">
-                    Choose your visual language
-                  </h3>
-
-                  <p class="form-section__description">
-                    Pick the direction that feels closest
-                    to the moment.
-                  </p>
-
-                </div>
-
-                <div
-                  class="choice-grid choice-grid--compact"
-                  role="radiogroup"
-                  aria-label="Visual language"
-                >
-
-                  <label class="choice choice--compact">
-
-                    <input
-                      type="radio"
-                      name="visualLanguage"
-                      value="Cinematic"
-                    >
-
-                    <span
-                      class="choice__indicator"
-                      aria-hidden="true"
-                    ></span>
-
-                    <span class="choice__content">
-
-                      <span class="choice__title">
-                        Cinematic
-                      </span>
-
-                    </span>
-
-                  </label>
-
-                  <label class="choice choice--compact">
-
-                    <input
-                      type="radio"
-                      name="visualLanguage"
-                      value="Editorial"
-                    >
-
-                    <span
-                      class="choice__indicator"
-                      aria-hidden="true"
-                    ></span>
-
-                    <span class="choice__content">
-
-                      <span class="choice__title">
-                        Editorial
-                      </span>
-
-                    </span>
-
-                  </label>
-
-                  <label class="choice choice--compact">
-
-                    <input
-                      type="radio"
-                      name="visualLanguage"
-                      value="Film"
-                    >
-
-                    <span
-                      class="choice__indicator"
-                      aria-hidden="true"
-                    ></span>
-
-                    <span class="choice__content">
-
-                      <span class="choice__title">
-                        Film
-                      </span>
-
-                    </span>
-
-                  </label>
-
-                  <label class="choice choice--compact">
-
-                    <input
-                      type="radio"
-                      name="visualLanguage"
-                      value="Luxury"
-                    >
-
-                    <span
-                      class="choice__indicator"
-                      aria-hidden="true"
-                    ></span>
-
-                    <span class="choice__content">
-
-                      <span class="choice__title">
-                        Luxury
-                      </span>
-
-                    </span>
-
-                  </label>
-
-                  <label class="choice choice--compact">
-
-                    <input
-                      type="radio"
-                      name="visualLanguage"
-                      value="Dreamlike"
-                    >
-
-                    <span
-                      class="choice__indicator"
-                      aria-hidden="true"
-                    ></span>
-
-                    <span class="choice__content">
-
-                      <span class="choice__title">
-                        Dreamlike
-                      </span>
-
-                    </span>
-
-                  </label>
-
-                  <label class="choice choice--compact">
-
-                    <input
-                      type="radio"
-                      name="visualLanguage"
-                      value="Minimal"
-                    >
-
-                    <span
-                      class="choice__indicator"
-                      aria-hidden="true"
-                    ></span>
-
-                    <span class="choice__content">
-
-                      <span class="choice__title">
-                        Minimal
-                      </span>
-
-                    </span>
-
-                  </label>
-
-                  <label class="choice choice--compact">
-
-                    <input
-                      type="radio"
-                      name="visualLanguage"
-                      value="Artistic"
-                    >
-
-                    <span
-                      class="choice__indicator"
-                      aria-hidden="true"
-                    ></span>
-
-                    <span class="choice__content">
-
-                      <span class="choice__title">
-                        Artistic
-                      </span>
-
-                    </span>
-
-                  </label>
-
-                  <label class="choice choice--compact">
-
-                    <input
-                      type="radio"
-                      name="visualLanguage"
-                      value="Dark & Moody"
-                    >
-
-                    <span
-                      class="choice__indicator"
-                      aria-hidden="true"
-                    ></span>
-
-                    <span class="choice__content">
-
-                      <span class="choice__title">
-                        Dark &amp; Moody
-                      </span>
-
-                    </span>
-
-                  </label>
-
-                </div>
-
-              </div>
-
-              <!-- ========================================
-                   FORM ACTION
-                   ======================================== -->
-
-              <div class="form-actions">
-
-                <p class="form-actions__note">
-                  Your direction will be prepared for
-                  WhatsApp so the conversation can start
-                  with context already in place.
-                </p>
-
-                <button
-                  type="submit"
-                  class="btn btn--dark btn--large"
-                >
-                  Make this moment visual →
-                </button>
-
-              </div>
-
-              <div
-                id="makeYoursStatus"
-                class="form-status"
-                role="status"
-                aria-live="polite"
-                aria-atomic="true"
-              ></div>
-
-            </form>
+              Cinematic
+            </button>
+
+            <button
+              class="visual-option"
+              type="button"
+              role="radio"
+              aria-checked="false"
+              data-value="Editorial"
+            >
+              Editorial
+            </button>
+
+            <button
+              class="visual-option"
+              type="button"
+              role="radio"
+              aria-checked="false"
+              data-value="Film"
+            >
+              Film
+            </button>
+
+            <button
+              class="visual-option"
+              type="button"
+              role="radio"
+              aria-checked="false"
+              data-value="Luxury"
+            >
+              Luxury
+            </button>
+
+            <button
+              class="visual-option"
+              type="button"
+              role="radio"
+              aria-checked="false"
+              data-value="Dreamlike"
+            >
+              Dreamlike
+            </button>
+
+            <button
+              class="visual-option"
+              type="button"
+              role="radio"
+              aria-checked="false"
+              data-value="Minimal"
+            >
+              Minimal
+            </button>
+
+            <button
+              class="visual-option"
+              type="button"
+              role="radio"
+              aria-checked="false"
+              data-value="Artistic"
+            >
+              Artistic
+            </button>
+
+            <button
+              class="visual-option"
+              type="button"
+              role="radio"
+              aria-checked="false"
+              data-value="Dark & Moody"
+            >
+              Dark &amp; Moody
+            </button>
 
           </div>
 
         </div>
 
-      </section>
 
-      <!-- ================================================
-           STORY BOARD
-           ================================================ -->
+        <button
+          class="create-form__submit"
+          type="submit"
+        >
+          Continue on WhatsApp
+          <span aria-hidden="true">↗</span>
+        </button>
 
-      <section
-        class="story-board-section home-board"
-        id="story-board"
-        aria-labelledby="storyBoardTitle"
-      >
+      </form>
 
-        <div class="container container--wide">
+    </section>
 
-          <div class="home-board__header">
 
-            <div>
-
-              <span class="eyebrow">
-                The FeelFrame Board
-              </span>
-
-              <h2
-                id="storyBoardTitle"
-                class="home-board__title"
-              >
-                Different moments.
-                Different ways to be seen.
-              </h2>
-
-            </div>
-
-            <a
-              href="./explore.html"
-              class="text-link"
-            >
-              See the store →
-            </a>
-
-          </div>
-
-          <div
-            id="homeStoryGrid"
-            class="story-board"
-          >
-            <!--
-              Story cards are rendered by home.js.
-            -->
-          </div>
-
-          <div
-            id="emptyState"
-            class="empty-state"
-            hidden
-          >
-
-            <h3>
-              Nothing here yet.
-            </h3>
-
-            <p>
-              New visual stories will appear here soon.
-            </p>
-
-          </div>
-
-        </div>
-
-      </section>
-
-    </main>
-
-    <!-- ===================================================
-         GLOBAL ERROR
-         =================================================== -->
-
-    <div
-      id="global-error"
-      class="error-state"
-      hidden
-      role="alert"
-      aria-live="assertive"
-    ></div>
-
-    <!-- ===================================================
-         MOBILE NAVIGATION
-         =================================================== -->
+    <!-- =======================================================
+         SOCIAL LINKS
+    ======================================================== -->
 
     <nav
-      class="mobile-nav bottom-nav"
-      aria-label="Mobile navigation"
-    >
+      id="social-links"
+      class="social-links"
+      aria-label="Social links"
+    ></nav>
 
-      <div class="mobile-nav__inner">
 
-        <a
-          href="./index.html"
-          class="mobile-nav__item bottom-nav-item is-active"
-          aria-current="page"
+    <!-- =======================================================
+         FOOTER
+    ======================================================== -->
+
+    <footer class="footer">
+
+      <div class="footer__brand">
+        FeelFrame™
+      </div>
+
+      <p class="footer__text">
+        Some feelings deserve to be seen.
+      </p>
+
+      <p class="footer__copyright">
+        © <span id="current-year"></span> FeelFrame™
+      </p>
+
+    </footer>
+
+  </main>
+
+
+  <!-- =========================================================
+       STATUS VIEWER
+  ========================================================== -->
+
+  <div
+    id="status-viewer"
+    class="status-viewer"
+    aria-hidden="true"
+    role="dialog"
+    aria-modal="true"
+    aria-label="FeelFrame status viewer"
+  >
+
+    <div
+      class="status-viewer__backdrop"
+      data-status-close
+    ></div>
+
+
+    <div class="status-viewer__container">
+
+      <!-- Progress bars -->
+      <div
+        id="status-progress"
+        class="status-viewer__progress"
+        aria-hidden="true"
+      ></div>
+
+
+      <!-- Header -->
+      <header class="status-viewer__header">
+
+        <div class="status-viewer__identity">
+
+          <div
+            id="viewer-avatar"
+            class="status-viewer__avatar"
+          >
+            F
+          </div>
+
+          <div>
+
+            <div
+              id="viewer-name"
+              class="status-viewer__name"
+            >
+              FeelFrame™
+            </div>
+
+            <div
+              id="viewer-time"
+              class="status-viewer__time"
+            >
+              Just now
+            </div>
+
+          </div>
+
+        </div>
+
+
+        <button
+          id="status-close"
+          class="status-viewer__close"
+          type="button"
+          aria-label="Close status viewer"
+        >
+          ×
+        </button>
+
+      </header>
+
+
+      <!-- Story -->
+      <div class="status-viewer__media">
+
+        <img
+          id="status-image"
+          class="status-viewer__image"
+          src=""
+          alt=""
+          draggable="false"
         >
 
-          <span
-            class="mobile-nav__icon bottom-nav-icon"
-            aria-hidden="true"
-          >
-            ⌂
-          </span>
+        <div
+          id="status-loading"
+          class="status-viewer__loading"
+          aria-hidden="true"
+        >
+          <span></span>
+        </div>
 
-          <span class="mobile-nav__label bottom-nav-label">
-            Home
-          </span>
+      </div>
 
-        </a>
+
+      <!-- Content -->
+      <div class="status-viewer__content">
+
+        <span
+          id="status-category"
+          class="status-viewer__category"
+        >
+          FEELFRAME
+        </span>
+
+        <h2
+          id="status-title"
+          class="status-viewer__title"
+        ></h2>
+
+        <p
+          id="status-text"
+          class="status-viewer__text"
+        ></p>
 
         <a
-          href="./explore.html"
-          class="mobile-nav__item bottom-nav-item"
+          id="status-cta"
+          class="status-viewer__cta"
+          href="#"
+          target="_blank"
+          rel="noopener noreferrer"
         >
-
-          <span
-            class="mobile-nav__icon bottom-nav-icon"
-            aria-hidden="true"
-          >
-            ◫
-          </span>
-
-          <span class="mobile-nav__label bottom-nav-label">
-            Explore
-          </span>
-
-        </a>
-
-        <a
-          href="./create.html"
-          class="mobile-nav__item bottom-nav-item"
-        >
-
-          <span
-            class="mobile-nav__icon bottom-nav-icon"
-            aria-hidden="true"
-          >
-            +
-          </span>
-
-          <span class="mobile-nav__label bottom-nav-label">
-            Create
-          </span>
-
+          View visual
+          <span aria-hidden="true">↗</span>
         </a>
 
       </div>
 
-    </nav>
+
+      <!-- Navigation zones -->
+      <button
+        id="status-prev"
+        class="status-viewer__nav status-viewer__nav--prev"
+        type="button"
+        aria-label="Previous status"
+      ></button>
+
+      <button
+        id="status-next"
+        class="status-viewer__nav status-viewer__nav--next"
+        type="button"
+        aria-label="Next status"
+      ></button>
+
+    </div>
 
   </div>
 
-  <!-- =====================================================
-       APPLICATION MODULES
-       ===================================================== -->
+
+  <!-- =========================================================
+       PRODUCT QUICK VIEW
+  ========================================================== -->
+
+  <div
+    id="product-modal"
+    class="product-modal"
+    aria-hidden="true"
+    role="dialog"
+    aria-modal="true"
+    aria-label="Visual story"
+  >
+
+    <div
+      class="product-modal__backdrop"
+      data-product-close
+    ></div>
+
+    <div class="product-modal__container">
+
+      <button
+        id="product-close"
+        class="product-modal__close"
+        type="button"
+        aria-label="Close"
+      >
+        ×
+      </button>
+
+      <div class="product-modal__image-wrap">
+
+        <img
+          id="product-image"
+          class="product-modal__image"
+          src=""
+          alt=""
+        >
+
+      </div>
+
+      <div class="product-modal__content">
+
+        <span
+          id="product-campaign"
+          class="product-modal__eyebrow"
+        ></span>
+
+        <h2
+          id="product-title"
+          class="product-modal__title"
+        ></h2>
+
+        <p
+          id="product-quote"
+          class="product-modal__quote"
+        ></p>
+
+        <p
+          id="product-description"
+          class="product-modal__description"
+        ></p>
+
+        <div class="product-modal__meta">
+
+          <span
+            id="product-style"
+            class="product-modal__tag"
+          ></span>
+
+          <span
+            id="product-emotion"
+            class="product-modal__tag"
+          ></span>
+
+        </div>
+
+        <div class="product-modal__pricing">
+
+          <span
+            id="product-price"
+            class="product-modal__price"
+          ></span>
+
+          <span
+            id="product-compare"
+            class="product-modal__compare"
+          ></span>
+
+        </div>
+
+        <a
+          id="product-buy"
+          class="product-modal__buy"
+          href="#"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          Get this visual
+          <span aria-hidden="true">↗</span>
+        </a>
+
+      </div>
+
+    </div>
+
+  </div>
+
+
+  <!-- =========================================================
+       TOAST
+  ========================================================== -->
+
+  <div
+    id="toast"
+    class="toast"
+    role="status"
+    aria-live="polite"
+    aria-atomic="true"
+  ></div>
+
+
+  <!-- =========================================================
+       JAVASCRIPT
+  ========================================================== -->
 
   <script
-    src="./js/core.js"
-    defer
-  ></script>
-
-  <script
-    src="./js/coverflow.js"
-    defer
-  ></script>
-
-  <script
-    src="./js/home.js"
-    defer
-  ></script>
-
-  <script
-    src="./js/create.js"
+    src="script.js"
     defer
   ></script>
 
 </body>
+
 </html>
