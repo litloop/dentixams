@@ -3,863 +3,860 @@
 <head>
   <meta charset="UTF-8">
 
-  <meta
-    name="viewport"
-    content="width=device-width, initial-scale=1.0, viewport-fit=cover"
-  >
+<meta
+name=“viewport”
+content=“width=device-width, initial-scale=1.0, viewport-fit=cover”
 
-  <meta
-    name="description"
-    content="Create a personalized FeelFrame™ visual story from your emotions, experiences and moments."
-  >
+<meta
+name=“description”
+content=“Create a FeelFrame™ visual story from a real feeling, milestone or human moment.”
 
-  <meta name="theme-color" content="#f5f3ee">
+<meta
+name=“theme-color”
+content=”#f4f2ed”
 
-  <title>FeelFrame™ — Create Your Moment</title>
+<meta
+property=“og:type”
+content=“website”
 
+<meta
+property=“og:title”
+content=“Create — FeelFrame™”
+
+<meta
+property=“og:description”
+content=“Turn a real feeling, milestone or human moment into a visual story.”
+
+<meta
+property=“og:site_name”
+content=“FeelFrame™”
+
+  <title>Create — FeelFrame™</title>
+  <!-- =====================================================
+       TYPOGRAPHY
+       ===================================================== -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-
+  <link
+    rel="preconnect"
+    href="https://fonts.gstatic.com"
+    crossorigin
+  >
   <link
     href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@500;600;700&display=swap"
     rel="stylesheet"
   >
-
-  <link rel="stylesheet" href="style.css">
+  <!-- =====================================================
+       CREATE PAGE STYLES
+       ===================================================== -->
+  <link
+    rel="stylesheet"
+    href="create.css"
+  >
 </head>
-
 <body class="create-page">
-
-  <main>
-
-    <!-- =====================================================
-         HEADER
-         ===================================================== -->
-
-    <header class="create-header">
-
-      <a
-        href="index.html"
-        class="create-back"
-        aria-label="Back to FeelFrame home"
-      >
-        <span aria-hidden="true">←</span>
-        <span>Back</span>
-      </a>
-
-      <a
-        href="index.html"
-        class="create-logo"
-        aria-label="FeelFrame home"
-      >
-        FeelFrame™
-      </a>
-
-      <span class="create-header-space" aria-hidden="true"></span>
-
-    </header>
-
-
-    <!-- =====================================================
-         INTRO
-         ===================================================== -->
-
-    <section class="create-intro">
-
-      <p class="eyebrow">
-        Create your moment
-      </p>
-
-      <h1>
-        Tell us what<br>
-        you're feeling.
-      </h1>
-
-      <p class="create-intro-copy">
-        You bring the moment.
-        FeelFrame turns it into a visual story.
-      </p>
-
-    </section>
-
-
-    <!-- =====================================================
-         FORM
-         ===================================================== -->
-
-    <section class="create-form-section">
-
-      <form
-        id="feelFrameForm"
-        class="feel-frame-form"
-        novalidate
-      >
-
-        <!-- =================================================
-             PERSONAL DETAILS
-             ================================================= -->
-
-        <div class="form-section">
-
-          <div class="form-section-heading">
-
-            <span class="form-number">
-              01
-            </span>
-
-            <div>
-              <p class="form-kicker">
-                Personal details
-              </p>
-
-              <h2>
-                Who is this visual for?
-              </h2>
-            </div>
-
-          </div>
-
-
-          <div class="form-grid">
-
-            <div class="form-field">
-
-              <label for="name">
-                Name
-              </label>
-
-              <input
-                type="text"
-                id="name"
-                name="name"
-                placeholder="Your name"
-                autocomplete="name"
-                required
-              >
-
-            </div>
-
-
-            <div class="form-field">
-
-              <label for="school">
-                University / School
-              </label>
-
-              <input
-                type="text"
-                id="school"
-                name="school"
-                placeholder="Your university or school"
-                autocomplete="organization"
-                required
-              >
-
-            </div>
-
-
-            <div class="form-field form-field-full">
-
-              <label for="course">
-                Course / Field
-              </label>
-
-              <input
-                type="text"
-                id="course"
-                name="course"
-                placeholder="e.g. Medicine, Computer Science, Business"
-                required
-              >
-
-            </div>
-
-          </div>
-
-        </div>
-
-
-        <!-- =================================================
-             THE MOMENT
-             ================================================= -->
-
-        <div class="form-section">
-
-          <div class="form-section-heading">
-
-            <span class="form-number">
-              02
-            </span>
-
-            <div>
-              <p class="form-kicker">
-                The moment
-              </p>
-
-              <h2>
-                What chapter are you in?
-              </h2>
-            </div>
-
-          </div>
-
-
-          <div
-            class="choice-grid"
-            id="momentChoices"
-          >
-
-            <label class="choice-card">
-
-              <input
-                type="radio"
-                name="moment"
-                value="Exam Era"
-                required
-              >
-
-              <span class="choice-card-content">
-
-                <strong>
-                  Exam Era
-                </strong>
-
-                <small>
-                  Pressure, preparation & persistence
-                </small>
-
-              </span>
-
-            </label>
-
-
-            <label class="choice-card">
-
-              <input
-                type="radio"
-                name="moment"
-                value="Graduation"
-              >
-
-              <span class="choice-card-content">
-
-                <strong>
-                  Graduation
-                </strong>
-
-                <small>
-                  I made it this far
-                </small>
-
-              </span>
-
-            </label>
-
-
-            <label class="choice-card">
-
-              <input
-                type="radio"
-                name="moment"
-                value="New Chapter"
-              >
-
-              <span class="choice-card-content">
-
-                <strong>
-                  New Chapter
-                </strong>
-
-                <small>
-                  Something new is beginning
-                </small>
-
-              </span>
-
-            </label>
-
-
-            <label class="choice-card">
-
-              <input
-                type="radio"
-                name="moment"
-                value="Building My Future"
-              >
-
-              <span class="choice-card-content">
-
-                <strong>
-                  Building My Future
-                </strong>
-
-                <small>
-                  Ambition, work & becoming
-                </small>
-
-              </span>
-
-            </label>
-
-
-            <label class="choice-card">
-
-              <input
-                type="radio"
-                name="moment"
-                value="Personal Comeback"
-              >
-
-              <span class="choice-card-content">
-
-                <strong>
-                  Personal Comeback
-                </strong>
-
-                <small>
-                  Starting again
-                </small>
-
-              </span>
-
-            </label>
-
-
-            <label class="choice-card">
-
-              <input
-                type="radio"
-                name="moment"
-                value="Something Else"
-              >
-
-              <span class="choice-card-content">
-
-                <strong>
-                  Something Else
-                </strong>
-
-                <small>
-                  My story doesn't fit a category
-                </small>
-
-              </span>
-
-            </label>
-
-          </div>
-
-        </div>
-
-
-        <!-- =================================================
-             FEELING
-             ================================================= -->
-
-        <div class="form-section">
-
-          <div class="form-section-heading">
-
-            <span class="form-number">
-              03
-            </span>
-
-            <div>
-              <p class="form-kicker">
-                The feeling
-              </p>
-
-              <h2>
-                What are you feeling?
-              </h2>
-            </div>
-
-          </div>
-
-
-          <div
-            class="choice-grid choice-grid-compact"
-            id="feelingChoices"
-          >
-
-            <label class="choice-card">
-
-              <input
-                type="radio"
-                name="feeling"
-                value="Determined"
-                required
-              >
-
-              <span class="choice-card-content">
-                <strong>Determined</strong>
-              </span>
-
-            </label>
-
-
-            <label class="choice-card">
-
-              <input
-                type="radio"
-                name="feeling"
-                value="Exhausted"
-              >
-
-              <span class="choice-card-content">
-                <strong>Exhausted</strong>
-              </span>
-
-            </label>
-
-
-            <label class="choice-card">
-
-              <input
-                type="radio"
-                name="feeling"
-                value="Proud"
-              >
-
-              <span class="choice-card-content">
-                <strong>Proud</strong>
-              </span>
-
-            </label>
-
-
-            <label class="choice-card">
-
-              <input
-                type="radio"
-                name="feeling"
-                value="Hopeful"
-              >
-
-              <span class="choice-card-content">
-                <strong>Hopeful</strong>
-              </span>
-
-            </label>
-
-
-            <label class="choice-card">
-
-              <input
-                type="radio"
-                name="feeling"
-                value="Confident"
-              >
-
-              <span class="choice-card-content">
-                <strong>Confident</strong>
-              </span>
-
-            </label>
-
-
-            <label class="choice-card">
-
-              <input
-                type="radio"
-                name="feeling"
-                value="Starting Again"
-              >
-
-              <span class="choice-card-content">
-                <strong>Starting Again</strong>
-              </span>
-
-            </label>
-
-          </div>
-
-        </div>
-
-
-        <!-- =================================================
-             STORY
-             ================================================= -->
-
-        <div class="form-section">
-
-          <div class="form-section-heading">
-
-            <span class="form-number">
-              04
-            </span>
-
-            <div>
-              <p class="form-kicker">
-                Your story
-              </p>
-
-              <h2>
-                Give us the part people don't see.
-              </h2>
-            </div>
-
-          </div>
-
-
-          <div class="form-field">
-
-            <label for="context">
-              What's happening / What are you going through?
-            </label>
-
-            <textarea
-              id="context"
-              name="context"
-              rows="6"
-              maxlength="1200"
-              placeholder="Tell us what's really happening. It doesn't have to sound perfect."
-              required
-            ></textarea>
-
-            <div class="field-hint">
-              The more honestly you describe the moment,
-              the more personal the visual direction can become.
-            </div>
-
-          </div>
-
-
-          <div class="form-field">
-
-            <label for="message">
-              What should the image communicate?
-            </label>
-
-            <textarea
-              id="message"
-              name="message"
-              rows="5"
-              maxlength="800"
-              placeholder="What do you want someone to feel when they see it?"
-              required
-            ></textarea>
-
-          </div>
-
-        </div>
-
-
-        <!-- =================================================
-             VISUAL LANGUAGE
-             ================================================= -->
-
-        <div class="form-section">
-
-          <div class="form-section-heading">
-
-            <span class="form-number">
-              05
-            </span>
-
-            <div>
-              <p class="form-kicker">
-                Visual language
-              </p>
-
-              <h2>
-                How should your story look?
-              </h2>
-            </div>
-
-          </div>
-
-
-          <div
-            class="choice-grid choice-grid-compact"
-            id="styleChoices"
-          >
-
-            <label class="choice-card">
-
-              <input
-                type="radio"
-                name="visualStyle"
-                value="Cinematic"
-                required
-              >
-
-              <span class="choice-card-content">
-                <strong>Cinematic</strong>
-              </span>
-
-            </label>
-
-
-            <label class="choice-card">
-
-              <input
-                type="radio"
-                name="visualStyle"
-                value="Editorial"
-              >
-
-              <span class="choice-card-content">
-                <strong>Editorial</strong>
-              </span>
-
-            </label>
-
-
-            <label class="choice-card">
-
-              <input
-                type="radio"
-                name="visualStyle"
-                value="Luxury"
-              >
-
-              <span class="choice-card-content">
-                <strong>Luxury</strong>
-              </span>
-
-            </label>
-
-
-            <label class="choice-card">
-
-              <input
-                type="radio"
-                name="visualStyle"
-                value="Film"
-              >
-
-              <span class="choice-card-content">
-                <strong>Film</strong>
-              </span>
-
-            </label>
-
-
-            <label class="choice-card">
-
-              <input
-                type="radio"
-                name="visualStyle"
-                value="Dreamlike"
-              >
-
-              <span class="choice-card-content">
-                <strong>Dreamlike</strong>
-              </span>
-
-            </label>
-
-
-            <label class="choice-card">
-
-              <input
-                type="radio"
-                name="visualStyle"
-                value="Dark & Moody"
-              >
-
-              <span class="choice-card-content">
-                <strong>Dark & Moody</strong>
-              </span>
-
-            </label>
-
-          </div>
-
-        </div>
-
-
-        <!-- =================================================
-             REFERENCE IMAGE
-             ================================================= -->
-
-        <div class="form-section">
-
-          <div class="form-section-heading">
-
-            <span class="form-number">
-              06
-            </span>
-
-            <div>
-              <p class="form-kicker">
-                Optional reference
-              </p>
-
-              <h2>
-                Is there a visual you want us to see?
-              </h2>
-            </div>
-
-          </div>
-
-
-          <div class="reference-upload">
-
-            <label
-              for="referenceImage"
-              class="reference-upload-box"
-            >
-
-              <span class="reference-upload-icon">
-                +
-              </span>
-
-              <span class="reference-upload-title">
-                Add a reference image
-              </span>
-
-              <span class="reference-upload-copy">
-                Optional · JPG, PNG or WEBP
-              </span>
-
-            </label>
-
-
-            <input
-              type="file"
-              id="referenceImage"
-              name="referenceImage"
-              accept="image/jpeg,image/png,image/webp"
-              hidden
-            >
-
-
-            <div
-              class="reference-preview"
-              id="referencePreview"
-              hidden
-            >
-
-              <img
-                id="referencePreviewImage"
-                src=""
-                alt="Selected reference preview"
-              >
-
-              <div class="reference-preview-info">
-
-                <strong id="referenceFileName">
-                  Reference image
-                </strong>
-
-                <button
-                  type="button"
-                  id="removeReference"
-                  class="reference-remove"
-                >
-                  Remove
-                </button>
-
-              </div>
-
-            </div>
-
-          </div>
-
-        </div>
-
-
-        <!-- =================================================
-             SUBMIT
-             ================================================= -->
-
-        <div class="create-submit-section">
-
-          <div class="create-submit-copy">
-
-            <span class="create-submit-mark">
-              ✦
-            </span>
-
-            <p>
-              Your answers become the creative direction
-              behind your FeelFrame visual.
-            </p>
-
-          </div>
-
-
-          <button
-            type="submit"
-            class="create-submit-button"
-          >
-
-            <span>
-              Create My FeelFrame
-            </span>
-
-            <span aria-hidden="true">
-              →
-            </span>
-
-          </button>
-
-
-          <p class="create-submit-note">
-            You'll continue through WhatsApp to submit your request.
-          </p>
-
-        </div>
-
-      </form>
-
-    </section>
-
-
-    <!-- =====================================================
-         FOOTER
-         ===================================================== -->
-
-    <footer class="site-footer">
-
-      <div class="site-footer-brand">
-        FeelFrame™
-      </div>
-
-      <p>
-        Visual stories for human moments.
-      </p>
-
-      <small>
-        © 2026 FeelFrame™
-      </small>
-
-    </footer>
-
-  </main>
-
-
-  <!-- =======================================================
-       STICKY NAVIGATION
-       ======================================================= -->
-
+  <!-- =====================================================
+       PAGE SHELL
+       ===================================================== -->
+  <div class="create-shell">
+<!-- ===================================================
+     HEADER
+     =================================================== -->
+<header class="create-header">
+  <a
+    href="index.html"
+    class="create-logo"
+    aria-label="FeelFrame home"
+  >
+    FeelFrame™
+  </a>
   <nav
-    class="bottom-nav"
+    class="create-desktop-nav"
     aria-label="Primary navigation"
   >
-
-    <a href="index.html">
+    <a
+      href="index.html"
+      class="create-nav-link"
+    >
       Home
     </a>
-
-    <a href="explore.html">
+    <a
+      href="explore.html"
+      class="create-nav-link"
+    >
       Explore
     </a>
-
     <a
       href="create.html"
-      class="bottom-nav-create active"
+      class="create-nav-link is-active"
       aria-current="page"
     >
       Create
     </a>
-
+    <a
+      href="explore.html#bookshelf"
+      class="create-nav-link"
+    >
+      Shop
+    </a>
   </nav>
-
-
-  <script src="script.js"></script>
-
+  <a
+    href="index.html"
+    class="create-header-back"
+  >
+    <span aria-hidden="true">←</span>
+    <span>Home</span>
+  </a>
+</header>
+<!-- ===================================================
+     MAIN
+     =================================================== -->
+<main class="create-main">
+  <!-- =================================================
+       INTRO / HERO
+       ================================================= -->
+  <section class="create-hero">
+    <div class="create-hero-copy">
+      <p class="create-eyebrow">
+        Create a FeelFrame™
+      </p>
+      <h1 class="create-title">
+        Turn a feeling
+        <br>
+        into a <em>story.</em>
+      </h1>
+      <p class="create-intro">
+        Bring us a photograph, a moment, an idea —
+        or simply a feeling. We'll help shape it
+        into something worth seeing.
+      </p>
+    </div>
+    <!-- Decorative visual -->
+    <div
+      class="create-hero-visual"
+      aria-hidden="true"
+    >
+      <div class="create-frame create-frame-back">
+        <span>01</span>
+      </div>
+      <div class="create-frame create-frame-middle">
+        <span>FEEL</span>
+      </div>
+      <div class="create-frame create-frame-front">
+        <div class="create-frame-inner">
+          <span class="create-frame-label">
+            FEELFRAME™
+          </span>
+          <span class="create-frame-word">
+            SEE
+          </span>
+          <span class="create-frame-line"></span>
+          <span class="create-frame-small">
+            SOME FEELINGS DESERVE TO BE SEEN.
+          </span>
+        </div>
+      </div>
+    </div>
+  </section>
+  <!-- =================================================
+       CREATION PROCESS
+       ================================================= -->
+  <section class="create-process">
+    <div class="create-section-heading">
+      <p class="create-section-label">
+        The process
+      </p>
+      <h2>
+        Start with what
+        <br>
+        <em>matters.</em>
+      </h2>
+    </div>
+    <div class="create-process-grid">
+      <article class="create-process-card">
+        <span class="create-process-number">
+          01
+        </span>
+        <h3>
+          Tell us the moment.
+        </h3>
+        <p>
+          What happened, what are you celebrating,
+          or what do you want the image to make
+          someone feel?
+        </p>
+      </article>
+      <article class="create-process-card">
+        <span class="create-process-number">
+          02
+        </span>
+        <h3>
+          Share your visual.
+        </h3>
+        <p>
+          Give us the photograph, reference,
+          direction or visual starting point
+          behind the story.
+        </p>
+      </article>
+      <article class="create-process-card">
+        <span class="create-process-number">
+          03
+        </span>
+        <h3>
+          We shape the story.
+        </h3>
+        <p>
+          Your idea becomes a considered visual
+          experience designed around its emotion,
+          identity and purpose.
+        </p>
+      </article>
+    </div>
+  </section>
+  <!-- =================================================
+       CREATE FORM
+       ================================================= -->
+  <section
+    class="create-form-section"
+    id="create-form"
+  >
+    <div class="create-form-intro">
+      <p class="create-section-label">
+        Begin here
+      </p>
+      <h2>
+        Tell us what
+        <br>
+        you're <em>feeling.</em>
+      </h2>
+      <p>
+        You don't need to know exactly what you want.
+        Give us the raw idea and we'll help discover
+        the visual direction.
+      </p>
+    </div>
+    <form
+      class="create-form"
+      id="createForm"
+      novalidate
+    >
+      <!-- =============================================
+           STEP 01 — NAME
+           ============================================= -->
+      <div
+        class="create-field-group"
+        data-field-group="name"
+      >
+        <div class="create-field-heading">
+          <span class="create-field-number">
+            01
+          </span>
+          <label
+            for="creatorName"
+            class="create-field-label"
+          >
+            What should we call you?
+          </label>
+        </div>
+        <input
+          type="text"
+          id="creatorName"
+          name="name"
+          class="create-input"
+          placeholder="Your name"
+          autocomplete="name"
+          required
+        >
+        <small
+          class="create-field-error"
+          data-error-for="name"
+          aria-live="polite"
+        ></small>
+      </div>
+      <!-- =============================================
+           STEP 02 — EMAIL
+           ============================================= -->
+      <div
+        class="create-field-group"
+        data-field-group="email"
+      >
+        <div class="create-field-heading">
+          <span class="create-field-number">
+            02
+          </span>
+          <label
+            for="creatorEmail"
+            class="create-field-label"
+          >
+            Where can we reach you?
+          </label>
+        </div>
+        <input
+          type="email"
+          id="creatorEmail"
+          name="email"
+          class="create-input"
+          placeholder="you@example.com"
+          autocomplete="email"
+          required
+        >
+        <small
+          class="create-field-error"
+          data-error-for="email"
+          aria-live="polite"
+        ></small>
+      </div>
+      <!-- =============================================
+           STEP 03 — STORY TYPE
+           ============================================= -->
+      <div
+        class="create-field-group"
+        data-field-group="storyType"
+      >
+        <div class="create-field-heading">
+          <span class="create-field-number">
+            03
+          </span>
+          <span class="create-field-label">
+            What kind of story is this?
+          </span>
+        </div>
+        <div
+          class="create-choice-grid"
+          role="radiogroup"
+          aria-label="Story type"
+        >
+          <label class="create-choice">
+            <input
+              type="radio"
+              name="storyType"
+              value="Personal Branding"
+            >
+            <span class="create-choice-content">
+              <strong>
+                Personal Branding
+              </strong>
+              <small>
+                Make your image feel
+                unmistakably yours.
+              </small>
+            </span>
+          </label>
+          <label class="create-choice">
+            <input
+              type="radio"
+              name="storyType"
+              value="Milestone"
+            >
+            <span class="create-choice-content">
+              <strong>
+                Milestone
+              </strong>
+              <small>
+                Give an important moment
+                a visual life.
+              </small>
+            </span>
+          </label>
+          <label class="create-choice">
+            <input
+              type="radio"
+              name="storyType"
+              value="Portrait"
+            >
+            <span class="create-choice-content">
+              <strong>
+                Portrait
+              </strong>
+              <small>
+                Turn a photograph into
+                something more.
+              </small>
+            </span>
+          </label>
+          <label class="create-choice">
+            <input
+              type="radio"
+              name="storyType"
+              value="Campaign"
+            >
+            <span class="create-choice-content">
+              <strong>
+                Campaign
+              </strong>
+              <small>
+                Build a visual around
+                a brand or idea.
+              </small>
+            </span>
+          </label>
+          <label class="create-choice">
+            <input
+              type="radio"
+              name="storyType"
+              value="Other"
+            >
+            <span class="create-choice-content">
+              <strong>
+                Something else
+              </strong>
+              <small>
+                Tell us what you're
+                imagining.
+              </small>
+            </span>
+          </label>
+        </div>
+        <small
+          class="create-field-error"
+          data-error-for="storyType"
+          aria-live="polite"
+        ></small>
+      </div>
+      <!-- =============================================
+           STEP 04 — FEELING
+           ============================================= -->
+      <div
+        class="create-field-group"
+        data-field-group="emotion"
+      >
+        <div class="create-field-heading">
+          <span class="create-field-number">
+            04
+          </span>
+          <label class="create-field-label">
+            What should it feel like?
+          </label>
+        </div>
+        <div
+          class="create-emotion-grid"
+          role="radiogroup"
+          aria-label="Emotional direction"
+        >
+          <label class="create-emotion">
+            <input
+              type="radio"
+              name="emotion"
+              value="Confident"
+            >
+            <span>
+              Confident
+            </span>
+          </label>
+          <label class="create-emotion">
+            <input
+              type="radio"
+              name="emotion"
+              value="Cinematic"
+            >
+            <span>
+              Cinematic
+            </span>
+          </label>
+          <label class="create-emotion">
+            <input
+              type="radio"
+              name="emotion"
+              value="Elegant"
+            >
+            <span>
+              Elegant
+            </span>
+          </label>
+          <label class="create-emotion">
+            <input
+              type="radio"
+              name="emotion"
+              value="Playful"
+            >
+            <span>
+              Playful
+            </span>
+          </label>
+          <label class="create-emotion">
+            <input
+              type="radio"
+              name="emotion"
+              value="Powerful"
+            >
+            <span>
+              Powerful
+            </span>
+          </label>
+          <label class="create-emotion">
+            <input
+              type="radio"
+              name="emotion"
+              value="Emotional"
+            >
+            <span>
+              Emotional
+            </span>
+          </label>
+          <label class="create-emotion">
+            <input
+              type="radio"
+              name="emotion"
+              value="Minimal"
+            >
+            <span>
+              Minimal
+            </span>
+          </label>
+          <label class="create-emotion">
+            <input
+              type="radio"
+              name="emotion"
+              value="Unexpected"
+            >
+            <span>
+              Unexpected
+            </span>
+          </label>
+        </div>
+        <small
+          class="create-field-error"
+          data-error-for="emotion"
+          aria-live="polite"
+        ></small>
+      </div>
+      <!-- =============================================
+           STEP 05 — THE MOMENT
+           ============================================= -->
+      <div
+        class="create-field-group"
+        data-field-group="moment"
+      >
+        <div class="create-field-heading">
+          <span class="create-field-number">
+            05
+          </span>
+          <label
+            for="storyMoment"
+            class="create-field-label"
+          >
+            Tell us about the moment.
+          </label>
+        </div>
+        <textarea
+          id="storyMoment"
+          name="moment"
+          class="create-textarea"
+          rows="6"
+          placeholder="What happened? Why does this moment matter to you? What do you want the final visual to say?"
+          required
+        ></textarea>
+        <div class="create-field-footer">
+          <small>
+            There is no perfect answer.
+            Just tell the story.
+          </small>
+          <span
+            class="create-character-count"
+            id="momentCount"
+          >
+            0 / 1000
+          </span>
+        </div>
+        <small
+          class="create-field-error"
+          data-error-for="moment"
+          aria-live="polite"
+        ></small>
+      </div>
+      <!-- =============================================
+           STEP 06 — VISUAL DIRECTION
+           ============================================= -->
+      <div
+        class="create-field-group"
+        data-field-group="direction"
+      >
+        <div class="create-field-heading">
+          <span class="create-field-number">
+            06
+          </span>
+          <label
+            for="visualDirection"
+            class="create-field-label"
+          >
+            Is there anything you already imagine?
+          </label>
+        </div>
+        <textarea
+          id="visualDirection"
+          name="direction"
+          class="create-textarea"
+          rows="5"
+          placeholder="A colour, scene, reference, composition, film, mood, object — anything that feels right."
+        ></textarea>
+      </div>
+      <!-- =============================================
+           STEP 07 — REFERENCE IMAGE
+           ============================================= -->
+      <div
+        class="create-field-group"
+        data-field-group="reference"
+      >
+        <div class="create-field-heading">
+          <span class="create-field-number">
+            07
+          </span>
+          <span class="create-field-label">
+            Do you have a reference image?
+          </span>
+        </div>
+        <label
+          for="referenceImage"
+          class="create-upload"
+          id="referenceUpload"
+        >
+          <input
+            type="file"
+            id="referenceImage"
+            name="referenceImage"
+            accept="image/jpeg,image/png,image/webp"
+          >
+          <span
+            class="create-upload-icon"
+            aria-hidden="true"
+          >
+            +
+          </span>
+          <span class="create-upload-title">
+            Add a photograph
+          </span>
+          <span class="create-upload-copy">
+            JPG, PNG or WebP · Optional
+          </span>
+        </label>
+        <div
+          class="create-upload-preview"
+          id="referencePreview"
+          hidden
+        >
+          <div class="create-upload-preview-image">
+            <img
+              id="referencePreviewImage"
+              src=""
+              alt="Selected reference preview"
+            >
+          </div>
+          <div class="create-upload-preview-info">
+            <strong id="referenceFileName">
+              Image selected
+            </strong>
+            <span id="referenceFileSize">
+              —
+            </span>
+          </div>
+          <button
+            type="button"
+            class="create-upload-remove"
+            id="removeReference"
+            aria-label="Remove selected image"
+          >
+            ×
+          </button>
+        </div>
+      </div>
+      <!-- =============================================
+           STEP 08 — PURPOSE
+           ============================================= -->
+      <div
+        class="create-field-group"
+        data-field-group="purpose"
+      >
+        <div class="create-field-heading">
+          <span class="create-field-number">
+            08
+          </span>
+          <label
+            for="storyPurpose"
+            class="create-field-label"
+          >
+            What will you use it for?
+          </label>
+        </div>
+        <select
+          id="storyPurpose"
+          name="purpose"
+          class="create-select"
+        >
+          <option value="">
+            Choose one
+          </option>
+          <option value="Personal">
+            Personal
+          </option>
+          <option value="Social Media">
+            Social media
+          </option>
+          <option value="Personal Branding">
+            Personal branding
+          </option>
+          <option value="Business">
+            Business
+          </option>
+          <option value="Campaign">
+            Campaign
+          </option>
+          <option value="Gift">
+            Gift
+          </option>
+          <option value="Other">
+            Other
+          </option>
+        </select>
+      </div>
+      <!-- =============================================
+           SUBMIT
+           ============================================= -->
+      <div class="create-submit-area">
+        <div class="create-submit-copy">
+          <p>
+            Your idea doesn't need to be finished.
+          </p>
+          <small>
+            We'll start with what you've shared.
+          </small>
+        </div>
+        <button
+          type="submit"
+          class="create-submit"
+          id="createSubmit"
+        >
+          <span class="create-submit-text">
+            Start my story
+          </span>
+          <span
+            class="create-submit-arrow"
+            aria-hidden="true"
+          >
+            ↗
+          </span>
+        </button>
+      </div>
+      <!-- Form status -->
+      <div
+        class="create-form-status"
+        id="createFormStatus"
+        role="status"
+        aria-live="polite"
+        hidden
+      ></div>
+    </form>
+  </section>
+  <!-- =================================================
+       CLOSING STATEMENT
+       ================================================= -->
+  <section class="create-closing">
+    <p class="create-closing-eyebrow">
+      FeelFrame™
+    </p>
+    <h2>
+      Some moments
+      <br>
+      deserve more
+      <br>
+      than a <em>photo.</em>
+    </h2>
+    <a
+      href="explore.html"
+      class="create-closing-link"
+    >
+      See what we've made
+      <span aria-hidden="true">↗</span>
+    </a>
+  </section>
+</main>
+<!-- ===================================================
+     FOOTER
+     =================================================== -->
+<footer class="create-footer">
+  <div class="create-footer-inner">
+    <div class="create-footer-brand">
+      FeelFrame™
+    </div>
+    <div class="create-footer-copy">
+      <p>
+        Visual stories for human moments.
+      </p>
+      <small>
+        © <span id="footer-year">2026</span>
+        FeelFrame™
+      </small>
+    </div>
+    <div class="create-footer-links">
+      <a href="index.html">
+        Home
+      </a>
+      <a href="explore.html">
+        Explore
+      </a>
+      <a href="explore.html#bookshelf">
+        Shop
+      </a>
+    </div>
+  </div>
+</footer>
+  </div>
+  <!-- =====================================================
+       MOBILE NAVIGATION
+       ===================================================== -->
+  <nav
+    class="create-bottom-nav"
+    aria-label="Primary navigation"
+  >
+<a
+  href="index.html"
+  class="create-bottom-nav-link"
+>
+  <span
+    class="create-bottom-nav-icon"
+    aria-hidden="true"
+  >
+    ⌂
+  </span>
+  <span>
+    Home
+  </span>
+</a>
+<a
+  href="explore.html"
+  class="create-bottom-nav-link"
+>
+  <span
+    class="create-bottom-nav-icon"
+    aria-hidden="true"
+  >
+    ◌
+  </span>
+  <span>
+    Explore
+  </span>
+</a>
+<a
+  href="create.html"
+  class="create-bottom-nav-link create-bottom-nav-create"
+  aria-current="page"
+>
+  <span
+    class="create-bottom-nav-icon"
+    aria-hidden="true"
+  >
+    +
+  </span>
+  <span>
+    Create
+  </span>
+</a>
+  </nav>
+  <!-- =====================================================
+       CREATE JAVASCRIPT
+       ===================================================== -->
+  <script
+    src="create.js"
+    defer
+  ></script>
 </body>
 </html>
