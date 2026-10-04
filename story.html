@@ -1,178 +1,149 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-
   <meta charset="UTF-8">
 
-  <meta
-    name="viewport"
-    content="width=device-width, initial-scale=1.0, viewport-fit=cover"
-  >
+<meta
+name=“viewport”
+content=“width=device-width, initial-scale=1.0, viewport-fit=cover”
 
-  <meta
-    name="description"
-    content="A FeelFrame™ visual story — some feelings deserve to be seen."
-  >
+<meta
+name=“description”
+content=“A FeelFrame™ visual story — some feelings deserve to be seen.”
 
+  <meta name="theme-color" content="#f4f2ed">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="FeelFrame™ — Visual Story">
   <meta
-    name="theme-color"
-    content="#f5f3ee"
+    property="og:description"
+    content="Visual stories built around real emotions, milestones and human moments."
   >
-
+  <meta property="og:site_name" content="FeelFrame™">
   <title>FeelFrame™ — Story</title>
-
-  <link
-    rel="preconnect"
-    href="https://fonts.googleapis.com"
-  >
-
-  <link
-    rel="preconnect"
-    href="https://fonts.gstatic.com"
-    crossorigin
-  >
-
+  <!-- Typography -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link
     href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@500;600;700&display=swap"
     rel="stylesheet"
   >
-
-  <link
-    rel="stylesheet"
-    href="style.css"
-  >
-
+  <!-- Story stylesheet -->
+  <link rel="stylesheet" href="story.css">
 </head>
-
-
 <body class="story-page">
-
-  <main>
-
-    <!-- =====================================================
-         STORY HEADER
-         ===================================================== -->
-
-    <header class="story-header">
-
-      <a
-        href="index.html"
-        class="story-back"
-        aria-label="Go back to FeelFrame home"
-      >
-        <span aria-hidden="true">←</span>
-        <span>Back</span>
-      </a>
-
-
-      <a
-        href="index.html"
-        class="story-logo"
-        aria-label="FeelFrame home"
-      >
-        FeelFrame™
-      </a>
-
-
-      <a
-        href="create.html"
-        class="story-create"
-      >
-        Create
-        <span aria-hidden="true">↗</span>
-      </a>
-
-    </header>
-
-
-    <!-- =====================================================
-         STORY CONTENT
-         ===================================================== -->
-
-    <main
-      class="story-content"
-      id="storyContent"
-      aria-live="polite"
-    >
-
-      <div
-        class="story-loading"
-        aria-live="polite"
-      >
-        Loading story…
-      </div>
-
-    </main>
-
-
-    <!-- =====================================================
-         STORY FOOTER
-         ===================================================== -->
-
-    <footer class="site-footer">
-
-      <div class="site-footer-brand">
-        FeelFrame™
-      </div>
-
-
+  <!-- =========================================================
+       PAGE SHELL
+       ========================================================= -->
+  <div class="story-shell">
+<!-- =======================================================
+     HEADER
+     ======================================================= -->
+<header class="story-header">
+  <a
+    href="index.html"
+    class="story-back"
+    aria-label="Back to FeelFrame home"
+  >
+    <span class="story-back-icon" aria-hidden="true">←</span>
+    <span>Back</span>
+  </a>
+  <a
+    href="index.html"
+    class="story-logo"
+    aria-label="FeelFrame home"
+  >
+    FeelFrame™
+  </a>
+  <a
+    href="create.html"
+    class="story-create"
+  >
+    <span>Create</span>
+    <span aria-hidden="true">↗</span>
+  </a>
+</header>
+<!-- =======================================================
+     STORY MAIN
+     ======================================================= -->
+<main
+  class="story-main"
+  id="storyContent"
+  aria-live="polite"
+>
+  <!--
+    JavaScript will replace this loading state
+    with the actual story.
+  -->
+  <section class="story-loading" aria-label="Loading story">
+    <div class="story-loading-mark" aria-hidden="true">
+      <span></span>
+      <span></span>
+    </div>
+    <p>Loading story…</p>
+  </section>
+</main>
+<!-- =======================================================
+     FOOTER
+     ======================================================= -->
+<footer class="story-footer">
+  <div class="story-footer-inner">
+    <div class="story-footer-brand">
+      FeelFrame™
+    </div>
+    <div class="story-footer-copy">
       <p>
         Visual stories for human moments.
       </p>
-
-
       <small>
-        © 2026 FeelFrame™
+        © <span id="footer-year">2026</span> FeelFrame™
       </small>
-
-    </footer>
-
-  </main>
-
-
-  <!-- =====================================================
-       STICKY NAVIGATION
-       ===================================================== -->
-
+    </div>
+    <div class="story-footer-links">
+      <a href="index.html">
+        Home
+      </a>
+      <a href="explore.html">
+        Explore
+      </a>
+      <a href="create.html">
+        Create
+      </a>
+    </div>
+  </div>
+</footer>
+  </div>
+  <!-- =========================================================
+       MOBILE NAVIGATION
+       ========================================================= -->
   <nav
-    class="bottom-nav"
+    class="story-bottom-nav"
     aria-label="Primary navigation"
   >
-
-    <a
-      href="index.html"
-    >
-      Home
-    </a>
-
-
-    <a
-      href="explore.html"
-    >
-      Explore
-    </a>
-
-
-    <a
-      href="create.html"
-      class="bottom-nav-create"
-    >
-      Create
-    </a>
-
+<a
+  href="index.html"
+  class="story-bottom-nav-link"
+>
+  <span class="story-bottom-nav-icon" aria-hidden="true">⌂</span>
+  <span>Home</span>
+</a>
+<a
+  href="explore.html"
+  class="story-bottom-nav-link"
+>
+  <span class="story-bottom-nav-icon" aria-hidden="true">◌</span>
+  <span>Explore</span>
+</a>
+<a
+  href="create.html"
+  class="story-bottom-nav-link story-bottom-nav-create"
+>
+  <span class="story-bottom-nav-icon" aria-hidden="true">+</span>
+  <span>Create</span>
+</a>
   </nav>
-
-
-  <!-- =====================================================
-       FEELFRAME™ ENGINE
-       ===================================================== -->
-
-  <script
-    src="script.js"
-    defer
-  ></script>
-
+  <!-- =========================================================
+       STORY JAVASCRIPT
+       ========================================================= -->
+  <script src="story.js" defer></script>
 </body>
-
 </html>
