@@ -1,1781 +1,1509 @@
 /* =========================================================
-FEELFRAME™
-LINK-IN-BIO + STATUS
-PRODUCTION JAVASCRIPT
+   FEELFRAME™ — APPLICATION JAVASCRIPT
+   ---------------------------------------------------------
+   Responsibilities:
+   - Load data.json
+   - Normalize application data
+   - Render profile/site content
+   - Render statuses
+   - Render featured stories
+   - Render Explore stories
+   - Render social links
+   - Product/story modal
+   - Status viewer
+   - Create form
+   - Visual language persistence
+   - Viewed status persistence
+   - Toast feedback
+   - SPA navigation
+   - Browser history
+   - Hash compatibility
 ========================================================= */
 
-(() => {
 "use strict";
 
-/* =======================================================
-01. CONFIGURATION
-======================================================== */
+
+/* =========================================================
+   CONFIGURATION
+========================================================= */
 
 const CONFIG = {
   dataUrl: "data.json",
 
   statusDuration: 5000,
 
-  storageKeys: {
-    viewedStatuses: "feelFrame_viewed_statuses",
-    selectedLanguage: "feelFrame_visual_language"
-  },
+  statusExpirationHours: 24,
 
-  pages: {
-    home: "home",
-    explore: "explore",
-    create: "create"
-  }
+  viewedStatusesKey: "feelFrame_viewed_statuses",
+
+  visualLanguageKey: "feelFrame_visual_language",
+
+  defaultVisualLanguage: "Cinematic",
+
+  defaultRoute: "home",
+
+  whatsappNumber: "2349012728201"
 };
 
-/* =======================================================
-02. STATE
-======================================================== */
+
+/* =========================================================
+   APPLICATION STATE
+========================================================= */
 
 const state = {
   data: null,
 
+  site: {},
+
   stories: [],
+
   featuredStories: [],
+
   statuses: [],
 
-  currentPage: "home",
+  socialLinks: [],
+
+  currentRoute: CONFIG.defaultRoute,
+
+  selectedVisualLanguage: CONFIG.defaultVisualLanguage,
+
+  viewedStatuses: new Set(),
 
   currentStatusIndex: 0,
+
   statusTimer: null,
+
   statusStartedAt: 0,
+
   statusRemaining: CONFIG.statusDuration,
+
   statusPaused: false,
 
   statusTouchStartX: 0,
+
   statusTouchStartY: 0,
-  statusTouchStartTime: 0,
 
-  selectedVisualLanguage:
-    localStorage.getItem(
-      CONFIG.storageKeys.selectedLanguage
-    ) || "Cinematic",
+  currentStory: null,
 
-  viewedStatuses: loadViewedStatuses(),
+  lastFocusedElement: null,
 
-  toastTimer: null
+  dataLoaded: false
 };
 
-/* =======================================================
-03. DOM
-======================================================== */
 
-const dom = {};
+/* =========================================================
+   DOM HELPERS
+========================================================= */
+
+const $ = (selector, parent = document) => {
+  return parent.querySelector(selector);
+};
+
+const $$ = (selector, parent = document) => {
+  return Array.from(parent.querySelectorAll(selector));
+};
+
+const byId = (id) => {
+  return document.getElementById(id);
+};
+
+
+/* =========================================================
+   DOM REFERENCES
+========================================================= */
+
+const DOM = {};
 
 function cacheDOM() {
+  DOM.body = document.body;
 
-  dom.app =
-    document.getElementById("app");
+  DOM.profile = byId("profile");
 
-  dom.siteName =
-    document.getElementById("site-name");
+  DOM.storiesSection = byId("stories-section");
 
-  dom.siteTagline =
-    document.getElementById("site-tagline");
+  DOM.createSection = byId("create-section");
 
-  dom.siteDescription =
-    document.getElementById("site-description");
+  DOM.siteName = byId("site-name");
 
-  dom.profile =
-    document.getElementById("profile");
+  DOM.siteTagline = byId("site-tagline");
 
-  dom.statusSection =
-    document.getElementById("status-section");
+  DOM.siteDescription = byId("site-description");
 
-  dom.statusList =
-    document.getElementById("status-list");
+  DOM.statusList = byId("status-list");
 
-  dom.statusCount =
-    document.getElementById("status-count");
+  DOM.featuredStories = byId("featured-stories");
 
-  dom.featuredSection =
-    document.getElementById("featured-section");
+  DOM.storyGrid = byId("story-grid");
 
-  dom.featuredList =
-    document.getElementById("featured-list");
+  DOM.storyFilters = byId("story-filters");
 
-  dom.storiesSection =
-    document.getElementById("stories-section");
+  DOM.socialLinks = byId("social-links");
 
-  dom.storiesList =
-    document.getElementById("stories-list");
+  DOM.createForm = byId("create-form");
 
-  dom.socialLinks =
-    document.getElementById("social-links");
+  DOM.visualLanguage = byId("visual-language");
 
-  dom.makeItYours =
-    document.getElementById("make-it-yours");
+  DOM.visualLanguageOptions =
+    byId("visual-language-options");
 
-  dom.viewAll =
-    document.getElementById("view-all");
+  DOM.statusViewer = byId("status-viewer");
 
-  dom.createSection =
-    document.getElementById("create-section");
+  DOM.statusViewerImage =
+    byId("status-viewer-image");
 
-  dom.createForm =
-    document.getElementById("create-form");
+  DOM.statusViewerCategory =
+    byId("status-viewer-category");
 
-  dom.currentYear =
-    document.getElementById("current-year");
+  DOM.statusViewerTitle =
+    byId("status-viewer-title");
 
-  dom.primaryAction =
-    document.querySelector(".primary-action");
+  DOM.statusViewerText =
+    byId("status-viewer-text");
 
-  dom.bottomNavigation =
-    document.querySelector(".bottom-nav");
+  DOM.statusViewerCTA =
+    byId("status-viewer-cta");
 
-  dom.bottomNavigationItems =
-    dom.bottomNavigation
-      ? Array.from(
-          dom.bottomNavigation.querySelectorAll(
-            ".bottom-nav__item"
-          )
-        )
-      : [];
+  DOM.statusProgress =
+    byId("status-progress");
 
-/* =====================================================
-   Status viewer
-====================================================== */
+  DOM.statusClose =
+    byId("status-close");
 
-  dom.statusViewer =
-    document.getElementById("status-viewer");
+  DOM.productModal =
+    byId("product-modal");
 
-  dom.statusProgress =
-    document.getElementById("status-progress");
+  DOM.productModalImage =
+    byId("product-modal-image");
 
-  dom.statusImage =
-    document.getElementById("status-image");
+  DOM.productModalCampaign =
+    byId("product-modal-campaign");
 
-  dom.statusLoading =
-    document.getElementById("status-loading");
+  DOM.productModalEmotion =
+    byId("product-modal-emotion");
 
-  dom.viewerAvatar =
-    document.getElementById("viewer-avatar");
+  DOM.productModalTitle =
+    byId("product-modal-title");
 
-  dom.viewerName =
-    document.getElementById("viewer-name");
+  DOM.productModalQuote =
+    byId("product-modal-quote");
 
-  dom.viewerTime =
-    document.getElementById("viewer-time");
+  DOM.productModalDescription =
+    byId("product-modal-description");
 
-  dom.statusCategory =
-    document.getElementById("status-category");
+  DOM.productModalCTA =
+    byId("product-modal-cta");
 
-  dom.statusTitle =
-    document.getElementById("status-title");
+  DOM.productModalClose =
+    byId("product-modal-close");
 
-  dom.statusText =
-    document.getElementById("status-text");
+  DOM.toast = byId("toast");
 
-  dom.statusCTA =
-    document.getElementById("status-cta");
+  DOM.bottomNavigation =
+    byId("bottom-navigation");
 
-  dom.statusClose =
-    document.getElementById("status-close");
-
-  dom.statusPrevious =
-    document.getElementById("status-prev");
-
-  dom.statusNext =
-    document.getElementById("status-next");
-
-/* =====================================================
-   Product modal
-====================================================== */
-
-  dom.productModal =
-    document.getElementById("product-modal");
-
-  dom.productClose =
-    document.getElementById("product-close");
-
-  dom.productImage =
-    document.getElementById("product-image");
-
-  dom.productCampaign =
-    document.getElementById("product-campaign");
-
-  dom.productTitle =
-    document.getElementById("product-title");
-
-  dom.productQuote =
-    document.getElementById("product-quote");
-
-  dom.productDescription =
-    document.getElementById("product-description");
-
-  dom.productStyle =
-    document.getElementById("product-style");
-
-  dom.productEmotion =
-    document.getElementById("product-emotion");
-
-  dom.productPrice =
-    document.getElementById("product-price");
-
-  dom.productCompare =
-    document.getElementById("product-compare");
-
-  dom.productBuy =
-    document.getElementById("product-buy");
-
-/* =====================================================
-   Toast
-====================================================== */
-
-  dom.toast =
-    document.getElementById("toast");
+  DOM.homeCreateButton =
+    byId("home-create-button");
 }
 
-/* =======================================================
-04. INITIALIZATION
-======================================================== */
 
-document.addEventListener(
-  "DOMContentLoaded",
-  init
-);
+/* =========================================================
+   SAFETY / HTML HELPERS
+========================================================= */
 
-async function init() {
+function escapeHTML(value) {
+  return String(value ?? "")
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#039;");
+}
 
-  cacheDOM();
 
-  setCurrentYear();
-
-  bindStaticEvents();
-
-  setSelectedVisualLanguage(
-    state.selectedVisualLanguage
-  );
-
-  /*
-    Read the requested page before rendering.
-  */
-
-  state.currentPage =
-    getCurrentPage();
+function safeURL(value) {
+  if (!value) {
+    return "#";
+  }
 
   try {
-
-    const data =
-      await loadData();
-
-    state.data =
-      data;
-
-    normalizeData();
-
-    renderSite();
-
-    renderStatuses();
-
-    renderFeatured();
-
-    renderStories();
-
-    renderSocialLinks();
-
-    applyPageView(
-      false
-    );
-
-  } catch (error) {
-
-    console.error(
-      "FeelFrame™ initialization error:",
-      error
-    );
-
-    renderErrorState();
-  }
-}
-
-/* =======================================================
-05. PAGE ROUTING
-======================================================== */
-
-function getCurrentPage() {
-
-  const params =
-    new URLSearchParams(
-      window.location.search
-    );
-
-  const requestedPage =
-    params.get("page");
-
-  if (
-    requestedPage ===
-    CONFIG.pages.explore
-  ) {
-    return CONFIG.pages.explore;
-  }
-
-  if (
-    requestedPage ===
-    CONFIG.pages.create
-  ) {
-    return CONFIG.pages.create;
-  }
-
-  /*
-    Support the existing hash-based
-    navigation from index.html.
-
-    #profile
-      → Home
-
-    #stories-section
-      → Explore
-
-    #create-section
-      → Create
-  */
-
-  const hash =
-    window.location.hash
-      .replace(
-        /^#/,
-        ""
-      )
-      .trim()
-      .toLowerCase();
-
-  if (
-    hash === "stories-section" ||
-    hash === "explore"
-  ) {
-    return CONFIG.pages.explore;
-  }
-
-  if (
-    hash === "create-section" ||
-    hash === "create"
-  ) {
-    return CONFIG.pages.create;
-  }
-
-  if (
-    hash === "profile" ||
-    hash === "home"
-  ) {
-    return CONFIG.pages.home;
-  }
-
-  return CONFIG.pages.home;
-}
-
-function navigateToPage(
-  page,
-  options = {}
-) {
-
-  const requestedPage =
-    normalizePage(
-      page
-    );
-
-  const currentPage =
-    normalizePage(
-      state.currentPage
-    );
-
-  /*
-    If the user clicks the page they
-    are already viewing, do not create
-    unnecessary browser-history entries.
-  */
-
-  if (
-    requestedPage === currentPage &&
-    options.force !== true
-  ) {
-
-    state.currentPage =
-      requestedPage;
-
-    applyPageView(
-      options.scroll !== false
-    );
-
-    return;
-  }
-
-  const url =
-    new URL(
+    const url = new URL(
+      String(value),
       window.location.href
     );
 
-  /*
-    Remove old hash navigation so
-    the URL has one clear routing
-    system.
-  */
+    const allowedProtocols = [
+      "http:",
+      "https:",
+      "mailto:",
+      "tel:"
+    ];
 
-  url.hash = "";
+    if (!allowedProtocols.includes(url.protocol)) {
+      return "#";
+    }
 
-  if (
-    requestedPage ===
-    CONFIG.pages.home
-  ) {
-
-    url.searchParams.delete(
-      "page"
-    );
-
-  } else {
-
-    url.searchParams.set(
-      "page",
-      requestedPage
-    );
-  }
-
-  const historyState = {
-    feelFramePage:
-      requestedPage
-  };
-
-  if (
-    options.replace === true
-  ) {
-
-    window.history.replaceState(
-      historyState,
-      "",
-      url
-    );
-
-  } else {
-
-    window.history.pushState(
-      historyState,
-      "",
-      url
-    );
-  }
-
-  state.currentPage =
-    requestedPage;
-
-  /*
-    Close overlays when moving
-    between application pages.
-  */
-
-  closeOpenOverlays();
-
-  applyPageView(
-    options.scroll !== false
-  );
-}
-
-function normalizePage(
-  page
-) {
-
-  const normalized =
-    String(
-      page || ""
-    )
-      .trim()
-      .toLowerCase();
-
-  if (
-    normalized ===
-      CONFIG.pages.explore ||
-    normalized ===
-      "stories" ||
-    normalized ===
-      "stories-section"
-  ) {
-
-    return CONFIG.pages.explore;
-  }
-
-  if (
-    normalized ===
-      CONFIG.pages.create ||
-    normalized ===
-      "create-section"
-  ) {
-
-    return CONFIG.pages.create;
-  }
-
-  return CONFIG.pages.home;
-}
-
-function applyPageView(
-  shouldScroll = true
-) {
-
-  const page =
-    normalizePage(
-      state.currentPage
-    );
-
-  state.currentPage =
-    page;
-
-  /*
-    HOME
-    -----------------------------------------------
-    Profile
-    Status
-    Primary action
-    Featured
-  */
-
-  const isHome =
-    page ===
-    CONFIG.pages.home;
-
-  /*
-    EXPLORE
-    -----------------------------------------------
-    Visual Stories
-  */
-
-  const isExplore =
-    page ===
-    CONFIG.pages.explore;
-
-  /*
-    CREATE
-    -----------------------------------------------
-    Personalization form
-  */
-
-  const isCreate =
-    page ===
-    CONFIG.pages.create;
-
-  /*
-    Profile
-  */
-
-  setSectionVisibility(
-    dom.profile,
-    isHome
-  );
-
-  /*
-    Status
-  */
-
-  setSectionVisibility(
-    dom.statusSection,
-    isHome
-  );
-
-  /*
-    Primary action
-  */
-
-  setSectionVisibility(
-    dom.primaryAction,
-    isHome
-  );
-
-  /*
-    Featured
-  */
-
-  setSectionVisibility(
-    dom.featuredSection,
-    isHome
-  );
-
-  /*
-    Stories
-  */
-
-  setSectionVisibility(
-    dom.storiesSection,
-    isExplore
-  );
-
-  /*
-    Create
-  */
-
-  setSectionVisibility(
-    dom.createSection,
-    isCreate
-  );
-
-  /*
-    Social links and footer remain
-    available across every page.
-  */
-
-  if (
-    dom.socialLinks
-  ) {
-
-    dom.socialLinks.hidden =
-      false;
-  }
-
-  /*
-    Update application page state.
-    This allows CSS to target the
-    current route if needed later.
-  */
-
-  if (
-    dom.app
-  ) {
-
-    dom.app.dataset.page =
-      page;
-
-    dom.app.classList.remove(
-      "is-page-home",
-      "is-page-explore",
-      "is-page-create"
-    );
-
-    dom.app.classList.add(
-      `is-page-${page}`
-    );
-  }
-
-  updateBottomNavigation();
-
-  /*
-    Only scroll when navigation was
-    explicitly triggered.
-  */
-
-  if (
-    shouldScroll
-  ) {
-
-    scrollPageToTop();
+    return url.href;
+  } catch {
+    return "#";
   }
 }
 
-function setSectionVisibility(
-  element,
-  visible
-) {
 
-  if (!element) {
-    return;
-  }
+/* =========================================================
+   LOCAL STORAGE
+========================================================= */
 
-  element.hidden =
-    !visible;
-
-  element.setAttribute(
-    "aria-hidden",
-    String(
-      !visible
-    )
-  );
-}
-
-function updateBottomNavigation() {
-
-  if (
-    !dom.bottomNavigation
-  ) {
-    return;
-  }
-
-  const currentPage =
-    normalizePage(
-      state.currentPage
-    );
-
-  dom.bottomNavigationItems.forEach(
-    item => {
-
-      const page =
-        getPageFromNavigationElement(
-          item
-        );
-
-      const active =
-        page === currentPage;
-
-      item.classList.toggle(
-        "is-active",
-        active
+function loadLocalState() {
+  try {
+    const storedStatuses =
+      localStorage.getItem(
+        CONFIG.viewedStatusesKey
       );
 
-      if (
-        active
-      ) {
+    if (storedStatuses) {
+      const parsed = JSON.parse(storedStatuses);
 
-        item.setAttribute(
-          "aria-current",
-          "page"
-        );
-
-      } else {
-
-        item.removeAttribute(
-          "aria-current"
+      if (Array.isArray(parsed)) {
+        state.viewedStatuses = new Set(
+          parsed.map(String)
         );
       }
     }
-  );
-}
-
-function getPageFromNavigationElement(
-  element
-) {
-
-  if (!element) {
-    return CONFIG.pages.home;
-  }
-
-  /*
-    First support an explicit
-    data-page attribute if the
-    HTML has one.
-  */
-
-  const dataPage =
-    element.getAttribute(
-      "data-page"
-    );
-
-  if (
-    dataPage
-  ) {
-
-    return normalizePage(
-      dataPage
+  } catch (error) {
+    console.warn(
+      "FeelFrame: unable to load viewed statuses.",
+      error
     );
   }
 
-  const href =
-    element.getAttribute(
-      "href"
-    );
-
-  return getPageFromNavigationHref(
-    href
-  );
-}
-
-function getPageFromNavigationHref(
-  href
-) {
-
-  if (!href) {
-    return CONFIG.pages.home;
-  }
-
-  const rawHref =
-    String(
-      href
-    )
-      .trim()
-      .toLowerCase();
-
-  /*
-    Existing HTML anchors.
-  */
-
-  if (
-    rawHref === "#stories-section" ||
-    rawHref === "#explore"
-  ) {
-
-    return CONFIG.pages.explore;
-  }
-
-  if (
-    rawHref === "#create-section" ||
-    rawHref === "#create"
-  ) {
-
-    return CONFIG.pages.create;
-  }
-
-  if (
-    rawHref === "#profile" ||
-    rawHref === "#home"
-  ) {
-
-    return CONFIG.pages.home;
-  }
-
-  /*
-    Query-string routes.
-  */
 
   try {
-
-    const url =
-      new URL(
-        href,
-        window.location.href
+    const storedLanguage =
+      localStorage.getItem(
+        CONFIG.visualLanguageKey
       );
 
-    const page =
-      url.searchParams.get(
-        "page"
-      );
-
-    if (
-      page
-    ) {
-
-      return normalizePage(
-        page
-      );
+    if (storedLanguage) {
+      state.selectedVisualLanguage =
+        storedLanguage;
     }
-
-    /*
-      Support hash routes inside
-      a complete URL as well.
-    */
-
-    const hash =
-      url.hash
-        .replace(
-          /^#/,
-          ""
-        )
-        .trim()
-        .toLowerCase();
-
-    if (
-      hash ===
-        "stories-section" ||
-      hash ===
-        "explore"
-    ) {
-
-      return CONFIG.pages.explore;
-    }
-
-    if (
-      hash ===
-        "create-section" ||
-      hash ===
-        "create"
-    ) {
-
-      return CONFIG.pages.create;
-    }
-
-    if (
-      hash ===
-        "profile" ||
-      hash ===
-        "home"
-    ) {
-
-      return CONFIG.pages.home;
-    }
-
-  } catch {
-    return CONFIG.pages.home;
-  }
-
-  return CONFIG.pages.home;
-}
-
-function handleNavigationClick(
-  event
-) {
-
-  const link =
-    event.target.closest(
-      ".bottom-nav__item"
+  } catch (error) {
+    console.warn(
+      "FeelFrame: unable to load visual language.",
+      error
     );
-
-  if (
-    !link ||
-    !dom.bottomNavigation ||
-    !dom.bottomNavigation.contains(
-      link
-    )
-  ) {
-    return;
-  }
-
-  const href =
-    link.getAttribute(
-      "href"
-    );
-
-  if (!href) {
-    return;
-  }
-
-  /*
-    Allow modifier clicks to behave
-    like normal browser navigation.
-  */
-
-  if (
-    event.metaKey ||
-    event.ctrlKey ||
-    event.shiftKey ||
-    event.altKey ||
-    event.button !== 0
-  ) {
-
-    return;
-  }
-
-  event.preventDefault();
-
-  const page =
-    getPageFromNavigationElement(
-      link
-    );
-
-  navigateToPage(
-    page
-  );
-}
-
-function handlePopState() {
-
-  state.currentPage =
-    getCurrentPage();
-
-  closeOpenOverlays();
-
-  applyPageView(
-    true
-  );
-}
-
-function handleHashChange() {
-
-  /*
-    This keeps older hash-based
-    navigation compatible with
-    the new page routing system.
-  */
-
-  const hash =
-    window.location.hash;
-
-  if (!hash) {
-    return;
-  }
-
-  const page =
-    getCurrentPage();
-
-  const currentPage =
-    normalizePage(
-      state.currentPage
-    );
-
-  if (
-    page !== currentPage
-  ) {
-
-    navigateToPage(
-      page,
-      {
-        replace: true,
-        scroll: true,
-        force: true
-      }
-    );
-
-    return;
-  }
-
-  applyPageView(
-    true
-  );
-}
-
-function closeOpenOverlays() {
-
-  if (
-    dom.statusViewer &&
-    dom.statusViewer.classList.contains(
-      "is-open"
-    )
-  ) {
-
-    closeStatus();
-  }
-
-  if (
-    dom.productModal &&
-    dom.productModal.classList.contains(
-      "is-open"
-    )
-  ) {
-
-    closeProduct();
   }
 }
 
-function scrollPageToTop() {
 
-  if (
-    prefersReducedMotion()
-  ) {
-
-    window.scrollTo(
-      0,
-      0
+function saveViewedStatuses() {
+  try {
+    localStorage.setItem(
+      CONFIG.viewedStatusesKey,
+      JSON.stringify(
+        Array.from(state.viewedStatuses)
+      )
     );
-
-    return;
+  } catch (error) {
+    console.warn(
+      "FeelFrame: unable to save viewed statuses.",
+      error
+    );
   }
-
-  window.scrollTo({
-    top: 0,
-    left: 0,
-    behavior: "smooth"
-  });
 }
 
-/* =======================================================
-06. DATA
-======================================================== */
+
+function saveVisualLanguage(value) {
+  state.selectedVisualLanguage =
+    value || CONFIG.defaultVisualLanguage;
+
+  try {
+    localStorage.setItem(
+      CONFIG.visualLanguageKey,
+      state.selectedVisualLanguage
+    );
+  } catch (error) {
+    console.warn(
+      "FeelFrame: unable to save visual language.",
+      error
+    );
+  }
+}
+
+
+/* =========================================================
+   DATA LOADING
+========================================================= */
 
 async function loadData() {
+  try {
+    const response = await fetch(CONFIG.dataUrl, {
+      cache: "no-cache"
+    });
 
-  const response =
-    await fetch(
-      CONFIG.dataUrl,
-      {
-        cache: "no-store"
-      }
+    if (!response.ok) {
+      throw new Error(
+        `Unable to load ${CONFIG.dataUrl}: ${response.status}`
+      );
+    }
+
+    const rawData = await response.json();
+
+    state.data = rawData;
+
+    normalizeData(rawData);
+
+    state.dataLoaded = true;
+
+    return true;
+
+  } catch (error) {
+    console.error(
+      "FeelFrame data loading error:",
+      error
     );
 
-  if (
-    !response.ok
-  ) {
-
-    throw new Error(
-      `Unable to load ${CONFIG.dataUrl}`
+    showToast(
+      "Unable to load FeelFrame content."
     );
+
+    renderDataError();
+
+    return false;
   }
-
-  const data =
-    await response.json();
-
-  if (
-    !data ||
-    typeof data !== "object"
-  ) {
-
-    throw new Error(
-      "Invalid FeelFrame™ data."
-    );
-  }
-
-  return data;
 }
 
-function normalizeData() {
+
+/* =========================================================
+   DATA NORMALIZATION
+========================================================= */
+
+function normalizeData(data) {
+  const site =
+    data && typeof data.site === "object"
+      ? data.site
+      : {};
+
+  state.site = site;
+
+
+  /* -------------------------------------------------------
+     Stories
+  ------------------------------------------------------- */
+
+  const incomingStories =
+    Array.isArray(data?.stories)
+      ? data.stories
+      : [];
 
   state.stories =
-    Array.isArray(
-      state.data.stories
-    )
-      ? state.data.stories.filter(
-          Boolean
-        )
-      : [];
+    incomingStories
+      .filter(Boolean)
+      .map(normalizeStory);
+
 
   state.featuredStories =
     state.stories.filter(
-      story =>
-        story.featured === true
+      (story) => story.featured === true
     );
 
+
+  /* -------------------------------------------------------
+     Status
+  ------------------------------------------------------- */
+
   state.statuses =
-    normalizeStatuses(
-      state.data.status
+    normalizeStatuses(data?.status);
+
+
+  /* -------------------------------------------------------
+     Social links
+  ------------------------------------------------------- */
+
+  state.socialLinks =
+    normalizeSocialLinks(
+      data?.socialLinks
     );
 }
 
-function normalizeStatuses(
-  statusData
-) {
 
-  if (!statusData) {
+function normalizeStory(story) {
+  return {
+    id: String(
+      story.id ??
+      cryptoRandomId()
+    ),
+
+    title:
+      story.title ||
+      "Untitled story",
+
+    description:
+      story.description ||
+      story.context ||
+      "",
+
+    image:
+      story.image ||
+      story.imageUrl ||
+      "",
+
+    featured:
+      story.featured === true,
+
+    campaign:
+      story.campaign ||
+      "",
+
+    emotion:
+      story.emotion ||
+      "",
+
+    moment:
+      story.moment ||
+      "",
+
+    quote:
+      story.quote ||
+      "",
+
+    link:
+      story.link ||
+      story.selar ||
+      story.url ||
+      "",
+
+    price:
+      story.price ??
+      null,
+
+    compareAt:
+      story.compareAt ??
+      null,
+
+    style:
+      story.style ||
+      "",
+
+    visualLanguage:
+      story.visualLanguage ||
+      story.visual_language ||
+      "",
+
+    ratio:
+      story.ratio ||
+      ""
+  };
+}
+
+
+function cryptoRandomId() {
+  return (
+    "story-" +
+    Math.random()
+      .toString(36)
+      .slice(2, 10)
+  );
+}
+
+
+/* =========================================================
+   STATUS NORMALIZATION
+========================================================= */
+
+function normalizeStatuses(input) {
+  if (!input) {
     return [];
   }
 
-  /*
-    Supported structure:
+  let items = [];
 
-    "status": {
-      "enabled": true,
-      "durationHours": 24,
-      "items": []
+  let durationHours =
+    CONFIG.statusExpirationHours;
+
+
+  /*
+    Supported format:
+
+    {
+      enabled: true,
+      durationHours: 24,
+      items: []
     }
   */
 
   if (
-    typeof statusData === "object" &&
-    Array.isArray(
-      statusData.items
-    )
+    typeof input === "object" &&
+    !Array.isArray(input)
   ) {
-
-    if (
-      statusData.enabled === false
-    ) {
-
+    if (input.enabled === false) {
       return [];
     }
 
-    const durationHours =
-      Number(
-        statusData.durationHours
-      ) || 24;
-
-    return statusData.items
-      .filter(Boolean)
-      .map(
-        (
-          item,
-          index
-        ) => {
-
-          const normalized =
-            normalizeStatusItem(
-              item,
-              index
-            );
-
-          normalized.durationHours =
-            durationHours;
-
-          return normalized;
-        }
+    if (
+      Number.isFinite(
+        Number(input.durationHours)
       )
-      .filter(
-        status =>
-          !isStatusExpired(
-            status
-          )
-      );
+    ) {
+      durationHours =
+        Number(input.durationHours);
+    }
+
+    if (Array.isArray(input.items)) {
+      items = input.items;
+    }
   }
 
-  /*
-    Also supports:
 
-    "status": [
-      {...},
-      {...}
-    ]
+  /*
+    Also support:
+
+    status: []
   */
 
-  if (
-    Array.isArray(
-      statusData
-    )
-  ) {
+  if (Array.isArray(input)) {
+    items = input;
+  }
 
-    return statusData
-      .filter(Boolean)
-      .map(
-        normalizeStatusItem
-      )
-      .filter(
-        status =>
-          !isStatusExpired(
-            status
-          )
-      );
+
+  const now = Date.now();
+
+  return items
+    .filter(Boolean)
+    .map((item, index) => {
+
+      const createdAt =
+        item.createdAt ||
+        item.created_at ||
+        item.timestamp ||
+        null;
+
+      const createdTimestamp =
+        createdAt
+          ? new Date(createdAt).getTime()
+          : now;
+
+
+      return {
+        id: String(
+          item.id ??
+          `status-${index + 1}`
+        ),
+
+        title:
+          item.title ||
+          "A new feeling",
+
+        text:
+          item.text ||
+          item.description ||
+          "",
+
+        image:
+          item.image ||
+          item.imageUrl ||
+          "",
+
+        cta:
+          item.cta ||
+          "",
+
+        link:
+          item.link ||
+          item.url ||
+          "",
+
+        category:
+          item.category ||
+          item.emotion ||
+          "",
+
+        createdAt:
+          createdTimestamp,
+
+        durationHours
+      };
+    })
+    .filter((status) => {
+      if (!status.createdAt) {
+        return true;
+      }
+
+      const expiration =
+        status.createdAt +
+        status.durationHours *
+        60 *
+        60 *
+        1000;
+
+      return now <= expiration;
+    });
+}
+
+
+/* =========================================================
+   SOCIAL NORMALIZATION
+========================================================= */
+
+function normalizeSocialLinks(input) {
+  if (!input) {
+    return [];
+  }
+
+  if (Array.isArray(input)) {
+    return input.map((item) => {
+
+      if (typeof item === "string") {
+        return {
+          label: item,
+          url: item
+        };
+      }
+
+      return {
+        label:
+          item.label ||
+          item.name ||
+          item.platform ||
+          "Social",
+
+        url:
+          item.url ||
+          item.link ||
+          "#"
+      };
+    });
+  }
+
+
+  if (
+    typeof input === "object"
+  ) {
+    return Object.entries(input)
+      .map(([label, value]) => ({
+        label,
+        url:
+          typeof value === "string"
+            ? value
+            : value?.url ||
+              value?.link ||
+              "#"
+      }));
   }
 
   return [];
 }
 
-function normalizeStatusItem(
-  item,
-  index
-) {
 
-  return {
-    id:
-      item.id ||
-      `status-${index + 1}`,
+/* =========================================================
+   SITE RENDERING
+========================================================= */
 
-    title:
-      item.title ||
-      "A new visual",
+function renderSite() {
+  renderSiteIdentity();
 
-    text:
-      item.text ||
-      item.description ||
-      item.quote ||
-      "",
+  renderStatuses();
 
-    image:
-      item.image ||
-      "",
+  renderFeaturedStories();
 
-    cta:
-      item.cta ||
-      "View visual",
+  renderStories();
 
-    link:
-      item.link ||
-      item.selarUrl ||
-      "#",
+  renderSocialLinks();
 
-    category:
-      item.category ||
-      item.campaign ||
-      "FEELFRAME",
-
-    createdAt:
-      item.createdAt ||
-      null,
-
-    durationHours:
-      Number(
-        item.durationHours
-      ) || 24
-  };
+  applyVisualLanguageUI();
 }
 
-function isStatusExpired(
-  status
-) {
 
-  if (
-    !status.createdAt
-  ) {
+function renderSiteIdentity() {
+  const siteName =
+    state.site.name ||
+    "FeelFrame™";
 
-    return false;
+  const tagline =
+    state.site.tagline ||
+    "Some feelings deserve to be seen.";
+
+  const description =
+    state.site.description ||
+    "";
+
+
+  if (DOM.siteName) {
+    DOM.siteName.textContent =
+      siteName;
   }
 
-  const created =
-    new Date(
-      status.createdAt
-    ).getTime();
-
-  if (
-    Number.isNaN(
-      created
-    )
-  ) {
-
-    return false;
+  if (DOM.siteTagline) {
+    DOM.siteTagline.textContent =
+      tagline;
   }
 
-  const duration =
-    (
-      Number(
-        status.durationHours
-      ) || 24
-    ) *
-    60 *
-    60 *
-    1000;
+  if (DOM.siteDescription) {
+    DOM.siteDescription.textContent =
+      description;
+  }
 
-  return (
-    Date.now() >
-    created + duration
+  document.title =
+    `${siteName} — ${tagline}`;
+}
+
+
+/* =========================================================
+   STATUS RENDERING
+========================================================= */
+
+function renderStatuses() {
+  if (!DOM.statusList) {
+    return;
+  }
+
+  DOM.statusList.innerHTML = "";
+
+  if (!state.statuses.length) {
+    return;
+  }
+
+
+  state.statuses.forEach((status, index) => {
+
+    const wrapper =
+      document.createElement("div");
+
+    wrapper.className =
+      "status-item-wrapper";
+
+    const button =
+      document.createElement("button");
+
+    button.type = "button";
+
+    button.className =
+      "status-item";
+
+    button.dataset.statusIndex =
+      String(index);
+
+    button.setAttribute(
+      "aria-label",
+      `View ${status.title}`
+    );
+
+
+    if (
+      state.viewedStatuses.has(
+        status.id
+      )
+    ) {
+      button.classList.add("viewed");
+    }
+
+
+    const image =
+      document.createElement("img");
+
+    image.src =
+      safeURL(status.image);
+
+    image.alt =
+      status.title;
+
+    image.loading = "lazy";
+
+    image.addEventListener(
+      "error",
+      () => {
+        image.removeAttribute("src");
+      }
+    );
+
+
+    button.appendChild(image);
+
+
+    const title =
+      document.createElement("div");
+
+    title.className =
+      "status-item-title";
+
+    title.textContent =
+      status.title;
+
+    wrapper.appendChild(button);
+
+    wrapper.appendChild(title);
+
+    DOM.statusList.appendChild(
+      wrapper
+    );
+  });
+
+
+  $$(".status-item", DOM.statusList)
+    .forEach((button) => {
+
+      button.addEventListener(
+        "click",
+        () => {
+
+          const index =
+            Number(
+              button.dataset.statusIndex
+            );
+
+          openStatus(index);
+        }
+      );
+    });
+}
+
+
+/* =========================================================
+   FEATURED STORIES
+========================================================= */
+
+function renderFeaturedStories() {
+  if (!DOM.featuredStories) {
+    return;
+  }
+
+  DOM.featuredStories.innerHTML = "";
+
+
+  if (!state.featuredStories.length) {
+    DOM.featuredStories.innerHTML =
+      createEmptyState(
+        "Nothing featured yet.",
+        "New visual stories will appear here."
+      );
+
+    return;
+  }
+
+
+  state.featuredStories.forEach(
+    (story) => {
+
+      DOM.featuredStories.insertAdjacentHTML(
+        "beforeend",
+        createStoryCard(story)
+      );
+    }
+  );
+
+
+  bindStoryCards(
+    DOM.featuredStories
   );
 }
 
-/* =======================================================
-07. SITE RENDERING
-======================================================== */
 
-function renderSite() {
+/* =========================================================
+   EXPLORE STORY GRID
+========================================================= */
 
-  const site =
-    state.data.site ||
-    {};
-
-  if (
-    site.name &&
-    dom.siteName
-  ) {
-
-    dom.siteName.textContent =
-      site.name;
+function renderStories() {
+  if (!DOM.storyGrid) {
+    return;
   }
 
-  if (
-    site.tagline &&
-    dom.siteTagline
-  ) {
+  DOM.storyGrid.innerHTML = "";
 
-    dom.siteTagline.textContent =
-      site.tagline;
-  }
 
-  if (
-    site.description &&
-    dom.siteDescription
-  ) {
-
-    dom.siteDescription.textContent =
-      site.description;
-  }
-}
-
-function setCurrentYear() {
-
-  if (
-    dom.currentYear
-  ) {
-
-    dom.currentYear.textContent =
-      new Date().getFullYear();
-  }
-}
-
-/* =======================================================
-08. STATUS RENDERING
-======================================================== */
-
-function renderStatuses() {
-
-  if (
-    !dom.statusList
-  ) {
+  if (!state.stories.length) {
+    DOM.storyGrid.innerHTML =
+      createEmptyState(
+        "No stories yet.",
+        "Your visual stories will appear here."
+      );
 
     return;
   }
 
-  dom.statusList.innerHTML =
+
+  state.stories.forEach(
+    (story) => {
+
+      DOM.storyGrid.insertAdjacentHTML(
+        "beforeend",
+        createStoryCard(story)
+      );
+    }
+  );
+
+
+  bindStoryCards(
+    DOM.storyGrid
+  );
+}
+
+
+/* =========================================================
+   STORY CARD
+========================================================= */
+
+function createStoryCard(story) {
+  const image =
+    safeURL(story.image);
+
+  const campaign =
+    story.campaign ||
+    story.emotion ||
+    "Visual story";
+
+  const description =
+    story.description ||
+    story.quote ||
     "";
 
+
+  let priceHTML = "";
+
   if (
-    !state.statuses.length
+    story.price !== null &&
+    story.price !== undefined
   ) {
+    priceHTML = `
+      <div class="story-card-price">
+        <span>
+          ${formatCurrency(story.price)}
+        </span>
 
-    if (
-      dom.statusSection
-    ) {
+        ${
+          story.compareAt !== null &&
+          story.compareAt !== undefined
+            ? `
+              <span class="compare-at">
+                ${formatCurrency(story.compareAt)}
+              </span>
+            `
+            : ""
+        }
+      </div>
+    `;
+  }
 
-      dom.statusSection.hidden =
-        true;
-    }
 
+  return `
+    <article
+      class="story-card"
+      data-story-id="${escapeHTML(story.id)}"
+      tabindex="0"
+      role="button"
+      aria-label="View ${escapeHTML(story.title)}"
+    >
+
+      <div class="story-card-image">
+
+        ${
+          image !== "#"
+            ? `
+              <img
+                src="${image}"
+                alt="${escapeHTML(story.title)}"
+                loading="lazy"
+              >
+            `
+            : `
+              <div
+                class="story-image-placeholder"
+                aria-hidden="true"
+              ></div>
+            `
+        }
+
+      </div>
+
+      <div class="story-card-body">
+
+        <div class="story-card-meta">
+          ${escapeHTML(campaign)}
+        </div>
+
+        <h3 class="story-card-title">
+          ${escapeHTML(story.title)}
+        </h3>
+
+        ${
+          description
+            ? `
+              <p class="story-card-description">
+                ${escapeHTML(description)}
+              </p>
+            `
+            : ""
+        }
+
+        ${priceHTML}
+
+      </div>
+
+    </article>
+  `;
+}
+
+
+function bindStoryCards(container) {
+  if (!container) {
     return;
   }
 
-  if (
-    dom.statusSection
-  ) {
+  $$(".story-card", container)
+    .forEach((card) => {
 
-    dom.statusSection.hidden =
-      false;
-  }
+      const storyId =
+        card.dataset.storyId;
 
-  const count =
-    state.statuses.length;
-
-  if (
-    dom.statusCount
-  ) {
-
-    dom.statusCount.textContent =
-      `${count} ${
-        count === 1
-          ? "update"
-          : "updates"
-      }`;
-  }
-
-  state.statuses.forEach(
-    (
-      status,
-      index
-    ) => {
-
-      const item =
-        document.createElement(
-          "button"
-        );
-
-      item.type =
-        "button";
-
-      item.className =
-        "status-item";
-
-      item.setAttribute(
-        "role",
-        "listitem"
+      card.addEventListener(
+        "click",
+        () => {
+          openStory(storyId);
+        }
       );
 
-      item.setAttribute(
-        "aria-label",
-        `View status: ${status.title}`
+      card.addEventListener(
+        "keydown",
+        (event) => {
+
+          if (
+            event.key === "Enter" ||
+            event.key === " "
+          ) {
+            event.preventDefault();
+
+            openStory(storyId);
+          }
+        }
       );
 
-      if (
-        state.viewedStatuses.has(
-          status.id
-        )
-      ) {
-
-        item.classList.add(
-          "is-viewed"
-        );
-      }
-
-      const ring =
-        document.createElement(
-          "span"
-        );
-
-      ring.className =
-        "status-item__ring";
 
       const image =
-        document.createElement(
-          "img"
+        $("img", card);
+
+      if (image) {
+        image.addEventListener(
+          "error",
+          () => {
+            image.removeAttribute("src");
+          }
         );
+      }
+    });
+}
 
-      image.className =
-        "status-item__image";
 
-      image.src =
-        status.image;
+/* =========================================================
+   SOCIAL LINKS
+========================================================= */
 
-      image.alt =
-        status.title;
+function renderSocialLinks() {
+  if (!DOM.socialLinks) {
+    return;
+  }
 
-      image.loading =
-        index < 4
-          ? "eager"
-          : "lazy";
+  DOM.socialLinks.innerHTML = "";
 
-      image.decoding =
-        "async";
 
-      const label =
-        document.createElement(
-          "span"
-        );
+  state.socialLinks.forEach(
+    (social) => {
 
-      label.className =
-        "status-item__label";
+      const url =
+        safeURL(social.url);
 
-      label.textContent =
-        status.title;
+      const link =
+        document.createElement("a");
 
-      ring.appendChild(
-        image
+      link.href = url;
+
+      link.textContent =
+        social.label;
+
+      if (
+        /^https?:\/\//i.test(url)
+      ) {
+        link.target = "_blank";
+        link.rel =
+          "noopener noreferrer";
+      }
+
+      DOM.socialLinks.appendChild(
+        link
+      );
+    }
+  );
+}
+
+
+/* =========================================================
+   EMPTY STATE
+========================================================= */
+
+function createEmptyState(
+  title,
+  description
+) {
+  return `
+    <div class="empty-state">
+
+      <h3>
+        ${escapeHTML(title)}
+      </h3>
+
+      <p>
+        ${escapeHTML(description)}
+      </p>
+
+    </div>
+  `;
+}
+
+
+/* =========================================================
+   CURRENCY
+========================================================= */
+
+function formatCurrency(value) {
+  const numericValue =
+    Number(value);
+
+  if (!Number.isFinite(numericValue)) {
+    return String(value);
+  }
+
+  const currency =
+    state.site.currency ||
+    "NGN";
+
+  try {
+    return new Intl.NumberFormat(
+      "en-NG",
+      {
+        style: "currency",
+        currency,
+        maximumFractionDigits: 0
+      }
+    ).format(numericValue);
+  } catch {
+    return `${currency} ${numericValue}`;
+  }
+}
+
+
+/* =========================================================
+   PRODUCT / STORY MODAL
+========================================================= */
+
+function openStory(storyId) {
+  const story =
+    state.stories.find(
+      (item) =>
+        String(item.id) ===
+        String(storyId)
+    );
+
+  if (!story) {
+    return;
+  }
+
+  state.currentStory =
+    story;
+
+  state.lastFocusedElement =
+    document.activeElement;
+
+
+  if (!DOM.productModal) {
+    return;
+  }
+
+
+  if (DOM.productModalImage) {
+    DOM.productModalImage.src =
+      safeURL(story.image);
+
+    DOM.productModalImage.alt =
+      story.title;
+  }
+
+  if (DOM.productModalCampaign) {
+    DOM.productModalCampaign.textContent =
+      story.campaign || "";
+  }
+
+  if (DOM.productModalEmotion) {
+    DOM.productModalEmotion.textContent =
+      story.emotion || "";
+  }
+
+  if (DOM.productModalTitle) {
+    DOM.productModalTitle.textContent =
+      story.title;
+  }
+
+  if (DOM.productModalQuote) {
+    DOM.productModalQuote.textContent =
+      story.quote || "";
+  }
+
+  if (DOM.productModalDescription) {
+    DOM.productModalDescription.textContent =
+      story.description || "";
+  }
+
+
+  if (DOM.productModalCTA) {
+
+    if (story.link) {
+
+      DOM.productModalCTA.href =
+        safeURL(story.link);
+
+      DOM.productModalCTA.hidden =
+        false;
+
+    } else {
+
+      DOM.productModalCTA.hidden =
+        true;
+    }
+  }
+
+
+  DOM.productModal.classList.add(
+    "is-open"
+  );
+
+  DOM.productModal.setAttribute(
+    "aria-hidden",
+    "false"
+  );
+
+  document.body.style.overflow =
+    "hidden";
+
+
+  if (DOM.productModalClose) {
+    DOM.productModalClose.focus();
+  }
+}
+
+
+function closeProductModal() {
+  if (!DOM.productModal) {
+    return;
+  }
+
+  DOM.productModal.classList.remove(
+    "is-open"
+  );
+
+  DOM.productModal.setAttribute(
+    "aria-hidden",
+    "true"
+  );
+
+  document.body.style.overflow = "";
+
+
+  if (
+    state.lastFocusedElement &&
+    typeof state.lastFocusedElement.focus ===
+      "function"
+  ) {
+    state.lastFocusedElement.focus();
+  }
+
+  state.currentStory = null;
+}
+
+
+/* =========================================================
+   STATUS VIEWER
+========================================================= */
+
+function openStatus(index) {
+  if (
+    !DOM.statusViewer ||
+    !state.statuses.length
+  ) {
+    return;
+  }
+
+  const safeIndex =
+    Math.max(
+      0,
+      Math.min(
+        Number(index) || 0,
+        state.statuses.length - 1
+      )
+    );
+
+  state.currentStatusIndex =
+    safeIndex;
+
+  state.lastFocusedElement =
+    document.activeElement;
+
+  state.statusPaused = false;
+
+  markStatusViewed(
+    state.statuses[
+      state.currentStatusIndex
+    ]
+  );
+
+  renderStatusViewer();
+
+  DOM.statusViewer.classList.add(
+    "is-open"
+  );
+
+  DOM.statusViewer.setAttribute(
+    "aria-hidden",
+    "false"
+  );
+
+  document.body.style.overflow =
+    "hidden";
+
+  startStatusTimer();
+
+  if (DOM.statusClose) {
+    DOM.statusClose.focus();
+  }
+}
+
+
+function renderStatusViewer() {
+  const status =
+    state.statuses[
+      state.currentStatusIndex
+    ];
+
+  if (!status) {
+    return;
+  }
+
+
+  if (DOM.statusViewerImage) {
+    DOM.statusViewerImage.src =
+      safeURL(status.image);
+
+    DOM.statusViewerImage.alt =
+      status.title;
+  }
+
+  if (DOM.statusViewerCategory) {
+    DOM.statusViewerCategory.textContent =
+      status.category || "";
+  }
+
+  if (DOM.statusViewerTitle) {
+    DOM.statusViewerTitle.textContent =
+      status.title;
+  }
+
+  if (DOM.statusViewerText) {
+    DOM.statusViewerText.textContent =
+      status.text || "";
+  }
+
+
+  if (DOM.statusViewerCTA) {
+
+    if (status.cta && status.link) {
+
+      DOM.statusViewerCTA.textContent =
+        status.cta;
+
+      DOM.statusViewerCTA.href =
+        safeURL(status.link);
+
+      DOM.statusViewerCTA.hidden =
+        false;
+
+    } else {
+
+      DOM.statusViewerCTA.hidden =
+        true;
+    }
+  }
+
+
+  renderStatusProgress();
+}
+
+
+function renderStatusProgress() {
+  if (!DOM.statusProgress) {
+    return;
+  }
+
+  DOM.statusProgress.innerHTML = "";
+
+
+  state.statuses.forEach(
+    (_, index) => {
+
+      const item =
+        document.createElement("div");
+
+      item.className =
+        "status-progress-item";
+
+      const percentage =
+        index <
+        state.currentStatusIndex
+          ? 100
+          : index ===
+            state.currentStatusIndex
+            ? 0
+            : 0;
+
+      item.style.setProperty(
+        "--progress",
+        `${percentage}%`
       );
 
-      item.appendChild(
-        ring
-      );
-
-      item.appendChild(
-        label
-      );
-
-      item.addEventListener(
-        "click",
-        () =>
-          openStatus(
-            index
-          )
-      );
-
-      dom.statusList.appendChild(
+      DOM.statusProgress.appendChild(
         item
       );
     }
   );
 }
 
-/* =======================================================
-09. STATUS VIEWER
-======================================================== */
 
-function openStatus(
-  index
+function updateCurrentStatusProgress(
+  percentage
 ) {
-
-  if (
-    !state.statuses.length
-  ) {
-
+  if (!DOM.statusProgress) {
     return;
   }
 
-  state.currentStatusIndex =
-    clamp(
-      index,
+  const bars =
+    $$(".status-progress-item");
+
+  const currentBar =
+    bars[state.currentStatusIndex];
+
+  if (!currentBar) {
+    return;
+  }
+
+  currentBar.style.setProperty(
+    "--progress",
+    `${Math.max(
       0,
-      state.statuses.length - 1
-    );
-
-  state.statusPaused =
-    false;
-
-  markStatusViewed(
-    state.statuses[
-      state.currentStatusIndex
-    ].id
-  );
-
-  dom.statusViewer.classList.add(
-    "is-open"
-  );
-
-  dom.statusViewer.setAttribute(
-    "aria-hidden",
-    "false"
-  );
-
-  document.body.classList.add(
-    "is-locked"
-  );
-
-  renderCurrentStatus();
-
-  requestAnimationFrame(
-    () => {
-
-      dom.statusClose?.focus();
-    }
+      Math.min(100, percentage)
+    )}%`
   );
 }
 
-function closeStatus() {
-
-  stopStatusTimer();
-
-  if (
-    !dom.statusViewer
-  ) {
-
-    return;
-  }
-
-  dom.statusViewer.classList.remove(
-    "is-open"
-  );
-
-  dom.statusViewer.setAttribute(
-    "aria-hidden",
-    "true"
-  );
-
-  document.body.classList.remove(
-    "is-locked"
-  );
-
-  if (
-    dom.statusImage
-  ) {
-
-    dom.statusImage.removeAttribute(
-      "src"
-    );
-
-    dom.statusImage.classList.remove(
-      "is-loaded"
-    );
-  }
-}
-
-function renderCurrentStatus() {
-
-  const status =
-    state.statuses[
-      state.currentStatusIndex
-    ];
-
-  if (
-    !status
-  ) {
-
-    closeStatus();
-
-    return;
-  }
-
-  stopStatusTimer();
-
-  state.statusPaused =
-    false;
-
-  dom.statusImage.classList.remove(
-    "is-loaded"
-  );
-
-  dom.statusLoading.hidden =
-    false;
-
-  dom.viewerName.textContent =
-    getSiteName();
-
-  dom.viewerAvatar.textContent =
-    getAvatarLetter();
-
-  dom.viewerTime.textContent =
-    formatStatusTime(
-      status.createdAt
-    );
-
-  dom.statusCategory.textContent =
-    status.category;
-
-  dom.statusTitle.textContent =
-    status.title;
-
-  dom.statusText.textContent =
-    status.text;
-
-  dom.statusCTA.textContent =
-    "";
-
-  const ctaText =
-    document.createElement(
-      "span"
-    );
-
-  ctaText.textContent =
-    status.cta;
-
-  const ctaArrow =
-    document.createElement(
-      "span"
-    );
-
-  ctaArrow.setAttribute(
-    "aria-hidden",
-    "true"
-  );
-
-  ctaArrow.textContent =
-    "↗";
-
-  dom.statusCTA.append(
-    ctaText,
-    ctaArrow
-  );
-
-  dom.statusCTA.href =
-    isSafeExternalUrl(
-      status.link
-    )
-      ? status.link
-      : "#";
-
-  renderStatusProgress();
-
-  dom.statusImage.onload =
-    () => {
-
-      dom.statusLoading.hidden =
-        true;
-
-      dom.statusImage.classList.add(
-        "is-loaded"
-      );
-
-      startStatusTimer();
-    };
-
-  dom.statusImage.onerror =
-    () => {
-
-      dom.statusLoading.hidden =
-        true;
-
-      dom.statusImage.alt =
-        "Unable to load this visual.";
-
-      startStatusTimer();
-    };
-
-  dom.statusImage.src =
-    status.image;
-}
-
-function renderStatusProgress() {
-
-  dom.statusProgress.innerHTML =
-    "";
-
-  state.statuses.forEach(
-    (
-      status,
-      index
-    ) => {
-
-      const progress =
-        document.createElement(
-          "span"
-        );
-
-      progress.className =
-        "status-progress-item";
-
-      const fill =
-        document.createElement(
-          "span"
-        );
-
-      fill.className =
-        "status-progress-item__fill";
-
-      if (
-        index <
-        state.currentStatusIndex
-      ) {
-
-        progress.classList.add(
-          "is-complete"
-        );
-      }
-
-      if (
-        index ===
-        state.currentStatusIndex
-      ) {
-
-        progress.classList.add(
-          "is-active"
-        );
-      }
-
-      progress.appendChild(
-        fill
-      );
-
-      dom.statusProgress.appendChild(
-        progress
-      );
-    }
-  );
-}
 
 function startStatusTimer() {
+  clearStatusTimer();
 
-  stopStatusTimer();
-
-  if (
-    state.statusPaused
-  ) {
-
-    return;
-  }
+  state.statusPaused = false;
 
   state.statusRemaining =
     CONFIG.statusDuration;
@@ -1783,267 +1511,212 @@ function startStatusTimer() {
   state.statusStartedAt =
     Date.now();
 
+  updateCurrentStatusProgress(0);
+
+
   state.statusTimer =
-    window.setTimeout(
+    window.setInterval(
       () => {
 
-        goToNextStatus();
+        if (state.statusPaused) {
+          return;
+        }
+
+        const elapsed =
+          Date.now() -
+          state.statusStartedAt;
+
+        const percentage =
+          (elapsed /
+            CONFIG.statusDuration) *
+          100;
+
+        updateCurrentStatusProgress(
+          percentage
+        );
+
+
+        if (
+          elapsed >=
+          CONFIG.statusDuration
+        ) {
+          nextStatus();
+        }
 
       },
-      state.statusRemaining
+      50
     );
-
-  animateCurrentProgress(
-    state.statusRemaining
-  );
 }
 
-function animateCurrentProgress(
-  duration
-) {
 
-  const active =
-    dom.statusProgress.querySelector(
-      ".is-active .status-progress-item__fill"
-    );
-
-  if (
-    !active
-  ) {
-
-    return;
-  }
-
-  active.style.transition =
-    "none";
-
-  active.style.width =
-    "0%";
-
-  requestAnimationFrame(
-    () => {
-
-      active.style.transition =
-        `width ${duration}ms linear`;
-
-      active.style.width =
-        "100%";
-    }
-  );
-}
-
-function stopStatusTimer() {
-
-  if (
-    state.statusTimer
-  ) {
-
-    window.clearTimeout(
+function clearStatusTimer() {
+  if (state.statusTimer) {
+    window.clearInterval(
       state.statusTimer
     );
 
-    state.statusTimer =
-      null;
-  }
-
-  const active =
-    dom.statusProgress.querySelector(
-      ".is-active .status-progress-item__fill"
-    );
-
-  if (
-    active
-  ) {
-
-    const elapsed =
-      Date.now() -
-      state.statusStartedAt;
-
-    const percentage =
-      Math.min(
-        100,
-        Math.max(
-          0,
-          (
-            elapsed /
-            CONFIG.statusDuration
-          ) *
-            100
-        )
-      );
-
-    active.style.transition =
-      "none";
-
-    active.style.width =
-      `${percentage}%`;
+    state.statusTimer = null;
   }
 }
 
-function pauseStatus() {
 
+function pauseStatus() {
   if (
-    state.statusPaused ||
-    !dom.statusViewer.classList.contains(
+    !DOM.statusViewer ||
+    !DOM.statusViewer.classList.contains(
       "is-open"
     )
   ) {
-
     return;
   }
 
-  state.statusPaused =
-    true;
+  if (state.statusPaused) {
+    return;
+  }
 
-  const elapsed =
-    Date.now() -
-    state.statusStartedAt;
+  state.statusPaused = true;
 
   state.statusRemaining =
     Math.max(
-      300,
+      0,
       CONFIG.statusDuration -
-      elapsed
-    );
-
-  if (
-    state.statusTimer
-  ) {
-
-    window.clearTimeout(
-      state.statusTimer
-    );
-
-    state.statusTimer =
-      null;
-  }
-
-  const active =
-    dom.statusProgress.querySelector(
-      ".is-active .status-progress-item__fill"
-    );
-
-  if (
-    active
-  ) {
-
-    const percentage =
-      Math.min(
-        100,
         (
-          elapsed /
-          CONFIG.statusDuration
-        ) *
-          100
-      );
-
-    active.style.transition =
-      "none";
-
-    active.style.width =
-      `${percentage}%`;
-  }
+          Date.now() -
+          state.statusStartedAt
+        )
+    );
 }
+
 
 function resumeStatus() {
-
-  if (
-    !state.statusPaused
-  ) {
-
+  if (!state.statusPaused) {
     return;
   }
 
-  state.statusPaused =
-    false;
+  state.statusPaused = false;
 
   state.statusStartedAt =
-    Date.now();
-
-  state.statusTimer =
-    window.setTimeout(
-      () =>
-        goToNextStatus(),
+    Date.now() -
+    (
+      CONFIG.statusDuration -
       state.statusRemaining
     );
-
-  const active =
-    dom.statusProgress.querySelector(
-      ".is-active .status-progress-item__fill"
-    );
-
-  if (
-    active
-  ) {
-
-    active.style.transition =
-      `width ${state.statusRemaining}ms linear`;
-
-    active.style.width =
-      "100%";
-  }
 }
 
-function goToNextStatus() {
+
+function nextStatus() {
+  if (!state.statuses.length) {
+    closeStatusViewer();
+    return;
+  }
 
   if (
-    state.currentStatusIndex <
+    state.currentStatusIndex >=
     state.statuses.length - 1
   ) {
-
-    state.currentStatusIndex++;
-
-    markStatusViewed(
-      state.statuses[
-        state.currentStatusIndex
-      ].id
-    );
-
-    renderCurrentStatus();
-
-    updateStatusBubbleState();
-
+    closeStatusViewer();
     return;
   }
 
-  closeStatus();
+  state.currentStatusIndex += 1;
+
+  markStatusViewed(
+    state.statuses[
+      state.currentStatusIndex
+    ]
+  );
+
+  renderStatusViewer();
+
+  startStatusTimer();
 }
 
-function goToPreviousStatus() {
+
+function previousStatus() {
+  if (!state.statuses.length) {
+    return;
+  }
 
   if (
-    state.currentStatusIndex >
-    0
+    state.currentStatusIndex <= 0
   ) {
+    state.currentStatusIndex = 0;
+  } else {
+    state.currentStatusIndex -= 1;
+  }
 
-    state.currentStatusIndex--;
+  markStatusViewed(
+    state.statuses[
+      state.currentStatusIndex
+    ]
+  );
 
-    markStatusViewed(
-      state.statuses[
-        state.currentStatusIndex
-      ].id
-    );
+  renderStatusViewer();
 
-    renderCurrentStatus();
+  startStatusTimer();
+}
 
-    updateStatusBubbleState();
 
+function closeStatusViewer() {
+  clearStatusTimer();
+
+  if (!DOM.statusViewer) {
     return;
   }
 
-  renderCurrentStatus();
+  DOM.statusViewer.classList.remove(
+    "is-open"
+  );
+
+  DOM.statusViewer.setAttribute(
+    "aria-hidden",
+    "true"
+  );
+
+  document.body.style.overflow = "";
+
+
+  if (
+    state.lastFocusedElement &&
+    typeof state.lastFocusedElement.focus ===
+      "function"
+  ) {
+    state.lastFocusedElement.focus();
+  }
 }
 
-/* =======================================================
-10. STATUS TOUCH / SWIPE
-======================================================== */
 
-function handleStatusTouchStart(
-  event
-) {
+function markStatusViewed(status) {
+  if (!status?.id) {
+    return;
+  }
 
+  state.viewedStatuses.add(
+    String(status.id)
+  );
+
+  saveViewedStatuses();
+
+  const matchingButton =
+    document.querySelector(
+      `.status-item[data-status-index="${state.currentStatusIndex}"]`
+    );
+
+  if (matchingButton) {
+    matchingButton.classList.add(
+      "viewed"
+    );
+  }
+}
+
+
+/* =========================================================
+   STATUS TOUCH / SWIPE
+========================================================= */
+
+function handleStatusTouchStart(event) {
   const touch =
-    event.changedTouches[0];
+    event.changedTouches?.[0];
 
   if (!touch) {
     return;
@@ -2054,24 +1727,14 @@ function handleStatusTouchStart(
 
   state.statusTouchStartY =
     touch.clientY;
-
-  state.statusTouchStartTime =
-    Date.now();
-
-  pauseStatus();
 }
 
-function handleStatusTouchEnd(
-  event
-) {
 
+function handleStatusTouchEnd(event) {
   const touch =
-    event.changedTouches[0];
+    event.changedTouches?.[0];
 
   if (!touch) {
-
-    resumeStatus();
-
     return;
   }
 
@@ -2083,1747 +1746,358 @@ function handleStatusTouchEnd(
     touch.clientY -
     state.statusTouchStartY;
 
-  const elapsed =
-    Date.now() -
-    state.statusTouchStartTime;
-
-  const horizontal =
-    Math.abs(deltaX) >
-    Math.abs(deltaY);
-
-  const swipe =
-    horizontal &&
-    Math.abs(deltaX) > 45 &&
-    elapsed < 700;
 
   if (
-    swipe
+    Math.abs(deltaX) < 50 ||
+    Math.abs(deltaX) < Math.abs(deltaY)
   ) {
-
-    if (
-      deltaX < 0
-    ) {
-
-      goToNextStatus();
-
-    } else {
-
-      goToPreviousStatus();
-    }
-
     return;
   }
 
-  resumeStatus();
-}
 
-/* =======================================================
-11. STATUS STORAGE
-======================================================== */
-
-function loadViewedStatuses() {
-
-  try {
-
-    const stored =
-      localStorage.getItem(
-        CONFIG.storageKeys.viewedStatuses
-      );
-
-    if (
-      !stored
-    ) {
-
-      return new Set();
-    }
-
-    const parsed =
-      JSON.parse(
-        stored
-      );
-
-    return new Set(
-      Array.isArray(
-        parsed
-      )
-        ? parsed
-        : []
-    );
-
-  } catch {
-
-    return new Set();
-  }
-}
-
-function saveViewedStatuses() {
-
-  try {
-
-    localStorage.setItem(
-      CONFIG.storageKeys.viewedStatuses,
-      JSON.stringify(
-        Array.from(
-          state.viewedStatuses
-        )
-      )
-    );
-
-  } catch {
-
-    /*
-      Storage may be unavailable.
-    */
-  }
-}
-
-function markStatusViewed(
-  id
-) {
-
-  if (
-    !id
-  ) {
-
-    return;
-  }
-
-  state.viewedStatuses.add(
-    id
-  );
-
-  saveViewedStatuses();
-}
-
-function updateStatusBubbleState() {
-
-  if (
-    !dom.statusList
-  ) {
-
-    return;
-  }
-
-  const items =
-    dom.statusList.querySelectorAll(
-      ".status-item"
-    );
-
-  items.forEach(
-    (
-      item,
-      index
-    ) => {
-
-      const status =
-        state.statuses[
-          index
-        ];
-
-      if (
-        !status
-      ) {
-
-        return;
-      }
-
-      item.classList.toggle(
-        "is-viewed",
-        state.viewedStatuses.has(
-          status.id
-        )
-      );
-    }
-  );
-}
-
-/* =======================================================
-12. FEATURED STORIES
-======================================================== */
-
-function renderFeatured() {
-
-  if (
-    !dom.featuredList
-  ) {
-
-    return;
-  }
-
-  dom.featuredList.innerHTML =
-    "";
-
-  if (
-    !state.featuredStories.length
-  ) {
-
-    dom.featuredList.appendChild(
-      createEmptyState(
-        "Featured visuals will appear here."
-      )
-    );
-
-    return;
-  }
-
-  state.featuredStories.forEach(
-    story => {
-
-      const card =
-        createFeaturedCard(
-          story
-        );
-
-      dom.featuredList.appendChild(
-        card
-      );
-    }
-  );
-}
-
-function createFeaturedCard(
-  story
-) {
-
-  const card =
-    document.createElement(
-      "article"
-    );
-
-  card.className =
-    "featured-card";
-
-  card.tabIndex =
-    0;
-
-  card.setAttribute(
-    "role",
-    "button"
-  );
-
-  card.setAttribute(
-    "aria-label",
-    `View ${story.title}`
-  );
-
-  const media =
-    document.createElement(
-      "div"
-    );
-
-  media.className =
-    "featured-card__media";
-
-  const image =
-    createImage(
-      story.image,
-      story.title
-    );
-
-  image.className =
-    "featured-card__image";
-
-  const overlay =
-    document.createElement(
-      "div"
-    );
-
-  overlay.className =
-    "featured-card__overlay";
-
-  const badge =
-    document.createElement(
-      "span"
-    );
-
-  badge.className =
-    "featured-card__badge";
-
-  badge.textContent =
-    story.emotion ||
-    "Featured";
-
-  media.append(
-    image,
-    overlay,
-    badge
-  );
-
-  const body =
-    document.createElement(
-      "div"
-    );
-
-  body.className =
-    "featured-card__body";
-
-  const campaign =
-    document.createElement(
-      "div"
-    );
-
-  campaign.className =
-    "featured-card__campaign";
-
-  campaign.textContent =
-    story.campaign ||
-    "FeelFrame";
-
-  const title =
-    document.createElement(
-      "h3"
-    );
-
-  title.className =
-    "featured-card__title";
-
-  title.textContent =
-    story.title ||
-    "Visual story";
-
-  const bottom =
-    document.createElement(
-      "div"
-    );
-
-  bottom.className =
-    "featured-card__bottom";
-
-  const pricing =
-    document.createElement(
-      "div"
-    );
-
-  pricing.className =
-    "featured-card__price";
-
-  pricing.appendChild(
-    document.createTextNode(
-      formatPrice(
-        story.price
-      )
-    )
-  );
-
-  if (
-    story.compareAt !==
-      undefined &&
-    story.compareAt !==
-      null
-  ) {
-
-    const compare =
-      document.createElement(
-        "span"
-      );
-
-    compare.className =
-      "featured-card__compare";
-
-    compare.textContent =
-      formatPrice(
-        story.compareAt
-      );
-
-    pricing.appendChild(
-      compare
-    );
-  }
-
-  const cta =
-    document.createElement(
-      "span"
-    );
-
-  cta.className =
-    "featured-card__cta";
-
-  cta.innerHTML =
-    `<span aria-hidden="true">🔐</span> View visual`;
-
-  bottom.append(
-    pricing,
-    cta
-  );
-
-  body.append(
-    campaign,
-    title,
-    bottom
-  );
-
-  card.append(
-    media,
-    body
-  );
-
-  bindProductCard(
-    card,
-    story
-  );
-
-  return card;
-}
-
-/* =======================================================
-13. STORY GRID
-======================================================== */
-
-function renderStories() {
-
-  if (
-    !dom.storiesList
-  ) {
-
-    return;
-  }
-
-  dom.storiesList.innerHTML =
-    "";
-
-  if (
-    !state.stories.length
-  ) {
-
-    dom.storiesList.appendChild(
-      createEmptyState(
-        "Visual stories will appear here."
-      )
-    );
-
-    return;
-  }
-
-  state.stories.forEach(
-    story => {
-
-      const card =
-        createStoryCard(
-          story
-        );
-
-      dom.storiesList.appendChild(
-        card
-      );
-    }
-  );
-}
-
-function createStoryCard(
-  story
-) {
-
-  const card =
-    document.createElement(
-      "article"
-    );
-
-  card.className =
-    "story-card";
-
-  card.tabIndex =
-    0;
-
-  card.setAttribute(
-    "role",
-    "button"
-  );
-
-  card.setAttribute(
-    "aria-label",
-    `View ${story.title}`
-  );
-
-  const media =
-    document.createElement(
-      "div"
-    );
-
-  media.className =
-    "story-card__media";
-
-  const image =
-    createImage(
-      story.image,
-      story.title
-    );
-
-  image.className =
-    "story-card__image";
-
-  const lock =
-    document.createElement(
-      "span"
-    );
-
-  lock.className =
-    "story-card__lock";
-
-  lock.setAttribute(
-    "aria-label",
-    "Prompt locked"
-  );
-
-  lock.textContent =
-    "🔐";
-
-  media.append(
-    image,
-    lock
-  );
-
-  const body =
-    document.createElement(
-      "div"
-    );
-
-  body.className =
-    "story-card__body";
-
-  const campaign =
-    document.createElement(
-      "div"
-    );
-
-  campaign.className =
-    "story-card__campaign";
-
-  campaign.textContent =
-    story.campaign ||
-    "Visual Story";
-
-  const title =
-    document.createElement(
-      "h3"
-    );
-
-  title.className =
-    "story-card__title";
-
-  title.textContent =
-    story.title ||
-    "Untitled visual";
-
-  const price =
-    document.createElement(
-      "div"
-    );
-
-  price.className =
-    "story-card__price";
-
-  price.textContent =
-    formatPrice(
-      story.price
-    );
-
-  body.append(
-    campaign,
-    title,
-    price
-  );
-
-  card.append(
-    media,
-    body
-  );
-
-  bindProductCard(
-    card,
-    story
-  );
-
-  return card;
-}
-
-function bindProductCard(
-  element,
-  story
-) {
-
-  const open =
-    () =>
-      openProduct(
-        story
-      );
-
-  element.addEventListener(
-    "click",
-    open
-  );
-
-  element.addEventListener(
-    "keydown",
-    event => {
-
-      if (
-        event.key === "Enter" ||
-        event.key === " "
-      ) {
-
-        event.preventDefault();
-
-        open();
-      }
-    }
-  );
-}
-
-/* =======================================================
-14. PRODUCT MODAL
-======================================================== */
-
-function openProduct(
-  story
-) {
-
-  if (
-    !story
-  ) {
-
-    return;
-  }
-
-  dom.productImage.src =
-    story.image || "";
-
-  dom.productImage.alt =
-    story.title ||
-    "FeelFrame visual";
-
-  dom.productCampaign.textContent =
-    story.campaign ||
-    "FEELFRAME";
-
-  dom.productTitle.textContent =
-    story.title ||
-    "Visual story";
-
-  dom.productQuote.textContent =
-    story.quote ||
-    "";
-
-  dom.productDescription.textContent =
-    story.description ||
-    story.context ||
-    "";
-
-  dom.productStyle.textContent =
-    story.style ||
-    "Visual";
-
-  dom.productEmotion.textContent =
-    story.emotion ||
-    "Feel";
-
-  dom.productPrice.textContent =
-    formatPrice(
-      story.price
-    );
-
-  if (
-    story.compareAt !==
-      undefined &&
-    story.compareAt !==
-      null
-  ) {
-
-    dom.productCompare.textContent =
-      formatPrice(
-        story.compareAt
-      );
-
-    dom.productCompare.hidden =
-      false;
-
+  if (deltaX < 0) {
+    nextStatus();
   } else {
-
-    dom.productCompare.hidden =
-      true;
-  }
-
-  dom.productBuy.href =
-    isSafeExternalUrl(
-      story.selarUrl
-    )
-      ? story.selarUrl
-      : "#";
-
-  dom.productModal.classList.add(
-    "is-open"
-  );
-
-  dom.productModal.setAttribute(
-    "aria-hidden",
-    "false"
-  );
-
-  document.body.classList.add(
-    "is-locked"
-  );
-
-  requestAnimationFrame(
-    () => {
-
-      dom.productClose?.focus();
-    }
-  );
-}
-
-function closeProduct() {
-
-  if (
-    !dom.productModal
-  ) {
-
-    return;
-  }
-
-  dom.productModal.classList.remove(
-    "is-open"
-  );
-
-  dom.productModal.setAttribute(
-    "aria-hidden",
-    "true"
-  );
-
-  if (
-    !dom.statusViewer ||
-    !dom.statusViewer.classList.contains(
-      "is-open"
-    )
-  ) {
-
-    document.body.classList.remove(
-      "is-locked"
-    );
+    previousStatus();
   }
 }
 
-/* =======================================================
-15. SOCIAL LINKS
-======================================================== */
 
-function renderSocialLinks() {
+/* =========================================================
+   VISUAL LANGUAGE
+========================================================= */
 
-  if (
-    !dom.socialLinks
-  ) {
+function applyVisualLanguageUI() {
+  const selected =
+    state.selectedVisualLanguage ||
+    CONFIG.defaultVisualLanguage;
 
+
+  if (DOM.visualLanguage) {
+    DOM.visualLanguage.value =
+      selected;
+  }
+
+
+  if (!DOM.visualLanguageOptions) {
     return;
   }
 
-  dom.socialLinks.innerHTML =
-    "";
-
-  const links =
-    state.data.links ||
-    state.data.socials ||
-    state.data.socialLinks ||
-    [];
-
-  if (
-    !Array.isArray(
-      links
-    ) ||
-    !links.length
-  ) {
-
-    dom.socialLinks.hidden =
-      true;
-
-    return;
-  }
-
-  dom.socialLinks.hidden =
-    false;
-
-  links
-    .filter(Boolean)
-    .forEach(
-      link => {
-
-        if (
-          !link.url ||
-          !isSafeExternalUrl(
-            link.url
-          )
-        ) {
-
-          return;
-        }
-
-        const anchor =
-          document.createElement(
-            "a"
-          );
-
-        anchor.className =
-          "social-link";
-
-        anchor.href =
-          link.url;
-
-        anchor.target =
-          "_blank";
-
-        anchor.rel =
-          "noopener noreferrer";
-
-        anchor.textContent =
-          link.label ||
-          link.name ||
-          "Open";
-
-        dom.socialLinks.appendChild(
-          anchor
-        );
-      }
-    );
-}
-
-/* =======================================================
-16. MAKE IT YOURS
-======================================================== */
-
-function setSelectedVisualLanguage(
-  language
-) {
-
-  state.selectedVisualLanguage =
-    language;
 
   const options =
-    document.querySelectorAll(
-      ".visual-option"
+    $$(".visual-language-option",
+      DOM.visualLanguageOptions);
+
+
+  options.forEach((option) => {
+
+    const value =
+      option.dataset.visualLanguage;
+
+    const isActive =
+      value === selected;
+
+    option.classList.toggle(
+      "active",
+      isActive
     );
 
-  options.forEach(
-    option => {
-
-      const active =
-        option.dataset.value ===
-        language;
-
-      option.classList.toggle(
-        "is-active",
-        active
-      );
-
-      option.setAttribute(
-        "aria-checked",
-        String(
-          active
-        )
-      );
-    }
-  );
+    option.setAttribute(
+      "aria-pressed",
+      String(isActive)
+    );
+  });
 }
 
-function handleVisualLanguageClick(
-  event
-) {
 
-  const option =
-    event.target.closest(
-      ".visual-option"
-    );
-
-  if (
-    !option
-  ) {
-
+function selectVisualLanguage(value) {
+  if (!value) {
     return;
   }
 
-  const language =
-    option.dataset.value;
+  saveVisualLanguage(value);
 
-  if (
-    !language
-  ) {
+  applyVisualLanguageUI();
 
-    return;
-  }
-
-  setSelectedVisualLanguage(
-    language
+  showToast(
+    `${value} selected.`
   );
-
-  try {
-
-    localStorage.setItem(
-      CONFIG.storageKeys.selectedLanguage,
-      language
-    );
-
-  } catch {
-
-    /*
-      Ignore storage errors.
-    */
-  }
 }
 
-function handleCreateSubmit(
-  event
-) {
 
+/* =========================================================
+   CREATE FORM
+========================================================= */
+
+function handleCreateSubmit(event) {
   event.preventDefault();
+
+  if (!DOM.createForm) {
+    return;
+  }
 
   const formData =
     new FormData(
-      dom.createForm
+      DOM.createForm
     );
-
-  const site =
-    state.data?.site ||
-    {};
 
   const name =
-    cleanValue(
-      formData.get(
-        "name"
-      )
+    String(
+      formData.get("name") ||
+      ""
+    ).trim();
+
+  const contact =
+    String(
+      formData.get("contact") ||
+      ""
+    ).trim();
+
+  const moment =
+    String(
+      formData.get("moment") ||
+      ""
+    ).trim();
+
+  const emotion =
+    String(
+      formData.get("emotion") ||
+      ""
+    ).trim();
+
+  const visualLanguage =
+    String(
+      formData.get("visualLanguage") ||
+      state.selectedVisualLanguage ||
+      CONFIG.defaultVisualLanguage
+    ).trim();
+
+
+  if (!name) {
+    showToast(
+      "Please enter your name."
     );
 
-  const school =
-    cleanValue(
-      formData.get(
-        "school"
-      )
+    focusField("create-name");
+
+    return;
+  }
+
+
+  if (!contact) {
+    showToast(
+      "Please enter your WhatsApp number."
     );
 
-  const course =
-    cleanValue(
-      formData.get(
-        "course"
-      )
+    focusField("create-contact");
+
+    return;
+  }
+
+
+  if (!moment) {
+    showToast(
+      "Tell us a little about your moment."
     );
 
-  const feeling =
-    cleanValue(
-      formData.get(
-        "feeling"
-      )
+    focusField("create-moment");
+
+    return;
+  }
+
+
+  if (!emotion) {
+    showToast(
+      "Please choose an emotion."
     );
 
-  const story =
-    cleanValue(
-      formData.get(
-        "story"
-      )
-    );
+    focusField("create-emotion");
+
+    return;
+  }
+
+
+  saveVisualLanguage(
+    visualLanguage
+  );
+
 
   const message =
-    cleanValue(
-      formData.get(
-        "message"
-      )
-    );
+    buildWhatsAppMessage({
+      name,
+      contact,
+      moment,
+      emotion,
+      visualLanguage
+    });
 
-  if (
-    !name
-  ) {
 
-    showToast(
-      "Please enter your name first."
-    );
-
-    document
-      .getElementById(
-        "create-name"
-      )
-      ?.focus();
-
-    return;
-  }
-
-  const whatsappNumber =
-    String(
-      site.whatsappNumber ||
-      ""
-    ).replace(
-      /\D/g,
-      ""
-    );
-
-  if (
-    !whatsappNumber
-  ) {
-
-    showToast(
-      "WhatsApp contact is not configured yet."
-    );
-
-    return;
-  }
-
-  const text =
-    [
-      "Hello FeelFrame™.",
-      "",
-      "I'd like to create a visual.",
-      "",
-      `Name: ${name}`,
-      `School / University: ${
-        school || "Not provided"
-      }`,
-      `Course / Field: ${
-        course || "Not provided"
-      }`,
-      `Feeling: ${
-        feeling || "Not provided"
-      }`,
-      `What's going on: ${
-        story || "Not provided"
-      }`,
-      `What the visual should say: ${
-        message || "Not provided"
-      }`,
-      `Visual language: ${
-        state.selectedVisualLanguage
-      }`
-    ].join(
-      "\n"
-    );
-
-  const whatsappUrl =
-    `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(
-      text
+  const whatsappURL =
+    `https://wa.me/${CONFIG.whatsappNumber}?text=${encodeURIComponent(
+      message
     )}`;
 
-  window.open(
-    whatsappUrl,
-    "_blank",
-    "noopener,noreferrer"
-  );
-}
 
-/* =======================================================
-17. NAVIGATION ACTIONS
-======================================================== */
-
-function openHomePage() {
-
-  navigateToPage(
-    CONFIG.pages.home
-  );
-}
-
-function openCreatePage() {
-
-  navigateToPage(
-    CONFIG.pages.create
-  );
-}
-
-function openExplorePage() {
-
-  navigateToPage(
-    CONFIG.pages.explore
-  );
-}
-
-/* =======================================================
-18. EVENTS
-======================================================== */
-
-function bindStaticEvents() {
-
-  /*
-    Bottom navigation.
-  */
-
-  dom.bottomNavigation?.addEventListener(
-    "click",
-    handleNavigationClick
+  showToast(
+    "Opening WhatsApp..."
   );
 
-  /*
-    Browser Back / Forward.
-  */
 
-  window.addEventListener(
-    "popstate",
-    handlePopState
-  );
-
-  /*
-    Existing hash navigation.
-  */
-
-  window.addEventListener(
-    "hashchange",
-    handleHashChange
-  );
-
-  /*
-    Make it yours.
-  */
-
-  dom.makeItYours?.addEventListener(
-    "click",
-    openCreatePage
-  );
-
-  /*
-    View all.
-  */
-
-  dom.viewAll?.addEventListener(
-    "click",
-    openExplorePage
-  );
-
-  /*
-    Visual language.
-  */
-
-  document
-    .getElementById(
-      "visual-language"
-    )
-    ?.addEventListener(
-      "click",
-      handleVisualLanguageClick
+  window.setTimeout(() => {
+    window.open(
+      whatsappURL,
+      "_blank",
+      "noopener,noreferrer"
     );
-
-  /*
-    Create form.
-  */
-
-  dom.createForm?.addEventListener(
-    "submit",
-    handleCreateSubmit
-  );
-
-/* =====================================================
-   Status
-====================================================== */
-
-  dom.statusClose?.addEventListener(
-    "click",
-    closeStatus
-  );
-
-  dom.statusPrevious?.addEventListener(
-    "click",
-    event => {
-
-      event.stopPropagation();
-
-      goToPreviousStatus();
-    }
-  );
-
-  dom.statusNext?.addEventListener(
-    "click",
-    event => {
-
-      event.stopPropagation();
-
-      goToNextStatus();
-    }
-  );
-
-  dom.statusViewer?.addEventListener(
-    "touchstart",
-    handleStatusTouchStart,
-    {
-      passive: true
-    }
-  );
-
-  dom.statusViewer?.addEventListener(
-    "touchend",
-    handleStatusTouchEnd,
-    {
-      passive: true
-    }
-  );
-
-  /*
-    Mouse hold support for desktop.
-  */
-
-  dom.statusViewer?.addEventListener(
-    "mousedown",
-    event => {
-
-      if (
-        event.target.closest(
-          ".status-viewer__close"
-        )
-      ) {
-
-        return;
-      }
-
-      pauseStatus();
-    }
-  );
-
-  dom.statusViewer?.addEventListener(
-    "mouseup",
-    () => {
-
-      if (
-        dom.statusViewer.classList.contains(
-          "is-open"
-        )
-      ) {
-
-        resumeStatus();
-      }
-    }
-  );
-
-  dom.statusViewer?.addEventListener(
-    "mouseleave",
-    () => {
-
-      if (
-        dom.statusViewer.classList.contains(
-          "is-open"
-        )
-      ) {
-
-        resumeStatus();
-      }
-    }
-  );
-
-  /*
-    Backdrops.
-  */
-
-  document
-    .querySelectorAll(
-      "[data-status-close]"
-    )
-    .forEach(
-      element => {
-
-        element.addEventListener(
-          "click",
-          closeStatus
-        );
-      }
-    );
-
-  document
-    .querySelectorAll(
-      "[data-product-close]"
-    )
-    .forEach(
-      element => {
-
-        element.addEventListener(
-          "click",
-          closeProduct
-        );
-      }
-    );
-
-  dom.productClose?.addEventListener(
-    "click",
-    closeProduct
-  );
-
-  /*
-    Escape.
-  */
-
-  document.addEventListener(
-    "keydown",
-    event => {
-
-      if (
-        event.key !==
-        "Escape"
-      ) {
-
-        return;
-      }
-
-      if (
-        dom.statusViewer &&
-        dom.statusViewer.classList.contains(
-          "is-open"
-        )
-      ) {
-
-        closeStatus();
-
-        return;
-      }
-
-      if (
-        dom.productModal &&
-        dom.productModal.classList.contains(
-          "is-open"
-        )
-      ) {
-
-        closeProduct();
-      }
-    }
-  );
-
-  /*
-    Status keyboard navigation.
-  */
-
-  document.addEventListener(
-    "keydown",
-    event => {
-
-      if (
-        !dom.statusViewer ||
-        !dom.statusViewer.classList.contains(
-          "is-open"
-        )
-      ) {
-
-        return;
-      }
-
-      if (
-        event.key ===
-        "ArrowRight"
-      ) {
-
-        event.preventDefault();
-
-        goToNextStatus();
-
-      } else if (
-        event.key ===
-        "ArrowLeft"
-      ) {
-
-        event.preventDefault();
-
-        goToPreviousStatus();
-
-      } else if (
-        event.key ===
-        " "
-      ) {
-
-        event.preventDefault();
-
-        if (
-          state.statusPaused
-        ) {
-
-          resumeStatus();
-
-        } else {
-
-          pauseStatus();
-        }
-      }
-    }
-  );
+  }, 250);
 }
 
-/* =======================================================
-19. ERROR STATE
-======================================================== */
 
-function renderErrorState() {
-
-  if (
-    dom.statusSection
-  ) {
-
-    dom.statusSection.hidden =
-      true;
-  }
-
-  if (
-    dom.featuredList
-  ) {
-
-    dom.featuredList.innerHTML =
-      "";
-
-    dom.featuredList.appendChild(
-      createErrorState(
-        "We couldn't load the FeelFrame collection right now."
-      )
-    );
-  }
-
-  if (
-    dom.storiesList
-  ) {
-
-    dom.storiesList.innerHTML =
-      "";
-
-    dom.storiesList.appendChild(
-      createErrorState(
-        "Please refresh the page and try again."
-      )
-    );
-  }
-
-  /*
-    Keep the navigation available
-    even when content loading fails.
-  */
-
-  applyPageView(
-    false
-  );
+function buildWhatsAppMessage({
+  name,
+  contact,
+  moment,
+  emotion,
+  visualLanguage
+}) {
+  return [
+    "Hello FeelFrame™ 👋",
+    "",
+    "I'd like to create a visual story.",
+    "",
+    `Name: ${name}`,
+    `WhatsApp: ${contact}`,
+    `Emotion: ${emotion}`,
+    `Visual language: ${visualLanguage}`,
+    "",
+    "My moment:",
+    moment
+  ].join("\n");
 }
 
-function createEmptyState(
-  message
-) {
 
-  const wrapper =
-    document.createElement(
-      "div"
-    );
+function focusField(id) {
+  const field =
+    byId(id);
 
-  wrapper.className =
-    "empty-state";
-
-  wrapper.textContent =
-    message;
-
-  return wrapper;
-}
-
-function createErrorState(
-  message
-) {
-
-  const wrapper =
-    document.createElement(
-      "div"
-    );
-
-  wrapper.className =
-    "error-state";
-
-  wrapper.textContent =
-    message;
-
-  return wrapper;
-}
-
-/* =======================================================
-20. UTILITIES
-======================================================== */
-
-function createImage(
-  src,
-  alt
-) {
-
-  const image =
-    document.createElement(
-      "img"
-    );
-
-  image.src =
-    src || "";
-
-  image.alt =
-    alt ||
-    "FeelFrame visual";
-
-  image.loading =
-    "lazy";
-
-  image.decoding =
-    "async";
-
-  image.addEventListener(
-    "error",
-    () => {
-
-      image.removeAttribute(
-        "src"
-      );
-
-      image.setAttribute(
-        "aria-label",
-        "Image unavailable"
-      );
-    },
-    {
-      once: true
-    }
-  );
-
-  return image;
-}
-
-function getSiteName() {
-
-  return (
-    state.data?.site?.name ||
-    "FeelFrame™"
-  );
-}
-
-function getAvatarLetter() {
-
-  const name =
-    getSiteName()
-      .replace(
-        /[™®]/g,
-        ""
-      )
-      .trim();
-
-  return (
-    name.charAt(0) ||
-    "F"
-  ).toUpperCase();
-}
-
-function formatPrice(
-  value
-) {
-
-  const amount =
-    Number(
-      value
-    );
-
-  if (
-    !Number.isFinite(
-      amount
-    )
-  ) {
-
-    return "";
-  }
-
-  const currency =
-    state.data?.site?.currency ||
-    "NGN";
-
-  try {
-
-    return new Intl.NumberFormat(
-      "en-NG",
-      {
-        style: "currency",
-        currency,
-        maximumFractionDigits: 0
-      }
-    ).format(
-      amount
-    );
-
-  } catch {
-
-    return `${currency} ${amount.toLocaleString()}`;
+  if (field) {
+    field.focus();
   }
 }
 
-function formatStatusTime(
-  createdAt
-) {
 
-  if (
-    !createdAt
-  ) {
+/* =========================================================
+   CREATE CTA
+========================================================= */
 
-    return "Just now";
-  }
-
-  const created =
-    new Date(
-      createdAt
-    ).getTime();
-
-  if (
-    Number.isNaN(
-      created
-    )
-  ) {
-
-    return "Just now";
-  }
-
-  const difference =
-    Math.max(
-      0,
-      Date.now() -
-      created
-    );
-
-  const seconds =
-    Math.floor(
-      difference / 1000
-    );
-
-  const minutes =
-    Math.floor(
-      seconds / 60
-    );
-
-  const hours =
-    Math.floor(
-      minutes / 60
-    );
-
-  const days =
-    Math.floor(
-      hours / 24
-    );
-
-  if (
-    seconds < 60
-  ) {
-
-    return "Just now";
-  }
-
-  if (
-    minutes < 60
-  ) {
-
-    return `${minutes}m ago`;
-  }
-
-  if (
-    hours < 24
-  ) {
-
-    return `${hours}h ago`;
-  }
-
-  if (
-    days === 1
-  ) {
-
-    return "Yesterday";
-  }
-
-  return `${days}d ago`;
-}
-
-function cleanValue(
-  value
-) {
-
-  return String(
-    value ?? ""
-  )
-    .trim()
-    .replace(
-      /\s+/g,
-      " "
-    );
-}
-
-function clamp(
-  value,
-  min,
-  max
-) {
-
-  return Math.min(
-    Math.max(
-      value,
-      min
-    ),
-    max
+function openCreate() {
+  navigateTo(
+    "create"
   );
 }
 
-function prefersReducedMotion() {
 
-  return window.matchMedia(
-    "(prefers-reduced-motion: reduce)"
-  ).matches;
-}
+/* =========================================================
+   TOAST SYSTEM
+========================================================= */
 
-function isSafeExternalUrl(
-  value
-) {
+let toastTimeout = null;
 
-  if (
-    !value
-  ) {
-
-    return false;
-  }
-
-  try {
-
-    const url =
-      new URL(
-        value,
-        window.location.href
-      );
-
-    return (
-      url.protocol ===
-        "https:" ||
-      url.protocol ===
-        "http:"
-    );
-
-  } catch {
-
-    return false;
-  }
-}
-
-/* =======================================================
-21. TOAST
-======================================================== */
-
-function showToast(
-  message
-) {
-
-  if (
-    !dom.toast
-  ) {
-
+function showToast(message) {
+  if (!DOM.toast) {
     return;
   }
 
-  dom.toast.textContent =
+  DOM.toast.textContent =
     message;
 
-  dom.toast.classList.add(
-    "is-visible"
+  DOM.toast.classList.add(
+    "show"
   );
 
-  if (
-    state.toastTimer
-  ) {
-
+  if (toastTimeout) {
     clearTimeout(
-      state.toastTimer
+      toastTimeout
     );
   }
 
-  state.toastTimer =
-    window.setTimeout(
-      () => {
+  toastTimeout =
+    window.setTimeout(() => {
 
-        dom.toast.classList.remove(
-          "is-visible"
-        );
+      DOM.toast.classList.remove(
+        "show"
+      );
 
-      },
-      2800
-    );
+    }, 2800);
 }
 
-})();
+
+/* =========================================================
+   ROUTING
+========================================================= */
+
+const ROUTES = {
+  home: {
+    page: "home",
+    section: "profile"
+  },
+
+  explore: {
+    page: "explore",
+    section: "stories-section"
+  },
+
+  create: {
+    page: "create",
+    section: "create-section"
+  }
+};
+
+
+function normalizeRoute(value) {
+  if (!value) {
+    return CONFIG.defaultRoute;
+  }
+
+  const route =
+    String(value)
+      .toLowerCase()
+      .trim();
+
+
+  if (ROUTES[route]) {
+    return route;
+  }
+
+
+  switch (route) {
+
+    case "profile":
+    case "index":
+    case "home-section":
+      return "home";
+
+    case "stories":
+    case "story":
+    case "stories-section":
+    case "explore-section":
+      return "explore";
+
+    case "create-section":
+    case "creation":
+      return "create";
+
+    default:
+      return CONFIG.defaultRoute;
+  }
+}
+
+
+function getRouteFromHash() {
+  const hash =
+    window.location.hash
+      .replace(/^#/, "")
+      .toLowerCase();
+
+  if (!hash) {
+    return null;
