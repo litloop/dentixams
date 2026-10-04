@@ -1,536 +1,1330 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-
-  <meta
-    name="viewport"
-    content="width=device-width, initial-scale=1.0, viewport-fit=cover"
-  >
-
-  <meta
-    name="description"
-    content="FeelFrame™ — Visual stories built around real emotions, milestones and human moments."
-  >
-
-  <meta name="theme-color" content="#f4f2ed">
-  <meta name="color-scheme" content="light">
-  <meta name="robots" content="index, follow">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
   <title>FeelFrame™ — Some feelings deserve to be seen.</title>
 
-  <!-- FONTS -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <meta
+    name="description"
+    content="Visual stories built around real emotions, milestones and human moments."
+  />
 
-  <link
-    href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@400;500;600&display=swap"
-    rel="stylesheet"
-  >
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
 
-  <!-- STYLES -->
-  <link rel="stylesheet" href="./css/main.css">
+    :root {
+      --bg: #0b0b0b;
+      --surface: #131313;
+      --surface-2: #1b1b1b;
+      --text: #f5f5f5;
+      --muted: #9c9c9c;
+      --border: rgba(255,255,255,0.1);
+      --accent: #ffffff;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: Arial, Helvetica, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.5;
+    }
+
+    button,
+    a {
+      font: inherit;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    /* =========================
+       NAVIGATION
+    ========================= */
+
+    .navbar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      z-index: 1000;
+
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+
+      padding: 20px 5%;
+      background: rgba(11, 11, 11, 0.75);
+      backdrop-filter: blur(18px);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .logo {
+      font-size: 1.35rem;
+      font-weight: 800;
+      letter-spacing: -0.04em;
+    }
+
+    .logo span {
+      opacity: 0.5;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 8px;
+    }
+
+    .nav-button {
+      border: none;
+      background: transparent;
+      color: var(--muted);
+      padding: 10px 18px;
+      border-radius: 999px;
+      cursor: pointer;
+      transition: 0.25s ease;
+    }
+
+    .nav-button:hover,
+    .nav-button.active {
+      color: var(--text);
+      background: rgba(255,255,255,0.08);
+    }
+
+    /* =========================
+       HERO
+    ========================= */
+
+    .hero {
+      min-height: 100vh;
+      padding: 150px 5% 80px;
+
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 60px;
+      align-items: center;
+    }
+
+    .hero-content {
+      max-width: 650px;
+    }
+
+    .eyebrow {
+      display: inline-block;
+      margin-bottom: 20px;
+      padding: 7px 13px;
+
+      border: 1px solid var(--border);
+      border-radius: 999px;
+
+      color: var(--muted);
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+    }
+
+    .hero h1 {
+      font-size: clamp(3.5rem, 7vw, 7rem);
+      line-height: 0.9;
+      letter-spacing: -0.07em;
+      margin-bottom: 30px;
+    }
+
+    .hero h1 span {
+      color: var(--muted);
+    }
+
+    .hero-description {
+      max-width: 520px;
+      color: var(--muted);
+      font-size: 1.1rem;
+      margin-bottom: 35px;
+    }
+
+    .hero-actions {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .primary-button,
+    .secondary-button {
+      border-radius: 999px;
+      padding: 14px 22px;
+      cursor: pointer;
+      transition: 0.25s ease;
+    }
+
+    .primary-button {
+      background: white;
+      color: black;
+      border: 1px solid white;
+    }
+
+    .primary-button:hover {
+      transform: translateY(-2px);
+      opacity: 0.9;
+    }
+
+    .secondary-button {
+      background: transparent;
+      color: white;
+      border: 1px solid var(--border);
+    }
+
+    .secondary-button:hover {
+      background: rgba(255,255,255,0.08);
+    }
+
+    /* =========================
+       HERO IMAGE
+    ========================= */
+
+    .hero-image {
+      position: relative;
+      height: 650px;
+      border-radius: 28px;
+      overflow: hidden;
+      background: var(--surface);
+    }
+
+    .hero-image img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .hero-image-overlay {
+      position: absolute;
+      inset: 0;
+      background:
+        linear-gradient(
+          to top,
+          rgba(0,0,0,0.7),
+          transparent 55%
+        );
+    }
+
+    .hero-image-caption {
+      position: absolute;
+      bottom: 25px;
+      left: 25px;
+      right: 25px;
+    }
+
+    .hero-image-caption small {
+      color: #ccc;
+    }
+
+    .hero-image-caption h3 {
+      font-size: 1.5rem;
+      margin-top: 5px;
+    }
+
+    /* =========================
+       SECTION
+    ========================= */
+
+    section {
+      padding: 100px 5%;
+    }
+
+    .section-header {
+      display: flex;
+      align-items: end;
+      justify-content: space-between;
+      gap: 30px;
+      margin-bottom: 45px;
+    }
+
+    .section-header h2 {
+      font-size: clamp(2rem, 4vw, 4rem);
+      letter-spacing: -0.05em;
+    }
+
+    .section-header p {
+      max-width: 450px;
+      color: var(--muted);
+    }
+
+    /* =========================
+       STORY GRID
+    ========================= */
+
+    .story-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 18px;
+    }
+
+    .story-card {
+      position: relative;
+      min-height: 500px;
+
+      overflow: hidden;
+      border-radius: 22px;
+
+      background: var(--surface);
+      cursor: pointer;
+    }
+
+    .story-card img {
+      width: 100%;
+      height: 100%;
+      min-height: 500px;
+      object-fit: cover;
+
+      display: block;
+      transition: transform 0.5s ease;
+    }
+
+    .story-card:hover img {
+      transform: scale(1.04);
+    }
+
+    .story-card::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+
+      background:
+        linear-gradient(
+          to top,
+          rgba(0,0,0,0.9),
+          rgba(0,0,0,0.05) 65%
+        );
+    }
+
+    .story-info {
+      position: absolute;
+      z-index: 2;
+
+      left: 24px;
+      right: 24px;
+      bottom: 24px;
+    }
+
+    .story-tag {
+      display: inline-block;
+      padding: 5px 10px;
+
+      background: rgba(255,255,255,0.1);
+      border: 1px solid rgba(255,255,255,0.15);
+      border-radius: 999px;
+
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+
+      margin-bottom: 12px;
+    }
+
+    .story-info h3 {
+      font-size: 1.5rem;
+      line-height: 1.1;
+      margin-bottom: 8px;
+    }
+
+    .story-info p {
+      color: #ccc;
+      font-size: 0.9rem;
+    }
+
+    /* =========================
+       CREATE SECTION
+    ========================= */
+
+    .create-section {
+      background: #f2f2f2;
+      color: #111;
+      border-radius: 35px;
+      margin: 30px 5%;
+      padding: 90px 6%;
+    }
+
+    .create-section .section-header p {
+      color: #666;
+    }
+
+    .create-box {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 50px;
+      align-items: center;
+    }
+
+    .create-copy h2 {
+      font-size: clamp(2.5rem, 5vw, 5rem);
+      line-height: 0.95;
+      letter-spacing: -0.06em;
+      margin-bottom: 25px;
+    }
+
+    .create-copy p {
+      max-width: 500px;
+      color: #666;
+      margin-bottom: 30px;
+    }
+
+    .create-button {
+      display: inline-block;
+      background: #111;
+      color: white;
+      padding: 15px 23px;
+      border-radius: 999px;
+    }
+
+    .create-preview {
+      min-height: 400px;
+      border-radius: 25px;
+      overflow: hidden;
+    }
+
+    .create-preview img {
+      width: 100%;
+      height: 100%;
+      min-height: 400px;
+      object-fit: cover;
+    }
+
+    /* =========================
+       FOOTER
+    ========================= */
+
+    footer {
+      padding: 70px 5% 40px;
+      border-top: 1px solid var(--border);
+    }
+
+    .footer-content {
+      display: flex;
+      justify-content: space-between;
+      gap: 30px;
+      flex-wrap: wrap;
+    }
+
+    .footer-brand h3 {
+      font-size: 1.5rem;
+      margin-bottom: 8px;
+    }
+
+    .footer-brand p {
+      color: var(--muted);
+    }
+
+    .footer-links {
+      display: flex;
+      gap: 20px;
+    }
+
+    .footer-links a {
+      color: var(--muted);
+    }
+
+    .footer-links a:hover {
+      color: white;
+    }
+
+    .copyright {
+      margin-top: 60px;
+      color: #555;
+      font-size: 0.8rem;
+    }
+
+    /* =========================
+       MODAL
+    ========================= */
+
+    .modal {
+      position: fixed;
+      inset: 0;
+      z-index: 2000;
+
+      display: none;
+      align-items: center;
+      justify-content: center;
+
+      padding: 20px;
+
+      background: rgba(0,0,0,0.8);
+      backdrop-filter: blur(10px);
+    }
+
+    .modal.show {
+      display: flex;
+    }
+
+    .modal-content {
+      width: min(900px, 100%);
+      max-height: 90vh;
+      overflow-y: auto;
+
+      background: #151515;
+      border: 1px solid var(--border);
+      border-radius: 25px;
+
+      padding: 30px;
+      position: relative;
+    }
+
+    .modal-close {
+      position: absolute;
+      right: 20px;
+      top: 20px;
+
+      width: 40px;
+      height: 40px;
+
+      border: 1px solid var(--border);
+      background: rgba(255,255,255,0.08);
+      color: white;
+
+      border-radius: 50%;
+      cursor: pointer;
+    }
+
+    .modal-image {
+      width: 100%;
+      max-height: 500px;
+      object-fit: cover;
+      border-radius: 18px;
+      margin-bottom: 25px;
+    }
+
+    .modal-content h2 {
+      font-size: 2.5rem;
+      line-height: 1;
+      margin-bottom: 15px;
+    }
+
+    .modal-quote {
+      font-size: 1.2rem;
+      color: #ccc;
+      margin-bottom: 25px;
+    }
+
+    .modal-description {
+      color: #aaa;
+      margin-bottom: 25px;
+    }
+
+    .modal-price {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 25px;
+    }
+
+    .price {
+      font-size: 1.7rem;
+      font-weight: bold;
+    }
+
+    .compare-price {
+      color: #666;
+      text-decoration: line-through;
+    }
+
+    .buy-button {
+      display: inline-block;
+      background: white;
+      color: black;
+
+      padding: 14px 22px;
+      border-radius: 999px;
+      font-weight: bold;
+    }
+
+    /* =========================
+       MOBILE
+    ========================= */
+
+    @media (max-width: 850px) {
+      .navbar {
+        padding: 16px 5%;
+      }
+
+      .hero {
+        grid-template-columns: 1fr;
+        padding-top: 120px;
+      }
+
+      .hero-image {
+        height: 500px;
+      }
+
+      .story-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .story-card {
+        min-height: 450px;
+      }
+
+      .story-card img {
+        min-height: 450px;
+      }
+
+      .create-box {
+        grid-template-columns: 1fr;
+      }
+
+      .nav-links {
+        gap: 0;
+      }
+
+      .nav-button {
+        padding: 8px 10px;
+        font-size: 0.85rem;
+      }
+    }
+
+    @media (max-width: 500px) {
+      .logo {
+        font-size: 1.1rem;
+      }
+
+      .nav-button {
+        font-size: 0.75rem;
+        padding: 7px 8px;
+      }
+
+      .hero h1 {
+        font-size: 3.5rem;
+      }
+
+      section {
+        padding: 70px 5%;
+      }
+    }
+  </style>
 </head>
 
-<body class="home-page">
+<body>
 
-  <a class="skip-link" href="#main-content">
-    Skip to content
-  </a>
+  <!-- =========================
+       NAVIGATION
+  ========================== -->
 
-  <div id="app" class="site-shell">
+  <nav class="navbar">
 
-    <!-- HEADER -->
-    <header class="site-header" id="siteHeader">
-      <div class="site-header__inner">
+    <a href="#home" class="logo">
+      FeelFrame<span>™</span>
+    </a>
 
-        <a
-          href="./index.html"
-          class="brand"
-          aria-label="FeelFrame home"
-        >
-          <span class="brand-mark">FeelFrame™</span>
-        </a>
+    <div class="nav-links">
 
-        <nav class="header-nav" aria-label="Primary navigation">
-          <a
-            href="./index.html"
-            class="header-nav__link is-active"
-            aria-current="page"
+      <button
+        class="nav-button active"
+        onclick="scrollToSection('home')"
+      >
+        Home
+      </button>
+
+      <button
+        class="nav-button"
+        onclick="scrollToSection('explore')"
+      >
+        Explore
+      </button>
+
+      <button
+        class="nav-button"
+        onclick="scrollToSection('create')"
+      >
+        Create
+      </button>
+
+    </div>
+
+  </nav>
+
+
+  <!-- =========================
+       HOME
+  ========================== -->
+
+  <main id="home">
+
+    <section class="hero">
+
+      <div class="hero-content">
+
+        <div class="eyebrow">
+          Visual stories · Real emotions
+        </div>
+
+        <h1>
+          Some feelings
+          <span>deserve to be seen.</span>
+        </h1>
+
+        <p class="hero-description">
+          FeelFrame™ turns real emotions, milestones and human moments
+          into visual stories designed to make people stop, feel and look again.
+        </p>
+
+        <div class="hero-actions">
+
+          <button
+            class="primary-button"
+            onclick="scrollToSection('explore')"
           >
-            Home
-          </a>
+            Explore stories
+          </button>
 
-          <a
-            href="./explore.html"
-            class="header-nav__link"
+          <button
+            class="secondary-button"
+            onclick="scrollToSection('create')"
           >
+            Create yours
+          </button>
+
+        </div>
+
+      </div>
+
+
+      <div class="hero-image">
+
+        <img
+          src="https://res.cloudinary.com/mo6vulz7/image/upload/v1790245069/IMG_1428.jpg"
+          alt="FeelFrame cinematic visual"
+        />
+
+        <div class="hero-image-overlay"></div>
+
+        <div class="hero-image-caption">
+
+          <small>Featured story · Personal Branding</small>
+
+          <h3>
+            Your photo. Now it breaks the frame.
+          </h3>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- =========================
+         EXPLORE
+    ========================== -->
+
+    <section id="explore">
+
+      <div class="section-header">
+
+        <div>
+          <div class="eyebrow">
             Explore
-          </a>
+          </div>
 
-          <a
-            href="./create.html"
-            class="header-nav__link"
-          >
+          <h2>
+            Stories built<br />
+            around feeling.
+          </h2>
+        </div>
+
+        <p>
+          Explore cinematic visual concepts created around identity,
+          ambition, transformation, curiosity and the moments that matter.
+        </p>
+
+      </div>
+
+      <div
+        class="story-grid"
+        id="storyGrid"
+      ></div>
+
+    </section>
+
+
+    <!-- =========================
+         CREATE
+    ========================== -->
+
+    <section
+      id="create"
+      class="create-section"
+    >
+
+      <div class="create-box">
+
+        <div class="create-copy">
+
+          <div class="eyebrow">
             Create
-          </a>
-        </nav>
+          </div>
 
-        <div class="site-header__actions">
+          <h2>
+            Your story deserves a frame.
+          </h2>
+
+          <p>
+            Bring your photograph, your idea, your milestone or simply
+            a feeling. We'll turn it into a visual concept built around you.
+          </p>
+
           <a
-            href="./create.html"
-            class="btn btn--dark btn--small"
+            href="https://wa.me/2349012728201"
+            class="create-button"
+            target="_blank"
           >
-            Make it Yours
+            Start creating
           </a>
+
+        </div>
+
+
+        <div class="create-preview">
+
+          <img
+            src="https://res.cloudinary.com/mo6vulz7/image/upload/v1790273721/IMG_1464.jpg"
+            alt="FeelFrame cinematic editorial"
+          />
+
         </div>
 
       </div>
-    </header>
 
-    <!-- MAIN -->
-    <main id="main-content" class="main-content">
+    </section>
 
-      <!-- HERO -->
-      <section
-        class="hero home-hero"
-        id="hero"
-        aria-labelledby="homeHeroTitle"
-      >
-        <div class="container">
-          <div class="hero__inner home-hero-inner">
-            <div class="hero__content home-hero-copy">
+  </main>
 
-              <div class="hero__eyebrow eyebrow home-hero-intro">
-                FeelFrame™
-              </div>
 
-              <h1
-                id="homeHeroTitle"
-                class="hero__title home-hero-title"
-              >
-                Some feelings deserve to be seen.
-              </h1>
+  <!-- =========================
+       FOOTER
+  ========================== -->
 
-              <p
-                id="homeHeroDescription"
-                class="hero__description"
-              >
-                Visual stories built around real emotions,
-                milestones and human moments.
-              </p>
+  <footer>
 
-              <div class="hero__actions">
-                <a
-                  href="./create.html"
-                  class="btn btn--dark btn--large hero-cta"
-                >
-                  <span>Make it Yours</span>
-                  <span class="hero-cta-arrow" aria-hidden="true">→</span>
-                </a>
-              </div>
+    <div class="footer-content">
 
-            </div>
-          </div>
-        </div>
-      </section>
+      <div class="footer-brand">
 
-      <!-- FEATURED 3D COVERFLOW -->
-      <section
-        class="featured-section coverflow-section home-featured"
-        id="featured"
-        aria-labelledby="featuredTitle"
-      >
-        <div class="container container--wide">
+        <h3>FeelFrame™</h3>
 
-          <div class="home-featured__header">
-            <div>
-              <span class="eyebrow">Featured</span>
+        <p>
+          Some feelings deserve to be seen.
+        </p>
 
-              <h2
-                id="featuredTitle"
-                class="home-featured__title"
-              >
-                Turn the moment into a visual.
-              </h2>
-            </div>
+      </div>
 
-            <a href="./explore.html" class="text-link">
-              Explore all
-            </a>
-          </div>
+      <div class="footer-links">
 
-          <div
-            class="coverflow"
-            id="coverflowViewport"
-            tabindex="0"
-            role="region"
-            aria-roledescription="carousel"
-            aria-label="Featured FeelFrame visual stories"
-          >
-            <div class="coverflow-track" id="coverflowTrack">
-              <!-- Cards rendered by home.js -->
-            </div>
-          </div>
+        <a href="#home">Home</a>
+        <a href="#explore">Explore</a>
+        <a href="#create">Create</a>
 
-          <div class="coverflow-controls">
+      </div>
 
-            <div class="coverflow-buttons">
-              <button
-                type="button"
-                class="coverflow-button"
-                id="coverflowPrevious"
-                aria-label="Previous featured story"
-              >
-                <span aria-hidden="true">←</span>
-              </button>
+    </div>
 
-              <button
-                type="button"
-                class="coverflow-button"
-                id="coverflowNext"
-                aria-label="Next featured story"
-              >
-                <span aria-hidden="true">→</span>
-              </button>
-            </div>
+    <div class="copyright">
+      © 2026 FeelFrame™. All rights reserved.
+    </div>
 
-            <div
-              class="coverflow-dots"
-              id="coverflowDots"
-              aria-label="Featured story navigation"
-            >
-              <!-- Dots rendered by coverflow.js -->
-            </div>
+  </footer>
 
-          </div>
-        </div>
-      </section>
 
-      <!-- MAKE IT YOURS -->
-      <section
-        class="home-make-yours"
-        id="make-it-yours"
-        aria-labelledby="makeItYoursTitle"
-      >
-        <div class="container">
-          <div class="make-yours">
+  <!-- =========================
+       STORY MODAL
+  ========================== -->
 
-            <div class="make-yours__header">
-              <span class="eyebrow">Make it Yours</span>
+  <div
+    class="modal"
+    id="storyModal"
+    onclick="closeModal(event)"
+  >
 
-              <h2
-                id="makeItYoursTitle"
-                class="make-yours__title"
-              >
-                Your moment.
-                Your feeling.
-                Your frame.
-              </h2>
-
-              <p class="make-yours__description">
-                Tell us what you're going through and the visual
-                language you want. We'll turn the direction into
-                something made for you.
-              </p>
-            </div>
-
-            <form id="makeYoursForm" class="form" novalidate>
-
-              <div class="form-grid">
-
-                <div class="form-field">
-                  <label class="form-field__label" for="makeYoursName">
-                    Your name
-                  </label>
-
-                  <input
-                    id="makeYoursName"
-                    name="name"
-                    class="form-control"
-                    type="text"
-                    autocomplete="name"
-                    maxlength="100"
-                    placeholder="What should we call you?"
-                  >
-                </div>
-
-                <div class="form-field">
-                  <label class="form-field__label" for="makeYoursSchool">
-                    School / University
-                  </label>
-
-                  <input
-                    id="makeYoursSchool"
-                    name="school"
-                    class="form-control"
-                    type="text"
-                    autocomplete="organization"
-                    maxlength="150"
-                    placeholder="Your school or university"
-                  >
-                </div>
-
-                <div class="form-field">
-                  <label class="form-field__label" for="makeYoursCourse">
-                    Course / Field
-                  </label>
-
-                  <input
-                    id="makeYoursCourse"
-                    name="course"
-                    class="form-control"
-                    type="text"
-                    maxlength="150"
-                    placeholder="What do you study or do?"
-                  >
-                </div>
-
-                <div class="form-field">
-                  <label class="form-field__label" for="makeYoursFeeling">
-                    What are you feeling?
-                  </label>
-
-                  <input
-                    id="makeYoursFeeling"
-                    name="feeling"
-                    class="form-control"
-                    type="text"
-                    maxlength="100"
-                    placeholder="Proud, hopeful, overwhelmed..."
-                  >
-                </div>
-
-                <div class="form-field form-field--full">
-                  <label class="form-field__label" for="makeYoursExperience">
-                    What are you going through?
-                  </label>
-
-                  <textarea
-                    id="makeYoursExperience"
-                    name="experience"
-                    class="form-control"
-                    rows="5"
-                    maxlength="1200"
-                    placeholder="Tell us what is happening in this moment..."
-                  ></textarea>
-                </div>
-
-                <div class="form-field form-field--full">
-                  <label class="form-field__label" for="makeYoursMessage">
-                    What should the visual say?
-                  </label>
-
-                  <textarea
-                    id="makeYoursMessage"
-                    name="message"
-                    class="form-control"
-                    rows="4"
-                    maxlength="800"
-                    placeholder="The message, feeling or idea you want the visual to communicate..."
-                  ></textarea>
-                </div>
-
-              </div>
-
-              <!-- VISUAL LANGUAGE -->
-              <div class="form-section">
-                <div class="form-section__header">
-                  <h3 class="form-section__title">
-                    Choose your visual language
-                  </h3>
-
-                  <p class="form-section__description">
-                    Pick the direction that feels closest to the moment.
-                  </p>
-                </div>
-
-                <div
-                  class="choice-grid choice-grid--compact"
-                  role="radiogroup"
-                  aria-label="Visual language"
-                >
-
-                  <label class="choice choice--compact">
-                    <input type="radio" name="visualLanguage" value="Cinematic">
-                    <span class="choice__indicator" aria-hidden="true"></span>
-                    <span class="choice__content">
-                      <span class="choice__title">Cinematic</span>
-                    </span>
-                  </label>
-
-                  <label class="choice choice--compact">
-                    <input type="radio" name="visualLanguage" value="Editorial">
-                    <span class="choice__indicator" aria-hidden="true"></span>
-                    <span class="choice__content">
-                      <span class="choice__title">Editorial</span>
-                    </span>
-                  </label>
-
-                  <label class="choice choice--compact">
-                    <input type="radio" name="visualLanguage" value="Film">
-                    <span class="choice__indicator" aria-hidden="true"></span>
-                    <span class="choice__content">
-                      <span class="choice__title">Film</span>
-                    </span>
-                  </label>
-
-                  <label class="choice choice--compact">
-                    <input type="radio" name="visualLanguage" value="Luxury">
-                    <span class="choice__indicator" aria-hidden="true"></span>
-                    <span class="choice__content">
-                      <span class="choice__title">Luxury</span>
-                    </span>
-                  </label>
-
-                  <label class="choice choice--compact">
-                    <input type="radio" name="visualLanguage" value="Dreamlike">
-                    <span class="choice__indicator" aria-hidden="true"></span>
-                    <span class="choice__content">
-                      <span class="choice__title">Dreamlike</span>
-                    </span>
-                  </label>
-
-                  <label class="choice choice--compact">
-                    <input type="radio" name="visualLanguage" value="Minimal">
-                    <span class="choice__indicator" aria-hidden="true"></span>
-                    <span class="choice__content">
-                      <span class="choice__title">Minimal</span>
-                    </span>
-                  </label>
-
-                  <label class="choice choice--compact">
-                    <input type="radio" name="visualLanguage" value="Artistic">
-                    <span class="choice__indicator" aria-hidden="true"></span>
-                    <span class="choice__content">
-                      <span class="choice__title">Artistic</span>
-                    </span>
-                  </label>
-
-                  <label class="choice choice--compact">
-                    <input type="radio" name="visualLanguage" value="Dark &amp; Moody">
-                    <span class="choice__indicator" aria-hidden="true"></span>
-                    <span class="choice__content">
-                      <span class="choice__title">Dark &amp; Moody</span>
-                    </span>
-                  </label>
-
-                </div>
-              </div>
-
-              <div class="form-actions">
-                <p class="form-actions__note">
-                  Your direction will be prepared for WhatsApp so
-                  the conversation can start with context already in place.
-                </p>
-
-                <button type="submit" class="btn btn--dark btn--large">
-                  Make this moment visual →
-                </button>
-              </div>
-
-              <div
-                id="makeYoursStatus"
-                class="form-status"
-                role="status"
-                aria-live="polite"
-                aria-atomic="true"
-              ></div>
-
-            </form>
-          </div>
-        </div>
-      </section>
-
-      <!-- STORY BOARD -->
-      <section
-        class="story-board-section home-board"
-        id="story-board"
-        aria-labelledby="storyBoardTitle"
-      >
-        <div class="container container--wide">
-
-          <div class="home-board__header">
-            <div>
-              <span class="eyebrow">The FeelFrame Board</span>
-
-              <h2
-                id="storyBoardTitle"
-                class="home-board__title"
-              >
-                Different moments.
-                Different ways to be seen.
-              </h2>
-            </div>
-
-            <a href="./explore.html" class="text-link">
-              See the store →
-            </a>
-          </div>
-
-          <div id="homeStoryGrid" class="story-board">
-            <!-- Story cards rendered by home.js -->
-          </div>
-
-          <div id="emptyState" class="empty-state" hidden>
-            <h3>Nothing here yet.</h3>
-            <p>New visual stories will appear here soon.</p>
-          </div>
-
-        </div>
-      </section>
-
-    </main>
-
-    <!-- GLOBAL ERROR -->
     <div
-      id="global-error"
-      class="error-state"
-      hidden
-      role="alert"
-      aria-live="assertive"
-    ></div>
+      class="modal-content"
+      onclick="event.stopPropagation()"
+    >
 
-    <!-- MOBILE BOTTOM NAVIGATION -->
-    <nav class="mobile-nav bottom-nav" aria-label="Mobile navigation">
-      <div class="mobile-nav__inner">
+      <button
+        class="modal-close"
+        onclick="closeModal()"
+      >
+        ×
+      </button>
 
-        <a
-          href="./index.html"
-          class="mobile-nav__item bottom-nav-item is-active"
-          aria-current="page"
-        >
-          <span class="mobile-nav__icon bottom-nav-icon" aria-hidden="true">⌂</span>
-          <span class="mobile-nav__label bottom-nav-label">Home</span>
-        </a>
+      <img
+        id="modalImage"
+        class="modal-image"
+        src=""
+        alt=""
+      />
 
-        <a
-          href="./explore.html"
-          class="mobile-nav__item bottom-nav-item"
-        >
-          <span class="mobile-nav__icon bottom-nav-icon" aria-hidden="true">◫</span>
-          <span class="mobile-nav__label bottom-nav-label">Explore</span>
-        </a>
+      <div id="modalCampaign" class="story-tag"></div>
 
-        <a
-          href="./create.html"
-          class="mobile-nav__item bottom-nav-item"
-        >
-          <span class="mobile-nav__icon bottom-nav-icon" aria-hidden="true">+</span>
-          <span class="mobile-nav__label bottom-nav-label">Create</span>
-        </a>
+      <h2 id="modalTitle"></h2>
+
+      <p
+        id="modalQuote"
+        class="modal-quote"
+      ></p>
+
+      <p
+        id="modalDescription"
+        class="modal-description"
+      ></p>
+
+      <div class="modal-price">
+
+        <span
+          id="modalPrice"
+          class="price"
+        ></span>
+
+        <span
+          id="modalCompare"
+          class="compare-price"
+        ></span>
 
       </div>
-    </nav>
+
+      <a
+        id="modalBuy"
+        class="buy-button"
+        href="#"
+        target="_blank"
+      >
+        Get this visual
+      </a>
+
+    </div>
 
   </div>
 
-  <!-- JAVASCRIPT MODULES -->
-  <script src="./js/core.js" defer></script>
-  <script src="./js/coverflow.js" defer></script>
-  <script src="./js/home.js" defer></script>
-  <script src="./js/create.js" defer></script>
+
+  <script>
+
+    /* ========================================
+       FEELFRAME STORY DATA
+    ======================================== */
+
+    const stories = [
+      {
+        id: "paper-burst-01",
+        featured: true,
+        campaign: "Personal Branding",
+        emotion: "Confident",
+        moment: "Turning an ordinary personal photograph into a high-impact campaign visual.",
+        title: "Your photo. Now it breaks the frame.",
+        quote: "Your ordinary photograph can become something people stop to look at.",
+        description:
+          "A cinematic 3D visual concept designed to turn an ordinary personal photograph into a high-impact campaign composition. The visual combines depth, perspective, identity, editorial lighting and physical-looking paper construction to create a result that feels deliberately designed rather than simply filtered.",
+        style: "Cinematic",
+        image:
+          "https://res.cloudinary.com/mo6vulz7/image/upload/v1790245069/IMG_1428.jpg",
+        price: 700,
+        compareAt: 1100,
+        selarUrl: "https://selar.com/918t15c498"
+      },
+
+      {
+        id: "social-profile-01",
+        featured: true,
+        campaign: "Personal Branding",
+        emotion: "Confident",
+        moment: "Reimagining an existing portrait as a complete visual campaign around your identity.",
+        title: "Your photo. Reimagined as a campaign.",
+        quote: "Your profile can become more than a profile.",
+        description:
+          "A premium AI visual creation concept for turning an ordinary personal photo into cinematic 3D advertising artwork. The visual is built around identity, depth, contrast, personalized branding and editorial art direction.",
+        style: "Luxury",
+        image:
+          "https://res.cloudinary.com/mo6vulz7/image/upload/v1790248297/IMG_1430.jpg",
+        price: 700,
+        compareAt: 1100,
+        selarUrl: "https://selar.com/206oc6r108"
+      },
+
+      {
+        id: "miniature-studio-01",
+        featured: true,
+        campaign: "Personal Branding",
+        emotion: "Curious",
+        moment: "Seeing yourself transformed into both the creator and the collectible.",
+        title: "What if you could see yourself twice?",
+        quote: "Once as the creator. Once as the collectible.",
+        description:
+          "A luxury miniature studio concept that transforms a single portrait into a scene featuring both the real subject and a hyper-realistic collectible version of themselves.",
+        style: "Luxury",
+        image:
+          "https://res.cloudinary.com/mo6vulz7/image/upload/v1790248634/IMG_1431.jpg",
+        price: 700,
+        compareAt: 1100,
+        selarUrl: "https://selar.com/h3u50p3193"
+      },
+
+      {
+        id: "glass-profile-01",
+        featured: true,
+        campaign: "Personal Branding",
+        emotion: "Confident",
+        moment: "Turning a digital profile into a physical visual object.",
+        title: "What if your profile could exist in your hand?",
+        quote: "Your digital identity, made tangible.",
+        description:
+          "A futuristic editorial concept that turns a digital profile into a tangible 3D glass identity object.",
+        style: "Editorial",
+        image:
+          "https://res.cloudinary.com/mo6vulz7/image/upload/v1790249614/IMG_1432.jpg",
+        price: 700,
+        compareAt: 1100,
+        selarUrl: "https://selar.com/b9th69k196"
+      },
+
+      {
+        id: "break-the-frame-01",
+        featured: true,
+        campaign: "Personal Branding",
+        emotion: "Bold",
+        moment: "Breaking beyond the limitations of an ordinary profile photograph.",
+        title: "What if your profile broke out of the screen?",
+        quote: "You were never meant to stay inside the frame.",
+        description:
+          "A cinematic 3D social-media visual that makes the subject appear to step beyond the boundaries of an ordinary profile photograph.",
+        style: "Cinematic",
+        image:
+          "https://res.cloudinary.com/mo6vulz7/image/upload/v1790249771/IMG_1433.jpg",
+        price: 700,
+        compareAt: 1100,
+        selarUrl: "https://selar.com/5678280z9m"
+      },
+
+      {
+        id: "cinematic-3d-social-01",
+        featured: true,
+        campaign: "New Chapter",
+        emotion: "Hopeful",
+        moment: "Seeing an ordinary photograph as the beginning of an entirely different visual world.",
+        title: "Your photo is the beginning. Give it a world.",
+        quote: "The photograph is only where the story begins.",
+        description:
+          "A reusable cinematic 3D visual concept for transforming an ordinary photograph into an entirely different visual world.",
+        style: "Cinematic",
+        image:
+          "https://res.cloudinary.com/mo6vulz7/image/upload/v1790253213/AEEFBD7C-1A9B-4570-A2E8-667624E7A30A.png",
+        price: 700,
+        compareAt: 1100,
+        selarUrl: "https://selar.com/d49096e74j"
+      },
+
+      {
+        id: "music-artist-editorial-01",
+        featured: true,
+        campaign: "Building My Future",
+        emotion: "Ambitious",
+        moment: "Visualizing the artist identity and world you're building before the release arrives.",
+        title: "Your photo is the beginning. Give it a world.",
+        quote: "Build the world before the release arrives.",
+        description:
+          "A cinematic music-artist campaign concept designed to turn an existing portrait into a complete visual world.",
+        style: "Luxury",
+        image:
+          "https://res.cloudinary.com/mo6vulz7/image/upload/v1790273546/7B3AD1EC-724C-4368-8AAE-11D5802B4EC9.png",
+        price: 700,
+        compareAt: 1100,
+        selarUrl: "https://selar.com/29k945c4b2"
+      },
+
+      {
+        id: "dual-identity-editorial-01",
+        featured: true,
+        campaign: "New Chapter",
+        emotion: "Curious",
+        moment: "Exploring two versions of the same identity inside one impossible visual world.",
+        title: "What if one photo could show two versions of you?",
+        quote: "One identity. Two versions. One visual world.",
+        description:
+          "A cinematic dual-identity editorial concept exploring transformation through two versions of the same subject.",
+        style: "Editorial",
+        image:
+          "https://res.cloudinary.com/mo6vulz7/image/upload/v1790273619/IMG_1460.jpg",
+        price: 700,
+        compareAt: 1100,
+        selarUrl: "https://selar.com/3xne575r01"
+      },
+
+      {
+        id: "collective-identity-01",
+        featured: true,
+        campaign: "Something Else",
+        emotion: "Reflective",
+        moment: "Exploring the relationship between individual identity and the people or society surrounding it.",
+        title: "What if your portrait was made of people?",
+        quote: "An individual can still belong to something larger.",
+        description:
+          "A conceptual visual about identity, belonging and society. From a distance, the viewer sees a recognizable portrait; up close, the portrait reveals itself as a collective of individually positioned human figures.",
+        style: "Dreamlike",
+        image:
+          "https://res.cloudinary.com/mo6vulz7/image/upload/v1790273648/IMG_1461.jpg",
+        price: 700,
+        compareAt: 1100,
+        selarUrl: "https://selar.com/161y7d9192"
+      },
+
+      {
+        id: "double-exposure-01",
+        featured: true,
+        campaign: "Personal Branding",
+        emotion: "Reflective",
+        moment: "Seeing one identity through two different artistic interpretations.",
+        title: "What if your portrait could exist in two worlds?",
+        quote: "One side photographed. The other interpreted.",
+        description:
+          "A fine-art editorial concept that places a realistic portrait and a monochrome charcoal interpretation of the same identity into one composition.",
+        style: "Editorial",
+        image:
+          "https://res.cloudinary.com/mo6vulz7/image/upload/v1790273695/IMG_1463.jpg",
+        price: 700,
+        compareAt: 1100,
+        selarUrl: "https://selar.com/7179e792mh"
+      },
+
+      {
+        id: "cinematic-editorial-01",
+        featured: true,
+        campaign: "New Chapter",
+        emotion: "Hopeful",
+        moment: "Turning an ordinary portrait into a cinematic moment that feels like part of a larger story.",
+        title: "What if your photo looked like a scene from a film?",
+        quote: "Some moments feel like they belong in a larger story.",
+        description:
+          "A cinematic editorial concept designed to make an ordinary portrait feel like a scene from a larger film.",
+        style: "Cinematic",
+        image:
+          "https://res.cloudinary.com/mo6vulz7/image/upload/v1790273721/IMG_1464.jpg",
+        price: 700,
+        compareAt: 1100,
+        selarUrl: "https://selar.com/xu3e719333"
+      },
+
+      {
+        id: "luxury-editorial-01",
+        featured: true,
+        campaign: "Personal Branding",
+        emotion: "Confident",
+        moment: "Reimagining an everyday photograph with the visual language of a fashion campaign.",
+        title: "What if your camera roll had a cover in it?",
+        quote: "An everyday photograph can carry a campaign.",
+        description:
+          "A refined luxury editorial concept that reimagines an everyday photograph using the visual language of a fashion campaign.",
+        style: "Luxury",
+        image:
+          "https://res.cloudinary.com/mo6vulz7/image/upload/v1790273749/IMG_1466.jpg",
+        price: 700,
+        compareAt: 1100,
+        selarUrl: "https://selar.com/5666009902"
+      }
+    ];
+
+
+    /* ========================================
+       RENDER STORIES
+    ======================================== */
+
+    const storyGrid = document.getElementById("storyGrid");
+
+    function renderStories() {
+
+      storyGrid.innerHTML = stories
+        .map((story, index) => {
+
+          return `
+            <article
+              class="story-card"
+              onclick="openStory(${index})"
+            >
+
+              <img
+                src="${story.image}"
+                alt="${story.title}"
+                loading="lazy"
+              />
+
+              <div class="story-info">
+
+                <span class="story-tag">
+                  ${story.campaign}
+                </span>
+
+                <h3>
+                  ${story.title}
+                </h3>
+
+                <p>
+                  ${story.quote}
+                </p>
+
+              </div>
+
+            </article>
+          `;
+
+        })
+        .join("");
+    }
+
+
+    /* ========================================
+       STORY MODAL
+    ======================================== */
+
+    function openStory(index) {
+
+      const story = stories[index];
+
+      document.getElementById("modalImage").src = story.image;
+      document.getElementById("modalImage").alt = story.title;
+
+      document.getElementById("modalCampaign").textContent =
+        story.campaign;
+
+      document.getElementById("modalTitle").textContent =
+        story.title;
+
+      document.getElementById("modalQuote").textContent =
+        story.quote;
+
+      document.getElementById("modalDescription").textContent =
+        story.description;
+
+      document.getElementById("modalPrice").textContent =
+        `₦${story.price.toLocaleString()}`;
+
+      document.getElementById("modalCompare").textContent =
+        `₦${story.compareAt.toLocaleString()}`;
+
+      document.getElementById("modalBuy").href =
+        story.selarUrl;
+
+      document
+        .getElementById("storyModal")
+        .classList.add("show");
+
+      document.body.style.overflow = "hidden";
+    }
+
+
+    function closeModal() {
+
+      document
+        .getElementById("storyModal")
+        .classList.remove("show");
+
+      document.body.style.overflow = "";
+    }
+
+
+    /* ========================================
+       NAVIGATION
+    ======================================== */
+
+    function scrollToSection(id) {
+
+      const section = document.getElementById(id);
+
+      if (!section) return;
+
+      section.scrollIntoView({
+        behavior: "smooth"
+      });
+
+      updateActiveNav(id);
+    }
+
+
+    function updateActiveNav(id) {
+
+      document
+        .querySelectorAll(".nav-button")
+        .forEach(button => {
+          button.classList.remove("active");
+        });
+
+      const buttons = document.querySelectorAll(".nav-button");
+
+      if (id === "home") {
+        buttons[0].classList.add("active");
+      }
+
+      if (id === "explore") {
+        buttons[1].classList.add("active");
+      }
+
+      if (id === "create") {
+        buttons[2].classList.add("active");
+      }
+    }
+
+
+    /* ========================================
+       ACTIVE NAV WHILE SCROLLING
+    ======================================== */
+
+    const sections = [
+      document.getElementById("home"),
+      document.getElementById("explore"),
+      document.getElementById("create")
+    ];
+
+    window.addEventListener("scroll", () => {
+
+      let current = "home";
+
+      sections.forEach(section => {
+
+        const sectionTop = section.offsetTop - 150;
+
+        if (window.scrollY >= sectionTop) {
+          current = section.id;
+        }
+
+      });
+
+      updateActiveNav(current);
+    });
+
+
+    /* ========================================
+       ESCAPE KEY CLOSES MODAL
+    ======================================== */
+
+    document.addEventListener("keydown", event => {
+
+      if (event.key === "Escape") {
+        closeModal();
+      }
+
+    });
+
+
+    /* ========================================
+       START SITE
+    ======================================== */
+
+    renderStories();
+
+  </script>
 
 </body>
 </html>
