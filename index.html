@@ -1,181 +1,220 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
+  <meta charset="UTF-8">
 
   <meta
     name="viewport"
-    content="width=device-width, initial-scale=1.0"
-  />
-
-  <meta
-    name="description"
-    content="FeelFrame™ — Visual stories built around real emotions, milestones and human moments."
-  />
+    content="width=device-width, initial-scale=1.0, viewport-fit=cover"
+  >
 
   <meta
     name="theme-color"
-    content="#0b0b0b"
-  />
+    content="#f4f2ed"
+  >
+
+  <meta
+    name="description"
+    content="FeelFrame™ — Some feelings deserve to be seen."
+  >
 
   <title>FeelFrame™ — Some feelings deserve to be seen.</title>
 
-  <!-- Main stylesheet -->
-  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
 
-  <!-- =========================
-       NAVIGATION
-  ========================== -->
-  <header class="navbar">
-    <div class="nav-container">
+  <!-- =========================================================
+       APPLICATION
+  ========================================================== -->
 
-      <a href="#home" class="logo" aria-label="FeelFrame home">
-        FeelFrame<span>™</span>
-      </a>
+  <div id="app">
 
-      <nav class="nav-links" aria-label="Main navigation">
+    <!-- =======================================================
+         HOME / PROFILE
+    ======================================================== -->
 
-        <button
-          class="nav-btn active"
-          type="button"
-          onclick="scrollToSection('home')"
-        >
-          Home
-        </button>
-
-        <button
-          class="nav-btn"
-          type="button"
-          onclick="scrollToSection('explore')"
-        >
-          Explore
-        </button>
-
-        <button
-          class="nav-btn"
-          type="button"
-          onclick="scrollToSection('create')"
-        >
-          Create
-        </button>
-
-      </nav>
-
-    </div>
-  </header>
-
-
-  <main>
-
-    <!-- =========================
-         HOME / HERO
-    ========================== -->
-    <section
-      id="home"
-      class="hero section"
+    <main
+      id="profile"
+      class="page-section"
+      data-page="home"
     >
 
-      <div class="hero-container">
+      <!-- Profile identity -->
+      <section class="profile-section">
 
-        <div class="hero-content">
+        <div class="profile-mark" aria-hidden="true">
+          <span>FF</span>
+        </div>
 
-          <p class="eyebrow">
-            FEELFRAME™
-          </p>
+        <div class="profile-copy">
 
-          <h1>
-            Some feelings
-            <span>deserve to be seen.</span>
+          <h1 id="site-name">
+            FeelFrame™
           </h1>
 
-          <p class="hero-description">
-            Visual stories built around real emotions,
-            milestones and human moments.
+          <p id="site-tagline">
+            Some feelings deserve to be seen.
           </p>
 
-          <div class="hero-actions">
-
-            <button
-              class="btn btn-primary"
-              type="button"
-              onclick="scrollToSection('explore')"
-            >
-              Explore stories
-            </button>
-
-            <button
-              class="btn btn-secondary"
-              type="button"
-              onclick="scrollToSection('create')"
-            >
-              Create yours
-            </button>
-
-          </div>
+          <p
+            id="site-description"
+            class="profile-description"
+          ></p>
 
         </div>
 
-        <div class="hero-visual">
-
-          <div class="hero-frame">
-
-            <div class="hero-frame-inner">
-
-              <span class="hero-frame-label">
-                YOUR STORY
-              </span>
-
-              <span class="hero-frame-mark">
-                FF
-              </span>
-
-            </div>
-
-          </div>
-
-        </div>
-
-      </div>
-
-    </section>
+      </section>
 
 
-    <!-- =========================
-         EXPLORE
-    ========================== -->
-    <section
-      id="explore"
-      class="explore section"
-    >
+      <!-- =====================================================
+           STATUS AREA
+      ====================================================== -->
 
-      <div class="container">
+      <section
+        id="status-section"
+        class="status-section"
+        aria-labelledby="status-heading"
+      >
 
-        <div class="section-heading">
+        <div class="section-header status-header">
 
           <div>
-            <p class="eyebrow">
-              EXPLORE
+            <p
+              id="status-heading"
+              class="section-label"
+            >
+              Stories
+            </p>
+          </div>
+
+        </div>
+
+        <!-- JavaScript renders status rings here -->
+        <div
+          id="status-list"
+          class="status-list"
+          aria-label="Visual stories"
+        ></div>
+
+      </section>
+
+
+      <!-- =====================================================
+           PRIMARY HOME CTA
+      ====================================================== -->
+
+      <section class="home-cta">
+
+        <button
+          id="home-create-button"
+          class="primary-button"
+          type="button"
+          data-route="create"
+        >
+          Create your story
+        </button>
+
+      </section>
+
+
+      <!-- =====================================================
+           FEATURED STORIES
+      ====================================================== -->
+
+      <section
+        id="featured-section"
+        class="featured-section"
+        aria-labelledby="featured-heading"
+      >
+
+        <div class="section-header">
+
+          <div>
+            <p class="section-label">
+              Featured
             </p>
 
-            <h2>
+            <h2 id="featured-heading">
               Stories worth seeing.
             </h2>
           </div>
 
-          <p class="section-description">
-            Discover visual interpretations of confidence,
-            hope, ambition, curiosity and everything in between.
-          </p>
-
         </div>
 
-
-        <!-- Story cards are inserted here by script.js -->
+        <!-- JavaScript populates featured stories -->
         <div
-          id="storyGrid"
+          id="featured-stories"
+          class="story-grid featured-grid"
+        ></div>
+
+      </section>
+
+
+      <!-- =====================================================
+           SOCIAL LINKS
+      ====================================================== -->
+
+      <section
+        id="social-section"
+        class="social-section"
+        aria-label="Social links"
+      >
+
+        <!-- JavaScript populates social links -->
+        <div
+          id="social-links"
+          class="social-links"
+        ></div>
+
+      </section>
+
+    </main>
+
+
+    <!-- =========================================================
+         EXPLORE / STORIES
+    ========================================================== -->
+
+    <section
+      id="stories-section"
+      class="page-section"
+      data-page="explore"
+      aria-labelledby="stories-heading"
+    >
+
+      <div class="section-container">
+
+        <header class="page-header">
+
+          <p class="section-label">
+            Explore
+          </p>
+
+          <h1 id="stories-heading">
+            Visual stories.
+          </h1>
+
+          <p class="page-description">
+            Real emotions, milestones and human moments
+            transformed into visual worlds.
+          </p>
+
+        </header>
+
+
+        <!-- Optional story filters -->
+        <div
+          id="story-filters"
+          class="story-filters"
+          aria-label="Story filters"
+        ></div>
+
+
+        <!-- JavaScript generates the complete story catalog -->
+        <div
+          id="story-grid"
           class="story-grid"
           aria-live="polite"
         ></div>
@@ -185,143 +224,407 @@
     </section>
 
 
-    <!-- =========================
+    <!-- =========================================================
          CREATE
-    ========================== -->
+    ========================================================== -->
+
     <section
-      id="create"
-      class="create section"
+      id="create-section"
+      class="page-section"
+      data-page="create"
+      aria-labelledby="create-heading"
     >
 
-      <div class="container">
+      <div class="section-container">
 
-        <div class="create-card">
+        <header class="page-header">
 
-          <div class="create-content">
+          <p class="section-label">
+            Create
+          </p>
 
-            <p class="eyebrow">
-              CREATE
-            </p>
+          <h1 id="create-heading">
+            Turn your feeling into a visual story.
+          </h1>
 
-            <h2>
-              Your moment.
-              <span>Your visual story.</span>
-            </h2>
+          <p class="page-description">
+            Tell us about your moment and choose the visual
+            language that feels right for your story.
+          </p>
 
-            <p>
-              Tell us about the feeling, milestone or moment
-              you want to turn into something unforgettable.
-            </p>
+        </header>
 
-            <button
-              class="btn btn-primary"
-              type="button"
-              onclick="openCreate()"
+
+        <!-- ===================================================
+             CREATE FORM
+        ==================================================== -->
+
+        <form
+          id="create-form"
+          class="create-form"
+          novalidate
+        >
+
+          <!-- Name -->
+          <div class="form-field">
+
+            <label for="create-name">
+              Your name
+            </label>
+
+            <input
+              id="create-name"
+              name="name"
+              type="text"
+              autocomplete="name"
+              placeholder="Your name"
             >
-              Start creating
-            </button>
 
           </div>
 
-          <div class="create-symbol">
-            <span>+</span>
+
+          <!-- Contact -->
+          <div class="form-field">
+
+            <label for="create-contact">
+              WhatsApp number
+            </label>
+
+            <input
+              id="create-contact"
+              name="contact"
+              type="tel"
+              autocomplete="tel"
+              placeholder="Your WhatsApp number"
+            >
+
           </div>
 
-        </div>
+
+          <!-- Moment -->
+          <div class="form-field">
+
+            <label for="create-moment">
+              Tell us about your moment
+            </label>
+
+            <textarea
+              id="create-moment"
+              name="moment"
+              rows="5"
+              placeholder="What happened? What are you feeling? What would you like the image to say?"
+            ></textarea>
+
+          </div>
+
+
+          <!-- Emotion -->
+          <div class="form-field">
+
+            <label for="create-emotion">
+              Emotion
+            </label>
+
+            <select
+              id="create-emotion"
+              name="emotion"
+            >
+
+              <option value="">
+                Choose an emotion
+              </option>
+
+              <option value="Confident">
+                Confident
+              </option>
+
+              <option value="Hopeful">
+                Hopeful
+              </option>
+
+              <option value="Ambitious">
+                Ambitious
+              </option>
+
+              <option value="Curious">
+                Curious
+              </option>
+
+              <option value="Reflective">
+                Reflective
+              </option>
+
+              <option value="Joyful">
+                Joyful
+              </option>
+
+              <option value="Something else">
+                Something else
+              </option>
+
+            </select>
+
+          </div>
+
+
+          <!-- =================================================
+               VISUAL LANGUAGE
+          ================================================== -->
+
+          <fieldset class="visual-language-field">
+
+            <legend>
+              Visual language
+            </legend>
+
+            <div
+              id="visual-language-options"
+              class="visual-language-options"
+            >
+
+              <button
+                type="button"
+                class="visual-language-option active"
+                data-visual-language="Cinematic"
+                aria-pressed="true"
+              >
+                <span class="option-title">
+                  Cinematic
+                </span>
+
+                <span class="option-description">
+                  Film-inspired, atmospheric and emotional.
+                </span>
+              </button>
+
+
+              <button
+                type="button"
+                class="visual-language-option"
+                data-visual-language="Editorial"
+                aria-pressed="false"
+              >
+                <span class="option-title">
+                  Editorial
+                </span>
+
+                <span class="option-description">
+                  Clean, premium and magazine-inspired.
+                </span>
+              </button>
+
+
+              <button
+                type="button"
+                class="visual-language-option"
+                data-visual-language="Creative"
+                aria-pressed="false"
+              >
+                <span class="option-title">
+                  Creative
+                </span>
+
+                <span class="option-description">
+                  Experimental, expressive and unexpected.
+                </span>
+              </button>
+
+            </div>
+
+            <!-- JS keeps the selected value here -->
+            <input
+              type="hidden"
+              id="visual-language"
+              name="visualLanguage"
+              value="Cinematic"
+            >
+
+          </fieldset>
+
+
+          <!-- Submit -->
+          <button
+            type="submit"
+            id="create-submit"
+            class="primary-button"
+          >
+            Start my story
+          </button>
+
+        </form>
 
       </div>
 
     </section>
 
-  </main>
+  </div>
 
 
-  <!-- =========================
-       STORY MODAL
-  ========================== -->
+  <!-- =========================================================
+       STATUS VIEWER
+  ========================================================== -->
+
   <div
-    id="storyModal"
-    class="modal"
-    aria-hidden="true"
+    id="status-viewer"
+    class="status-viewer"
     role="dialog"
     aria-modal="true"
-    aria-labelledby="modalTitle"
+    aria-hidden="true"
+    aria-label="Story status viewer"
   >
 
     <div
-      class="modal-overlay"
-      onclick="closeModal(event)"
+      class="status-viewer-overlay"
+      data-status-close
     ></div>
 
-    <div class="modal-content">
+    <div class="status-viewer-content">
 
+      <!-- Progress indicators -->
+      <div
+        id="status-progress"
+        class="status-progress"
+        aria-hidden="true"
+      ></div>
+
+
+      <!-- Close -->
       <button
-        class="modal-close"
         type="button"
+        class="status-close"
+        id="status-close"
         aria-label="Close story"
-        onclick="closeModal()"
+        data-status-close
       >
         ×
       </button>
 
 
-      <div class="modal-image-wrap">
+      <!-- Status image -->
+      <div class="status-image-wrapper">
 
         <img
-          id="modalImage"
+          id="status-viewer-image"
+          class="status-viewer-image"
           src=""
           alt=""
-          class="modal-image"
-        />
+        >
 
       </div>
 
 
-      <div class="modal-details">
+      <!-- Status information -->
+      <div class="status-viewer-info">
 
         <p
-          id="modalCampaign"
+          id="status-viewer-category"
+          class="status-category"
+        ></p>
+
+        <h2
+          id="status-viewer-title"
+        ></h2>
+
+        <p
+          id="status-viewer-text"
+        ></p>
+
+        <a
+          id="status-viewer-cta"
+          class="primary-button"
+          href="#"
+          target="_blank"
+          rel="noopener noreferrer"
+          hidden
+        ></a>
+
+      </div>
+
+    </div>
+
+  </div>
+
+
+  <!-- =========================================================
+       PRODUCT / STORY MODAL
+  ========================================================== -->
+
+  <div
+    id="product-modal"
+    class="product-modal"
+    role="dialog"
+    aria-modal="true"
+    aria-hidden="true"
+    aria-labelledby="product-modal-title"
+  >
+
+    <div
+      class="product-modal-overlay"
+      data-modal-close
+    ></div>
+
+    <div class="product-modal-content">
+
+      <button
+        type="button"
+        class="modal-close"
+        id="product-modal-close"
+        aria-label="Close"
+        data-modal-close
+      >
+        ×
+      </button>
+
+
+      <div class="product-modal-image-wrapper">
+
+        <img
+          id="product-modal-image"
+          src=""
+          alt=""
+          class="product-modal-image"
+        >
+
+      </div>
+
+
+      <div class="product-modal-body">
+
+        <p
+          id="product-modal-campaign"
           class="modal-campaign"
         ></p>
 
         <p
-          id="modalEmotion"
+          id="product-modal-emotion"
           class="modal-emotion"
         ></p>
 
         <h2
-          id="modalTitle"
+          id="product-modal-title"
         ></h2>
 
         <blockquote
-          id="modalQuote"
+          id="product-modal-quote"
         ></blockquote>
 
         <p
-          id="modalDescription"
+          id="product-modal-description"
           class="modal-description"
         ></p>
 
 
-        <div class="modal-actions">
+        <div class="product-modal-actions">
 
           <a
-            id="modalBuy"
-            class="btn btn-primary"
+            id="product-modal-cta"
+            class="primary-button"
             href="#"
             target="_blank"
             rel="noopener noreferrer"
           >
-            Get this visual
+            Get this story
           </a>
-
-          <button
-            class="btn btn-secondary"
-            type="button"
-            onclick="closeModal()"
-          >
-            Close
-          </button>
 
         </div>
 
@@ -332,11 +635,102 @@
   </div>
 
 
-  <!-- =========================
-       FOOTER
-  ========================== -->
-  <footer class="footer">
+  <!-- =========================================================
+       TOAST / FEEDBACK
+  ========================================================== -->
 
-    <div class="container">
+  <div
+    id="toast"
+    class="toast"
+    role="status"
+    aria-live="polite"
+    aria-atomic="true"
+  ></div>
 
-      <div class="footer-top
+
+  <!-- =========================================================
+       BOTTOM NAVIGATION
+  ========================================================== -->
+
+  <nav
+    class="bottom-navigation"
+    id="bottom-navigation"
+    aria-label="Primary navigation"
+  >
+
+    <a
+      href="index.html?page=home"
+      class="bottom-nav-item"
+      data-route="home"
+      data-section="profile"
+      aria-label="Home"
+    >
+
+      <span
+        class="bottom-nav-icon"
+        aria-hidden="true"
+      >
+        ○
+      </span>
+
+      <span class="bottom-nav-label">
+        Home
+      </span>
+
+    </a>
+
+
+    <a
+      href="index.html?page=explore"
+      class="bottom-nav-item"
+      data-route="explore"
+      data-section="stories-section"
+      aria-label="Explore"
+    >
+
+      <span
+        class="bottom-nav-icon"
+        aria-hidden="true"
+      >
+        ◇
+      </span>
+
+      <span class="bottom-nav-label">
+        Explore
+      </span>
+
+    </a>
+
+
+    <a
+      href="index.html?page=create"
+      class="bottom-nav-item"
+      data-route="create"
+      data-section="create-section"
+      aria-label="Create"
+    >
+
+      <span
+        class="bottom-nav-icon"
+        aria-hidden="true"
+      >
+        +
+      </span>
+
+      <span class="bottom-nav-label">
+        Create
+      </span>
+
+    </a>
+
+  </nav>
+
+
+  <!-- =========================================================
+       JAVASCRIPT
+  ========================================================== -->
+
+  <script src="script.js" defer></script>
+
+</body>
+</html>
